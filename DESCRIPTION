@@ -1,0 +1,11 @@
+Package: markdown
+Type: Package
+Title: A Markdown to XTHML renderer
+Version: 1.0
+Date: 2012-03-31
+Author: Jeffrey Horner <jeffrey.horner@gmail.com>
+Maintainer: Jeffrey Horner <jeffrey.horner@gmail.com>
+Description: Markdown is a plain-text formatting syntax that can be converted
+ to XHTML or other file formats. This package uses the Github sundown markdown library
+ as the renderer.
+License: GPL

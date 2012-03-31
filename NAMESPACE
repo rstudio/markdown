@@ -1,0 +1,2 @@
+export("renderMarkdown")
+useDynLib(markdown,.registration=TRUE)
