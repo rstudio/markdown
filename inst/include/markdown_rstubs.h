@@ -12,10 +12,8 @@
  */
 #include "markdown.h"
 
-/* BUFPUTSL: optimized bufputs of a string litteral */
-#define BUFPUTSL RMD_BUFPUTSL
-#define RMD_BUFPUTSL(output, literal) \
-	rmd_bufput(output, literal, sizeof literal - 1)
+Rboolean rmd_register_renderer(struct rmd_renderer *renderer);
+#define register_renderer rmd_register_renderer
 
 /* bufgrow: increasing the allocated size to the given value */
 int rmd_bufgrow(struct buf *, size_t);

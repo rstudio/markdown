@@ -11,21 +11,13 @@
 #
 #
 
-# Function for registering renderers written in R
-#
-# registerMarkdownRenderer <-
-# function(renderer=NULL,...)
-# {
-# 
-# }
-
 rendererExists <- function(name)
 {
    .Call(renderer_exists,name)
 }
 
 renderMarkdown <-
-function(file, output, text, renderer='HTML', options=NULL,
+function(file, output, text, renderer='HTML', renderer.options=NULL,
          extensions=getOption('markdown.extensions'))
 {
 
@@ -58,13 +50,14 @@ function(file, output, text, renderer='HTML', options=NULL,
 
 
    # Options
-   if (is.null(options))
-      options <- getOption(paste('markdown',renderer,'options',sep='.'))
+   if (is.null(renderer.options))
+      renderer.options <- getOption(paste('markdown',renderer,'options',
+                                          sep='.'))
 
    # HTML options must be a character vector. 
    if (renderer=="HTML")
    {
-      if (!is.null(options) && !is.character(options))
+      if (!is.null(renderer.options) && !is.character(renderer.options))
          stop("HTML options must be a character vector")
    }
 
@@ -72,9 +65,26 @@ function(file, output, text, renderer='HTML', options=NULL,
    if (!is.null(extensions) && !is.character(extensions))
       stop("extensions must be a character vector")
 
-   invisible(.Call(render_markdown,file,output,text,renderer,options,
+   invisible(.Call(render_markdown,file,output,text,renderer,renderer.options,
                    extensions))
 }
+
+markdownToHTML <- function(file, output, text, 
+                           options=getOption('markdown.HTML.options'),
+                           extensions=getOption('markdown.extensions'))
+{
+   ret <- renderMarkdown(file,output,text,renderer="HTML",
+                  renderer.options=options,extensions=extensions)
+   if (is.raw(ret))
+      ret <- rawToChar(ret)
+
+   invisible(ret)
+}
+
+# RmdToRnw <- function()
+# {
+# }
+
 
 # Markdown extensions are ON by default
 #

@@ -15,6 +15,15 @@
 
 #include "markdown_rstubs.h"
 
+Rboolean rmd_register_renderer(struct rmd_renderer *renderer)
+{
+   static Rboolean (*fun)(struct rmd_renderer *) = NULL;
+   if (fun==NULL)
+      fun = (Rboolean (*)(struct rmd_renderer *))
+            R_GetCCallable("markdown","register_renderer");
+   return fun(renderer);
+}
+
 int rmd_bufgrow(struct buf *buf, size_t sz)
 {
    static int (*fun)(struct buf *, size_t) = NULL;
@@ -95,8 +104,18 @@ void rmd_bufslurp(struct buf *buf, size_t sz)
    return fun(buf,sz);
 }
 
-/* TODO: figure out how to pass variable argument lists to a function */
-/* void rmd_bufprintf(struct buf *, const char *, ...) __attribute__ ((format (printf, 2, 3))); */
+void rmd_bufprintf(struct buf *buf, const char *fmt, ...)
+{
+   va_list ap;
+   static int (*fun)(struct buf *, const char *, ...) = NULL;
+   if (fun==NULL)
+      fun = (int (*)(struct buf *,const char *, ...))
+         R_GetCCallable("markdown","bufprintf");
+
+	va_start(ap, fmt);
+   fun(buf,fmt,ap);
+   va_end(ap);
+}
 
 extern int
 rmd_sd_autolink_issafe(const uint8_t *link, size_t link_len){

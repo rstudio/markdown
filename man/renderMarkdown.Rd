@@ -1,50 +1,61 @@
 \name{renderMarkdown}
 \alias{renderMarkdown}
-
-\title{
-Markdown Rendering
-}
+\title{Markdown Rendering}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+   \code{renderMarkdown} transforms the \emph{markdown} text provided by the
+   user in either the \code{file} or \code{text} variable. The transformation is
+   either written to the \code{output} file or returned to the user as a 
+   \code{"raw"} vector.
+
+   The default rendering target is "HTML".
 }
 \usage{
-renderMarkdown()
+renderMarkdown(file, output, text, renderer='HTML', renderer.options=NULL,
+               extensions=getOption('markdown.extensions'))
 }
-
-\details{
-%%  ~~ If necessary, more details than the description above ~~
+\arguments{
+   \item{file}{a character string giving the pathname of the file to
+      read from. If it is omitted from the argument list, then it is
+      presumed that the \code{text} argument will be used instead.}
+   \item{output}{a character string giving the pathname of the file to
+      write to. If it is omitted, then it is presumed that the use expects
+      the results returned as a \code{"raw"} vector.}
+   \item{text}{a character vector containing the \emph{markdown} text to
+      transform.}
+   \item{renderer}{the name of the renderer that will be used to transform
+      the \code{file} or \code{text}.}
+   \item{renderer.options}{options that are passed to the renderer. 
+      For \code{HTML} renderer options see \code{\link{markdownHTMLOptions}}.}
+   \item{extensions}{options that are passed to the \emph{markdown} engine. See
+      \code{\link{markdownExtensions}}.}
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+   \code{renderMarkdown} returns NULL invisibly when output is to a file, and
+   a \code{"raw"} vector otherwise.
 }
-\references{
-%% ~put references to the literature/web site here ~
+\details{
+   \code{markdown} uses (and ships with) the popular Sundown library provided
+   by GitHub. C stubs are available to implement new renderers.
 }
-\author{
-%%  ~~who you are~~
-}
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
-\examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+   \code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
+   \code{\link{markdownToHTML}}.
 
-## The function is currently defined as
-function () 
-{
-  }
+   For a description of the original \emph{markdown} 
+   version:
+
+   \url{http://daringfireball.net/projects/markdown/}
+
+   The original Sundown library on github:
+
+   \url{https://github.com/tanoku/sundown}
+
+   C stubs for writing new renders are in inst/include/markdown_rstubs.[ch].
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
+
+\examples{
+
+rawToChar(renderMarkdown(text='Hello World!'))
+
+}
+\keyword{programming}

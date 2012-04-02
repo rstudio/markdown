@@ -1,7 +1,8 @@
 export(
-   "rendererExists",
-   "renderMarkdown",
    "markdownExtensions",
-   "markdownHTMLOptions"
+   "markdownHTMLOptions",
+   "markdownToHTML",
+   "rendererExists",
+   "renderMarkdown"
 )
 useDynLib(markdown,.registration=TRUE)
