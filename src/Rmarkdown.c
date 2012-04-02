@@ -20,30 +20,102 @@
 struct rmd_renderer RENDERERS[NREND];
 
 struct rmd_renderer *renderer(const char *name);
-Rboolean renderer_exists(SEXP Srenderer);
 
 static void html_init_args(struct sd_markdown_new_args *args,
-                           SEXP Shtml_options, SEXP Soptions)
+                           SEXP Soptions, SEXP Sextensions)
 {
    struct sd_callbacks *callbacks;
-   struct html_renderopt *options;
+   struct html_renderopt *renderopt;
+   unsigned int exts=0, options=0;
 
    callbacks = malloc(sizeof(struct sd_callbacks));
-   options = malloc(sizeof(struct html_renderopt));
-   if (!callbacks || !options)
+   renderopt = malloc(sizeof(struct html_renderopt));
+   if (!callbacks || !renderopt)
    {
       if (callbacks) free(callbacks);
-      if (options) free(options);
+      if (renderopt) free(renderopt);
       error("malloc failure in html_init_args!");
       return;
    }
 
-   sdhtml_renderer(callbacks, options, 0);
+   /* Marshal extensions */
+   if (isString(Sextensions))
+   {
+      int i;
+      for (i = 0; i < LENGTH(Sextensions); i++)
+      {
+         if (strcasecmp(CHAR(STRING_ELT(Sextensions,i)),
+                        "NO_INTRA_EMPHASIS") == 0)
+            exts |= MKDEXT_NO_INTRA_EMPHASIS;
+         else if (strcasecmp(CHAR(STRING_ELT(Sextensions,i)),
+                        "TABLES") == 0)
+            exts |= MKDEXT_TABLES;
+         else if (strcasecmp(CHAR(STRING_ELT(Sextensions,i)),
+                        "FENCED_CODE") == 0)
+            exts |= MKDEXT_FENCED_CODE;
+         else if (strcasecmp(CHAR(STRING_ELT(Sextensions,i)),
+                        "AUTOLINK") == 0)
+            exts |= MKDEXT_AUTOLINK;
+         else if (strcasecmp(CHAR(STRING_ELT(Sextensions,i)),
+                        "STRIKETHROUGH") == 0)
+            exts |= MKDEXT_STRIKETHROUGH;
+         else if (strcasecmp(CHAR(STRING_ELT(Sextensions,i)),
+                        "LAX_HTML_BLOCKS") == 0)
+            exts |= MKDEXT_LAX_HTML_BLOCKS;
+         else if (strcasecmp(CHAR(STRING_ELT(Sextensions,i)),
+                        "SPACE_HEADERS") == 0)
+            exts |= MKDEXT_SPACE_HEADERS;
+         else if (strcasecmp(CHAR(STRING_ELT(Sextensions,i)),
+                        "SUPERSCRIPT") == 0)
+            exts |= MKDEXT_SUPERSCRIPT;
+      }
+   }
 
-   args->extensions = 0;
+   /* Marshal HTML options */
+   if (isString(Soptions))
+   {
+      int i;
+      for (i = 0; i < LENGTH(Soptions); i++)
+      {
+         if (strcasecmp(CHAR(STRING_ELT(Soptions,i)),
+                        "SKIP_HTML") == 0)
+            options |= HTML_SKIP_HTML;
+         else if (strcasecmp(CHAR(STRING_ELT(Soptions,i)),
+                        "SKIP_STYLE") == 0)
+            options |= HTML_SKIP_STYLE;
+         else if (strcasecmp(CHAR(STRING_ELT(Soptions,i)),
+                        "SKIP_IMAGES") == 0)
+            options |= HTML_SKIP_IMAGES;
+         else if (strcasecmp(CHAR(STRING_ELT(Soptions,i)),
+                        "SKIP_LINKS") == 0)
+            options |= HTML_SKIP_LINKS;
+         else if (strcasecmp(CHAR(STRING_ELT(Soptions,i)),
+                        "EXPAND_TABS") == 0)
+            options |= HTML_EXPAND_TABS;
+         else if (strcasecmp(CHAR(STRING_ELT(Soptions,i)),
+                        "SAFELINK") == 0)
+            options |= HTML_SAFELINK;
+         else if (strcasecmp(CHAR(STRING_ELT(Soptions,i)),
+                        "TOC") == 0)
+            options |= HTML_TOC;
+         else if (strcasecmp(CHAR(STRING_ELT(Soptions,i)),
+                        "HARD_WRAP") == 0)
+            options |= HTML_HARD_WRAP;
+         else if (strcasecmp(CHAR(STRING_ELT(Soptions,i)),
+                        "USE_XHTML") == 0)
+            options |= HTML_USE_XHTML;
+         else if (strcasecmp(CHAR(STRING_ELT(Soptions,i)),
+                        "ESCAPE") == 0)
+            options |= HTML_ESCAPE;
+      }
+   }
+
+   sdhtml_renderer(callbacks, renderopt, options);
+
+   args->extensions = exts;
    args->max_nesting = 16;
    args->callbacks = callbacks;
-   args->opaque = (void *)options;
+   args->opaque = (void *)renderopt;
 }
 
 static void html_destroy_args(struct sd_markdown_new_args *args)
@@ -101,16 +173,23 @@ Rboolean register_renderer(struct rmd_renderer *renderer)
    return TRUE;
 }
 
-Rboolean renderer_exists(SEXP Srenderer)
+SEXP renderer_exists(SEXP Srenderer)
 {
+   SEXP ans;
+
+   PROTECT(ans = allocVector(LGLSXP,1));
+   LOGICAL(ans)[0] = FALSE;
+
    if (isString(Srenderer))
    {
       const char *name = CHAR(STRING_ELT(Srenderer,0));
       if (renderer(name) != NULL)
-         return TRUE;
+         LOGICAL(ans)[0] = TRUE;
    }
 
-   return FALSE;
+   UNPROTECT(1);
+
+   return ans;
 }
 
 struct rmd_renderer *renderer(const char *name)
@@ -127,7 +206,7 @@ struct rmd_renderer *renderer(const char *name)
 }
 
 SEXP render_markdown(SEXP Sfile, SEXP Soutput, SEXP Stext, SEXP Srenderer,
-                            SEXP Srender_options, SEXP Soptions)
+                            SEXP Soptions, SEXP Sextensions)
 {
    const char *text, *name;
    struct buf *ib, *ob;
@@ -136,7 +215,7 @@ SEXP render_markdown(SEXP Sfile, SEXP Soutput, SEXP Stext, SEXP Srenderer,
 
    name = CHAR(STRING_ELT(Srenderer,0));
 
-   if (renderer_exists(Srenderer) == FALSE)
+   if (!LOGICAL(renderer_exists(Srenderer))[0])
    {
       error("Renderer '%s' not registered!",name);
       return R_NilValue;
@@ -174,7 +253,7 @@ SEXP render_markdown(SEXP Sfile, SEXP Soutput, SEXP Stext, SEXP Srenderer,
    }
 
    ob = bufnew(OUTPUT_UNIT);
-   renderer(name)->init_args(&args,Srender_options,Soptions);
+   renderer(name)->init_args(&args,Soptions,Sextensions);
    markdown = sd_markdown_new(args.extensions,args.max_nesting,args.callbacks,
                               args.opaque);
 

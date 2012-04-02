@@ -1,2 +1,7 @@
-export("renderMarkdown")
+export(
+   "rendererExists",
+   "renderMarkdown",
+   "markdownExtensions",
+   "markdownHTMLOptions"
+)
 useDynLib(markdown,.registration=TRUE)

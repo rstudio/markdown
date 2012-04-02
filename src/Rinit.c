@@ -18,6 +18,7 @@
 #define CALLDEF(name, n) {#name,(DL_FUNC) &name, n}
 static R_CallMethodDef CallEntries[] = {
    CALLDEF(render_markdown,6),
+   CALLDEF(renderer_exists,1),
    {NULL,NULL,0}
 };
 

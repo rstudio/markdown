@@ -19,18 +19,27 @@
 # 
 # }
 
+rendererExists <- function(name)
+{
+   .Call(renderer_exists,name)
+}
+
 renderMarkdown <-
-function(file,output,text=NULL,renderer='HTML',
-         render.options=getOption('markdown.HTML.options'),
-         options=getOption('markdown.options'))
+function(file, output, text, renderer='HTML', options=NULL,
+         extensions=getOption('markdown.extensions'))
 {
 
+   if (!rendererExists(renderer))
+   {
+      stop("Renderer '",renderer,"' is not registered!")
+   }
+
    # Input from either a file or character vector
-   if (is.character(file) && file.exists(file))
+   if (!missing(file) && is.character(file) && file.exists(file))
    {
       text <- NULL
    }
-   else if (is.character(text) && !is.null(text))
+   else if (!missing(text) && !is.null(text) && is.character(text))
    {
       file <- NULL
       if (length(text) > 1)
@@ -47,7 +56,65 @@ function(file,output,text=NULL,renderer='HTML',
    else if (!is.character(output))
       stop("output variable must be a file name!");
 
-   invisible(.Call(render_markdown,file,output,text,renderer,render.options,
-                   options))
+
+   # Options
+   if (is.null(options))
+      options <- getOption(paste('markdown',renderer,'options',sep='.'))
+
+   # HTML options must be a character vector. 
+   if (renderer=="HTML")
+   {
+      if (!is.null(options) && !is.character(options))
+         stop("HTML options must be a character vector")
+   }
+
+   # Extensions must be a character vector
+   if (!is.null(extensions) && !is.character(extensions))
+      stop("extensions must be a character vector")
+
+   invisible(.Call(render_markdown,file,output,text,renderer,options,
+                   extensions))
 }
 
+# Markdown extensions are ON by default
+#
+# To turn on all extensions:
+#
+# options(markdown.extensions=markdownExtensions())
+# 
+# To turn off all extensions:
+# 
+# options(markdown.extensions=c())
+#
+markdownExtensions <- function()
+{
+   c('no_intra_emphasis','tables','fenced_code','autolink','strikethrough',
+     'lax_html_blocks','space_headers','superscript')
+}
+
+# HTML renderer options are OFF by default
+#
+# To turn on all options:
+#
+# options(markdown.HTML.options=markdownHTMLOptions())
+# 
+# To turn off all options:
+# 
+# options(markdown.HTML.options=c())
+#
+markdownHTMLOptions <- function()
+{
+   c('skip_html', 'skip_style', 'skip_images', 'skip_links', 'expand_tabs',
+     'safelink', 'toc', 'hard_wrap', 'use_xhtml', 'escape')
+}
+
+.onLoad <- function(libname,pkgname)
+{
+   options(markdown.extensions=markdownExtensions())
+}
+
+.onUnload <- function(libPath)
+{
+   options(markdown.extensions=NULL)
+   options(markdown.HTML.options=NULL)
+}

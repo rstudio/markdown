@@ -36,3 +36,4 @@ extern Rboolean register_renderer(struct rmd_renderer *);
 extern SEXP render_markdown(SEXP Sfile, SEXP Soutput, SEXP Stext,
                             SEXP Srenderer, SEXP Srender_options,
                             SEXP Soptions);
+extern SEXP renderer_exists(SEXP name);
