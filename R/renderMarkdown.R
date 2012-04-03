@@ -81,11 +81,6 @@ markdownToHTML <- function(file, output, text,
    invisible(ret)
 }
 
-# RmdToRnw <- function()
-# {
-# }
-
-
 # Markdown extensions are ON by default
 #
 # To turn on all extensions:
