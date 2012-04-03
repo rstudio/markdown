@@ -4,10 +4,10 @@
 \description{
    \code{markdownExensions} returns a character vector listing all the extensions that are available in the \code{markdown} package.
 
-   They are all on by default.
+   They are all ON by default.
 }
 \usage{
-markdownExensions()
+markdownExtensions()
 }
 \arguments{
    None.
@@ -98,7 +98,8 @@ options(markdown.extensions=NULL)
 
 # no_intra_emphasis example
 cat(markdownToHTML(text='foo_bar_function',extensions=c()))
-cat(markdownToHTML(text='foo_bar_function',extensions=c('no_intra_emphasis')))
+cat(markdownToHTML(text='foo_bar_function',
+                   extensions=c('no_intra_emphasis')))
 
 # tables example (need 4 spaces at beginning of line here)
 cat(markdownToHTML(text="
@@ -163,7 +164,7 @@ because there is no space between # and N.
 ",extensions=c('space_headers')))
 
 # superscript example
-cat(markdownToHTML(text="2^10",extensions=c('')))
+cat(markdownToHTML(text="2^10",extensions=c()))
 cat(markdownToHTML(text="2^10",extensions=c('superscript')))
 
 }

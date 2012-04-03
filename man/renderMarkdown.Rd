@@ -10,7 +10,8 @@
    The default rendering target is "HTML".
 }
 \usage{
-renderMarkdown(file, output, text, renderer='HTML', renderer.options=NULL,
+renderMarkdown(file, output, text, renderer='HTML',
+               renderer.options=NULL,
                extensions=getOption('markdown.extensions'))
 }
 \arguments{
@@ -24,10 +25,13 @@ renderMarkdown(file, output, text, renderer='HTML', renderer.options=NULL,
       transform.}
    \item{renderer}{the name of the renderer that will be used to transform
       the \code{file} or \code{text}.}
-   \item{renderer.options}{options that are passed to the renderer. 
-      For \code{HTML} renderer options see \code{\link{markdownHTMLOptions}}.}
-   \item{extensions}{options that are passed to the \emph{markdown} engine. See
-      \code{\link{markdownExtensions}}.}
+   \item{renderer.options}{
+      options that are passed to the renderer. 
+      For \code{HTML} renderer options see 
+      \code{\link{markdownHTMLOptions}}.}
+   \item{extensions}{
+      options that are passed to the \emph{markdown}
+      engine. See \code{\link{markdownExtensions}}.}
 }
 \value{
    \code{renderMarkdown} returns NULL invisibly when output is to a file, and

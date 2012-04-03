@@ -109,7 +109,7 @@ markdownExtensions <- function()
 #
 markdownHTMLOptions <- function()
 {
-   c('skip_html', 'skip_style', 'skip_images', 'skip_links', 'expand_tabs',
+   c('skip_html', 'skip_style', 'skip_images', 'skip_links',
      'safelink', 'toc', 'hard_wrap', 'use_xhtml', 'escape')
 }
 

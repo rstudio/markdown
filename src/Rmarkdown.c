@@ -90,9 +90,6 @@ static void html_init_args(struct sd_markdown_new_args *args,
                         "SKIP_LINKS") == 0)
             options |= HTML_SKIP_LINKS;
          else if (strcasecmp(CHAR(STRING_ELT(Soptions,i)),
-                        "EXPAND_TABS") == 0)
-            options |= HTML_EXPAND_TABS;
-         else if (strcasecmp(CHAR(STRING_ELT(Soptions,i)),
                         "SAFELINK") == 0)
             options |= HTML_SAFELINK;
          else if (strcasecmp(CHAR(STRING_ELT(Soptions,i)),
