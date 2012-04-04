@@ -8,12 +8,17 @@ Overview
 to XHTML or other formats. This package provides R bindings to the 
 [Sundown](https://github.com/tanoku/sundown) markdown rendering library.
 
-The R function `markdownToHTML` renders a markdown file to HTML. Options controlling
-HTML output and supported markdown extensions can be optionally specified.  
+The R function `markdownToHTML` renders a markdown file to HTML. Options
+controlling HTML output and supported markdown extensions can be optionally
+specified.  
    
-The package also exports the underlying Sundown C extension API which enables creating and calling custom renderers using the `renderMarkdown` function.
+The package also exports the underlying Sundown C extension API which
+enables creating and calling custom renderers using the `renderMarkdown`
+function.
 
-To learn more about markdown syntax see: [http://en.wikipedia.org/wiki/Markdown](http://en.wikipedia.org/wiki/Markdown)
+To learn more about markdown syntax see: 
+
+[http://en.wikipedia.org/wiki/Markdown](http://en.wikipedia.org/wiki/Markdown)
 
 License
 -----------------------------------------------------------------------------
@@ -22,5 +27,6 @@ The markdown package is licensed under the GPLv3. See these files for
 additional details:
 
 - inst/COPYING - Markdown package license (GPLv3)
-- inst/NOTICE  - Additional open source software included with the markdown package
+- inst/NOTICE  - Copyright notices for additional included software
+
 
