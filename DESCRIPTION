@@ -3,7 +3,7 @@ Type: Package
 Title: Markdown rendering for R
 Version: 0.3
 Date: 2012-04-04
-Author: JJ Allaire, Jeffrey Horner, Vicent Marti, and Natacha Porté 
+Author: JJ Allaire, Jeffrey Horner, Vicent Marti, and Natacha Porte
 Maintainer: JJ Allaire <jj@rstudio.org>
 Description: Markdown is a plain-text formatting syntax that can be 
  converted to XHTML or other formats. This package provides R bindings
