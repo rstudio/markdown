@@ -8,5 +8,5 @@ Maintainer: RStudio <info@rstudio.org>
 Description: Markdown is a plain-text formatting syntax that can be converted
  to XHTML or other file formats. This package provides R bindings to the 
  Sundown markdown rendering library.
-Depends: R (>= 2.10.0)
+Depends: R (>= 2.11.1)
 License: GPL-3
