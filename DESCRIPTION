@@ -1,11 +1,12 @@
 Package: markdown
 Type: Package
-Title: A Markdown to XTHML renderer
-Version: 1.0
+Title: Markdown rendering for R
+Version: 0.1
 Date: 2012-03-31
-Author: RStudio <info@rstudio.org>
+Author: RStudio
 Maintainer: RStudio <info@rstudio.org>
 Description: Markdown is a plain-text formatting syntax that can be converted
- to XHTML or other file formats. This package uses the Github sundown markdown
- library as the renderer.
+ to XHTML or other file formats. This package provides R bindings to the 
+ Sundown markdown rendering library.
+Depends: R (>= 2.10.0)
 License: GPL-3

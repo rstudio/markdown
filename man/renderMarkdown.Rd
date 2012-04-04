@@ -1,6 +1,6 @@
 \name{renderMarkdown}
 \alias{renderMarkdown}
-\title{Markdown Rendering}
+\title{Render markdown}
 \description{
    \code{renderMarkdown} transforms the \emph{markdown} text provided by the
    user in either the \code{file} or \code{text} variable. The transformation is

@@ -2,20 +2,27 @@
 \alias{markdown}
 \docType{package}
 \title{
-Markdown to HTML renderer in R
+Markdown rendering for R
 }
 \description{
-   \emph{markdown} is as package for rendering markdown formatted text to
-   HTML. C extensions exist as well to create other renderers.
+   \emph{Markdown} is a plain-text formatting syntax that can be converted
+ to XHTML or other formats. This package provides R bindings to the 
+ Sundown (\url{https://github.com/tanoku/sundown}) markdown rendering library.
 
-   To learn more about \emph{markdown} syntax see:
+   The R function \code{\link{markdownToHTML}} renders a markdown file to HTML
+   (respecting the specified \code{\link{markdownExtensions}} and \code{\link{markdownHTMLOptions}}).   
+   
+   The package also exports the underlying Sundown C extension API which enables creating and calling custom renderers using the \code{\link{renderMarkdown}} function.
 
-   \url{http://daringfireball.net/projects/markdown/syntax}   
+   To learn more about markdown syntax see:
+
+   \url{http://en.wikipedia.org/wiki/Markdown}   
 }
 \author{
 Copyright (C) 2009-1012 by RStudio, Inc.
 }
 \keyword{ package }
 \seealso{
+\code{\link{markdownToHTML}}
 \code{\link{renderMarkdown}}
 }

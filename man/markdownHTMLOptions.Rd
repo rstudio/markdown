@@ -1,6 +1,6 @@
 \name{markdownHTMLOptions}
 \alias{markdownHTMLOptions}
-\title{Options for Markdown to HTML Renderer}
+\title{Markdown HTML rendering options}
 \description{
    \code{markdownHTMLOptions} returns a character vector listing all the extensions that are available for the HTML renderer in the \code{markdown} package.
 

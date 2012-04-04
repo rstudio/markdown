@@ -1,6 +1,6 @@
 \name{markdownToHTML}
 \alias{markdownToHTML}
-\title{Markdown Rendering}
+\title{Render markdown to HTML}
 \description{
    \code{markdownToHTML} transforms the \emph{markdown} text provided by the
    user in either the \code{file} or \code{text} variable. The HTML 

@@ -1,6 +1,6 @@
 \name{markdownExtensions}
 \alias{markdownExtensions}
-\title{Markdown Exensions defined}
+\title{Markdown exensions}
 \description{
    \code{markdownExensions} returns a character vector listing all the extensions that are available in the \code{markdown} package.
 
