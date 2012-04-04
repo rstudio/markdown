@@ -10,7 +10,15 @@
  * GPL (http://www.gnu.org/licenses/gpl-3.0.txt) for more details.
  *
  */
+
+#ifndef MARKDOWN_RSTUBS
+#define MARKDOWN_RSTUBS
+
 #include "markdown.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 Rboolean rmd_register_renderer(struct rmd_renderer *renderer);
 #define register_renderer rmd_register_renderer
@@ -98,3 +106,9 @@ rmd_sd_markdown_free(struct sd_markdown *md);
 extern void
 rmd_sd_version(int *major, int *minor, int *revision);
 #define sd_version rmd_sd_version
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // MARKDOWN_RSTUBS
