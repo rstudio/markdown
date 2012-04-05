@@ -19,7 +19,9 @@ Markdown rendering for R
    \url{http://en.wikipedia.org/wiki/Markdown}   
 }
 \author{
-Copyright (C) 2009-1012 by RStudio, Inc.
+JJ Allaire, Jeffrey Horner, Vicent Marti, and Natacha Porte
+
+Maintainer: JJ Allaire <jj@rstudio.org>
 }
 \keyword{ package }
 \seealso{
