@@ -63,7 +63,7 @@ void rstub_bufputs(struct buf *buf, const char *c)
    return fun(buf,c);
 }
 
-void rstub_bufputc(struct buf *, int i);
+void rstub_bufputc(struct buf *buf, int i)
 {
    static void (*fun)(struct buf *, int) = NULL;
    if (fun==NULL)
@@ -92,7 +92,7 @@ void rstub_bufslurp(struct buf *buf, size_t sz)
    static int (*fun)(struct buf *, size_t) = NULL;
    if (fun==NULL)
       fun = (int (*)(struct buf *,size_t))R_GetCCallable("markdown","bufslurp");
-   return fun(buf,sz);
+   fun(buf,sz);
 }
 
 void rstub_bufprintf(struct buf *buf, const char *fmt, ...)
@@ -114,7 +114,7 @@ rstub_sd_autolink_issafe(const uint8_t *link, size_t link_len){
    if (fun==NULL)
       fun = (int (*)(const uint8_t *, size_t))
          R_GetCCallable("markdown","sd_autolink_issafe");
-   return fun(link,sz);
+   return fun(link,link_len);
 }
 
 size_t
@@ -124,7 +124,7 @@ rstub_sd_autolink__www(size_t *rewind_p, struct buf *link, uint8_t *data,
    static size_t (*fun)(size_t *rewind_p, struct buf *link, uint8_t *data,
                         size_t offset, size_t size) = NULL;
    if (fun==NULL)
-      fun = (size_t (*fun)(size_t *rewind_p, struct buf *link, uint8_t *data,
+      fun = (size_t (*)(size_t *rewind_p, struct buf *link, uint8_t *data,
                            size_t offset, size_t size))
          R_GetCCallable("markdown","sd_autolink__www");
    return fun(rewind_p,link,data,offset,size);
@@ -137,7 +137,7 @@ rstub_sd_autolink__email(size_t *rewind_p, struct buf *link, uint8_t *data,
    static size_t (*fun)(size_t *rewind_p, struct buf *link, uint8_t *data,
                         size_t offset, size_t size) = NULL;
    if (fun==NULL)
-      fun = (size_t (*fun)(size_t *rewind_p, struct buf *link, uint8_t *data,
+      fun = (size_t (*)(size_t *rewind_p, struct buf *link, uint8_t *data,
                            size_t offset, size_t size))
          R_GetCCallable("markdown","sd_autolink__email");
    return fun(rewind_p,link,data,offset,size);
@@ -150,7 +150,7 @@ rstub_sd_autolink__url(size_t *rewind_p, struct buf *link, uint8_t *data,
    static size_t (*fun)(size_t *rewind_p, struct buf *link, uint8_t *data,
                         size_t offset, size_t size) = NULL;
    if (fun==NULL)
-      fun = (size_t (*fun)(size_t *rewind_p, struct buf *link, uint8_t *data,
+      fun = (size_t (*)(size_t *rewind_p, struct buf *link, uint8_t *data,
                            size_t offset, size_t size))
          R_GetCCallable("markdown","sd_autolink__url");
    return fun(rewind_p,link,data,offset,size);
@@ -199,7 +199,7 @@ rstub_sd_version(int *major, int *minor, int *revision)
 {
    static void (*fun)(int *, int *, int *) = NULL;
    if (fun==NULL)
-      fun = (void (*)(inst *, inst *, int *))
+      fun = (void (*)(int *, int *, int *))
          R_GetCCallable("markdown","sd_version");
    return fun(major,minor,revision);
 }
@@ -227,7 +227,7 @@ Rboolean rstub_rmd_buf_to_output(struct buf *ob, SEXP Soutput,
 {
    static Rboolean (*fun)(struct buf *, SEXP, SEXP *) = NULL;
    if (fun==NULL)
-      fun = (Rboolean (*fun)(struct buf *, SEXP, SEXP *))
+      fun = (Rboolean (*)(struct buf *, SEXP, SEXP *))
          R_GetCCallable("markdown","rmd_buf_to_output");
    return fun(ob,Soutput,raw_vec);
 }
@@ -236,7 +236,7 @@ Rboolean rstub_rmd_input_to_buf(SEXP Sfile, SEXP Stext, struct buf *ib)
 {
    static Rboolean (*fun)(SEXP, SEXP, struct buf *) = NULL;
    if (fun==NULL)
-      fun = (Rboolean (*fun)(SEXP, SEXP, struct buf *))
+      fun = (Rboolean (*)(SEXP, SEXP, struct buf *))
          R_GetCCallable("markdown","rmd_input_to_buf");
    return fun(Sfile,Stext,ib);
 }
