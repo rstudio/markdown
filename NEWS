@@ -1,0 +1,21 @@
+			      CHANGES IN markdown VERSION 0.4
+
+NEW FEATURES
+
+  o added support for post-processing HTML using smartypants filter
+
+  o added optional support for rendering a table of contents
+
+MAJOR CHANGES
+
+  o changed exported C functions to use an rmd_ prefix (eliminating
+    potential symbol conflicts with other packages)
+
+  o changed default html rendering options to use_xhtml, hard_wrap,
+    safelink, and smartypants
+
+BUG FIXES
+
+  o eliminated name collision with render_markdown function in knitr
+
+
