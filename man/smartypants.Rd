@@ -22,10 +22,6 @@ smartypants(file, output, text)
    \code{smartypants} returns NULL invisibly when output is to a file, and
    a character string otherwise.
 }
-\details{
-   \code{markdown} uses (and ships with) the popular Sundown library provided
-   by GitHub. C stubs are available to implement new renderers.
-}
 \seealso{
    \code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
    \code{\link{markdownToHTML}}.
