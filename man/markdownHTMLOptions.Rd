@@ -2,9 +2,12 @@
 \alias{markdownHTMLOptions}
 \title{Markdown HTML rendering options}
 \description{
-   \code{markdownHTMLOptions} returns a character vector listing all the extensions that are available for the HTML renderer in the \code{markdown} package.
+   \code{markdownHTMLOptions} returns a character vector listing all the 
+   extensions that are available for the HTML renderer in the \code{markdown}
+   package.
 
-   They are all OFF by default.
+   The following options are ON by default: \code{'safelink'}, 
+   \code{'hard_wrap'}, \code{'use_xhtml'}, and \code{'smartypants'}.
 }
 \usage{
 markdownHTMLOptions()
@@ -56,6 +59,9 @@ markdownHTMLOptions()
       \item{\code{'escape'}}{
          escape all HTML found within the \emph{markdown}. Overrides all
          of the \code{'skip_*'} options mentioned above.}
+      \item{\code{'smartypants'}}{
+         translates plain ASCII punctuation characters into \emph{smart}
+         typographic punctuation HTML entities. }
    }
 
    See the EXAMPLES section to see the output of each option turned on
@@ -127,6 +133,10 @@ mkd='<style></style><img src=""><a href="">Hello</a>'
 cat(markdownToHTML(text=mkd,options=c('skip_html')))
 # overrides all 'skip_*' options
 cat(markdownToHTML(text=mkd,options=c('skip_html','escape')))
+
+# smartypants example
+cat(markdownToHTML(text='1/2 (c)',options=c('')))
+cat(markdownToHTML(text='1/2 (c)',options=c('smartypants')))
 
 rm(mkd)
 

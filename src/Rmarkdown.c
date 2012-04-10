@@ -15,28 +15,22 @@
 
 #define READ_UNIT 1024
 #define OUTPUT_UNIT 64
+#define RMD_WARNING_NOMEM warning("Out of memory!")
 
 #define NREND 8
-struct rmd_renderer RENDERERS[NREND];
+static struct rmd_renderer RENDERERS[NREND];
 
-struct rmd_renderer *renderer(const char *name);
+static struct rmd_renderer *renderer(const char *name);
 
-static void html_init_args(struct sd_markdown_new_args *args,
-                           SEXP Soptions, SEXP Sextensions)
+static Rboolean render_to_html(struct buf *ib, struct buf *ob,
+                                  SEXP Soptions, SEXP Sextensions)
 {
-   struct sd_callbacks *callbacks;
-   struct html_renderopt *renderopt;
+   struct sd_callbacks callbacks;
+   struct html_renderopt renderopt;
    unsigned int exts=0, options=0;
-
-   callbacks = malloc(sizeof(struct sd_callbacks));
-   renderopt = malloc(sizeof(struct html_renderopt));
-   if (!callbacks || !renderopt)
-   {
-      if (callbacks) free(callbacks);
-      if (renderopt) free(renderopt);
-      error("malloc failure in html_init_args!");
-      return;
-   }
+   struct sd_markdown *markdown;
+   struct buf *htmlbuf;
+   Rboolean toc = FALSE, smarty = FALSE;
 
    /* Marshal extensions */
    if (isString(Sextensions))
@@ -94,7 +88,10 @@ static void html_init_args(struct sd_markdown_new_args *args,
             options |= HTML_SAFELINK;
          else if (strcasecmp(CHAR(STRING_ELT(Soptions,i)),
                         "TOC") == 0)
+         {
             options |= HTML_TOC;
+            toc = TRUE;
+         }
          else if (strcasecmp(CHAR(STRING_ELT(Soptions,i)),
                         "HARD_WRAP") == 0)
             options |= HTML_HARD_WRAP;
@@ -104,24 +101,82 @@ static void html_init_args(struct sd_markdown_new_args *args,
          else if (strcasecmp(CHAR(STRING_ELT(Soptions,i)),
                         "ESCAPE") == 0)
             options |= HTML_ESCAPE;
+         else if (strcasecmp(CHAR(STRING_ELT(Soptions,i)),
+                        "SMARTYPANTS") == 0)
+            smarty = TRUE;
       }
    }
 
-   sdhtml_renderer(callbacks, renderopt, options);
+   htmlbuf = bufnew(OUTPUT_UNIT);
+   if (!htmlbuf)
+   {
+      RMD_WARNING_NOMEM;
+      return FALSE;
+   }
 
-   args->extensions = exts;
-   args->max_nesting = 16;
-   args->callbacks = callbacks;
-   args->opaque = (void *)renderopt;
+   if (toc==TRUE)
+   {
+      struct buf *tocbuf = bufnew(OUTPUT_UNIT);
+
+      if (!tocbuf)
+      {
+         RMD_WARNING_NOMEM;
+         return FALSE;
+      }
+
+      sdhtml_toc_renderer(&callbacks, &renderopt);
+      markdown = sd_markdown_new(exts,16,&callbacks,(void *)&renderopt);
+      if (!markdown)
+      {
+         RMD_WARNING_NOMEM;
+         return FALSE;
+      }
+      
+      sd_markdown_render(tocbuf, ib->data, ib->size, markdown);
+      sd_markdown_free(markdown);
+
+      bufputs(htmlbuf,"<div id=\"toc\">\n");
+      bufputs(htmlbuf,"<div id=\"toc_header\">Table of Contents</div>\n");
+      bufput(htmlbuf,tocbuf->data,tocbuf->size);
+      bufputs(htmlbuf,"</div>\n");
+      bufputs(htmlbuf,"\n");
+      bufrelease(tocbuf);
+   }
+
+   sdhtml_renderer(&callbacks, &renderopt, options);
+
+   markdown = sd_markdown_new(exts,16,&callbacks,(void *)&renderopt);
+   if (!markdown)
+   {
+      RMD_WARNING_NOMEM;
+      return FALSE;
+   }
+
+   sd_markdown_render(htmlbuf, ib->data, ib->size, markdown);
+
+   sd_markdown_free(markdown);
+
+   if (smarty==TRUE)
+   {
+      struct buf *smartybuf = bufnew(OUTPUT_UNIT);
+      if (!smartybuf)
+      {
+         RMD_WARNING_NOMEM;
+         return FALSE;
+      }
+      sdhtml_smartypants(smartybuf,htmlbuf->data,htmlbuf->size);
+      bufrelease(htmlbuf);
+      htmlbuf = smartybuf;
+   }
+
+   bufput(ob,htmlbuf->data,htmlbuf->size);
+
+   bufrelease(htmlbuf);
+
+   return TRUE;
 }
 
-static void html_destroy_args(struct sd_markdown_new_args *args)
-{
-   free(args->callbacks);
-   free(args->opaque);
-}
-
-void init_renderer_list()
+void rmd_init_renderer_list()
 {
    int i;
    struct rmd_renderer *html;
@@ -133,13 +188,16 @@ void init_renderer_list()
    /* Add HTML renderer */
    html = &RENDERERS[0];
    html->name = "HTML";
-   html->init_args = html_init_args;
-   html->destroy_args = html_destroy_args;
+   html->render = render_to_html;
 }
 
-Rboolean register_renderer(struct rmd_renderer *renderer)
+Rboolean rmd_register_renderer(struct rmd_renderer *renderer)
 {
    int i, empty_slot = -1, name_exists = -1;
+
+   if (!renderer)
+      return FALSE;
+
    for (i=0;i<NREND;i++)
    {
       if (RENDERERS[i].name == NULL)
@@ -159,8 +217,7 @@ Rboolean register_renderer(struct rmd_renderer *renderer)
    {
       if (name_exists<0)
          RENDERERS[empty_slot].name = strdup(renderer->name);
-      RENDERERS[empty_slot].init_args = renderer->init_args;
-      RENDERERS[empty_slot].destroy_args = renderer->destroy_args;
+      RENDERERS[empty_slot].render = renderer->render;
    }
    else
    {
@@ -170,7 +227,7 @@ Rboolean register_renderer(struct rmd_renderer *renderer)
    return TRUE;
 }
 
-SEXP renderer_exists(SEXP Srenderer)
+SEXP rmd_renderer_exists(SEXP Srenderer)
 {
    SEXP ans;
 
@@ -189,7 +246,7 @@ SEXP renderer_exists(SEXP Srenderer)
    return ans;
 }
 
-struct rmd_renderer *renderer(const char *name)
+static struct rmd_renderer *renderer(const char *name)
 {
    int i;
    for (i=0;i<NREND;i++)
@@ -202,44 +259,37 @@ struct rmd_renderer *renderer(const char *name)
    return NULL;
 }
 
-SEXP render_markdown(SEXP Sfile, SEXP Soutput, SEXP Stext, SEXP Srenderer,
-                            SEXP Soptions, SEXP Sextensions)
+Rboolean rmd_input_to_buf(SEXP Sfile, SEXP Stext, struct buf *ib)
 {
-   const char *text, *name;
-   struct buf *ib, *ob;
-   struct sd_markdown_new_args args;
-   struct sd_markdown *markdown;
-
-   name = CHAR(STRING_ELT(Srenderer,0));
-
-   if (!LOGICAL(renderer_exists(Srenderer))[0])
-   {
-      error("Renderer '%s' not registered!",name);
-      return R_NilValue;
-   }
-
    /* Setup input buffer */
    if (isNull(Sfile))
    {
       int len;
-      text = CHAR(STRING_ELT(Stext,0));
+      const char *text = CHAR(STRING_ELT(Stext,0));
       len = strlen(text);
-      ib = bufnew(len);
-      bufgrow(ib,len);
-      bufput(ib,(const void *)text,len);
+      if (len > 0)
+      {
+         bufgrow(ib,len);
+         bufput(ib,(const void *)text,len);
+      }
+      else
+      {
+         warning("Input text is zero length!");
+         return FALSE;
+      }
    } 
    else
    {
       FILE *in;
       size_t ret;
-      text = CHAR(STRING_ELT(Sfile,0));
-      in = fopen(text,"r");
+      const char *file = CHAR(STRING_ELT(Sfile,0));
+
+      in = fopen(file,"r");
       if (!in)
       {
-         error("Cannot open %s!", text);
-         return R_NilValue;
+         warning("Cannot open %s!", file);
+         return FALSE;
       }
-      ib = bufnew(READ_UNIT);
       bufgrow(ib, READ_UNIT);
       while ((ret = fread(ib->data + ib->size, 1, ib->asize - ib->size,
                           in)) > 0) {
@@ -249,26 +299,17 @@ SEXP render_markdown(SEXP Sfile, SEXP Soutput, SEXP Stext, SEXP Srenderer,
       fclose(in);
    }
 
-   ob = bufnew(OUTPUT_UNIT);
-   renderer(name)->init_args(&args,Soptions,Sextensions);
-   markdown = sd_markdown_new(args.extensions,args.max_nesting,args.callbacks,
-                              args.opaque);
+   return TRUE;
+}
 
-   sd_markdown_render(ob, ib->data, ib->size, markdown);
-
-   sd_markdown_free(markdown);
-   renderer(name)->destroy_args(&args);
-   bufrelease(ib);
-
+Rboolean rmd_buf_to_output(struct buf *ob, SEXP Soutput, SEXP *raw_vec)
+{
    /* Output */
    if (isNull(Soutput))
    {
-      SEXP ans;
-      PROTECT(ans = allocVector(RAWSXP, ob->size));
-      memcpy(RAW(ans),ob->data,ob->size);
+      PROTECT(*raw_vec = allocVector(RAWSXP, ob->size));
+      memcpy(RAW(*raw_vec),ob->data,ob->size);
       UNPROTECT(1);
-      bufrelease(ob);
-      return ans;
    }
    else
    {
@@ -277,16 +318,104 @@ SEXP render_markdown(SEXP Sfile, SEXP Soutput, SEXP Stext, SEXP Srenderer,
       size_t ret;
       if (!out)
       {
-         error("Cannot save output to %s!", filename);
-         bufrelease(ob);
-         return R_NilValue;
+         warning("Cannot save output to %s!", filename);
+         return FALSE;
       }
+
       ret = fwrite(ob->data, 1, ob->size, out);
-      if (ret < 0)
-         warning("Error occured writing to %s!", filename);
       fclose(out);
-      bufrelease(ob);
+
+      if (ret < 0)
+      {
+         warning("Error occurred writing to %s!", filename);
+         return FALSE;
+      }
    }
 
-   return R_NilValue;
+   return TRUE;
+}
+
+SEXP rmd_render_markdown(SEXP Sfile, SEXP Soutput, SEXP Stext, SEXP Srenderer,
+                            SEXP Soptions, SEXP Sextensions)
+{
+   const char *name;
+   struct buf *ib, *ob;
+   SEXP ret_val = R_NilValue;
+   Rboolean success;
+
+   name = CHAR(STRING_ELT(Srenderer,0));
+
+   if (!LOGICAL(rmd_renderer_exists(Srenderer))[0])
+   {
+      error("Renderer '%s' not registered!",name);
+      return R_NilValue;
+   }
+
+   ib = bufnew(READ_UNIT);
+   if (!ib)
+      error("Out of memory!");
+
+   success = rmd_input_to_buf(Sfile,Stext,ib);
+   if (!success)
+   {
+      bufrelease(ib);
+      error("Input error!");
+   }
+
+   ob = bufnew(OUTPUT_UNIT);
+   if (!ob)
+      error("Out of memory!");
+
+   success = renderer(name)->render(ib,ob,Soptions,Sextensions);
+   if (!success)
+   {
+      bufrelease(ib);
+      bufrelease(ob);
+      error("Render error!");
+   }
+
+   success = rmd_buf_to_output(ob,Soutput,&ret_val);
+
+   bufrelease(ib);
+   bufrelease(ob);
+
+   if (!success)
+      error("Output error!");
+
+   return ret_val;
+}
+
+SEXP rmd_render_smartypants(SEXP Sfile, SEXP Soutput, SEXP Stext)
+{
+   struct buf *ib, *ob;
+   SEXP ret_val = R_NilValue;
+   Rboolean success;
+
+   ib = bufnew(READ_UNIT);
+   if (!ib)
+      error("Out of memory!");
+
+   success = rmd_input_to_buf(Sfile, Stext, ib);
+
+   if (!success)
+   {
+      bufrelease(ib);
+      error("Input error!");
+   }
+
+   ob = bufnew(OUTPUT_UNIT);
+   if (!ob)
+      error("Out of memory!");
+
+   sdhtml_smartypants(ob,ib->data,ib->size);
+
+   success = rmd_buf_to_output(ob,Soutput,&ret_val);
+
+   bufrelease(ib);
+   bufrelease(ob);
+
+   if (!success)
+      error("Output error!");
+
+   return ret_val;
 }

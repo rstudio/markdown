@@ -17,8 +17,9 @@
 
 #define CALLDEF(name, n) {#name,(DL_FUNC) &name, n}
 static R_CallMethodDef CallEntries[] = {
-   CALLDEF(render_markdown,6),
-   CALLDEF(renderer_exists,1),
+   CALLDEF(rmd_render_markdown,6),
+   CALLDEF(rmd_renderer_exists,1),
+   CALLDEF(rmd_render_smartypants,3),
    {NULL,NULL,0}
 };
 
@@ -27,7 +28,7 @@ void R_init_markdown(DllInfo *dll)
    R_registerRoutines(dll,NULL,CallEntries, NULL, NULL);
    R_useDynamicSymbols(dll, FALSE);
 
-   init_renderer_list();
+   rmd_init_renderer_list();
 
    /* Callable functions from other packages' C code */
 #define RREGDEF(name) R_RegisterCCallable("markdown", #name, (DL_FUNC) name)
@@ -51,4 +52,10 @@ void R_init_markdown(DllInfo *dll)
    RREGDEF(sd_markdown_render);
    RREGDEF(sd_markdown_free);
    RREGDEF(sd_version);
+
+   /* markdown C calls */
+   RREGDEF(rmd_register_renderer);
+   RREGDEF(rmd_renderer_exists);
+   RREGDEF(rmd_input_to_buf);
+   RREGDEF(rmd_buf_to_output);
 }

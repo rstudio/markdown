@@ -16,24 +16,23 @@
 #include "markdown.h"
 #include "html.h"
 
-struct sd_markdown_new_args {
-   unsigned int extensions;
-   size_t max_nesting;
-   struct sd_callbacks *callbacks;
-   void *opaque;
-};
-
 struct rmd_renderer {
    char *name;
-   void (*init_args)(struct sd_markdown_new_args *,SEXP, SEXP);
-   void (*destroy_args)(struct sd_markdown_new_args *);
+   Rboolean (*render)(struct buf *,struct buf *, SEXP, SEXP);
 };
 
-extern void init_renderer_list();
+extern void rmd_init_renderer_list();
 
-extern Rboolean register_renderer(struct rmd_renderer *);
+extern Rboolean rmd_buf_to_output(struct buf *, SEXP, SEXP *);
 
-extern SEXP render_markdown(SEXP Sfile, SEXP Soutput, SEXP Stext,
+extern Rboolean rmd_input_to_buf(SEXP, SEXP, struct buf *);
+
+extern Rboolean rmd_register_renderer(struct rmd_renderer *);
+
+extern SEXP rmd_render_markdown(SEXP Sfile, SEXP Soutput, SEXP Stext,
                             SEXP Srenderer, SEXP Srender_options,
                             SEXP Soptions);
-extern SEXP renderer_exists(SEXP name);
+
+extern SEXP rmd_renderer_exists(SEXP name);
+
+extern SEXP rmd_render_smartypants(SEXP Sfile, SEXP Soutput, SEXP Stext);

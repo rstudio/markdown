@@ -3,6 +3,7 @@ export(
    "markdownHTMLOptions",
    "markdownToHTML",
    "rendererExists",
-   "renderMarkdown"
+   "renderMarkdown",
+   "smartypants"
 )
 useDynLib(markdown,.registration=TRUE)

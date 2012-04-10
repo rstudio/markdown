@@ -119,4 +119,11 @@ cat(markdownToHTML(text=mkd,options=c('skip_html')))
 # overrides all 'skip_*' options
 cat(markdownToHTML(text=mkd,options=c('skip_html','escape')))
 
+# smartypants example
+cat(markdownToHTML(text='1/2 (c)',options=c('')))
+cat(markdownToHTML(text='1/2 (c)',options=c('smartypants')))
+
+cat(smartypants(text='1/2 (c)\n'))
+
+
 rm(mkd)

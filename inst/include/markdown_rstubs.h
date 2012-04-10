@@ -20,92 +20,106 @@
 extern "C" {
 #endif
 
-Rboolean rmd_register_renderer(struct rmd_renderer *renderer);
-#define register_renderer rmd_register_renderer
-
 /* bufgrow: increasing the allocated size to the given value */
-int rmd_bufgrow(struct buf *, size_t);
-#define bufgrow rmd_bufgrow
+int rstub_bufgrow(struct buf *, size_t);
+#define bufgrow rstub_bufgrow
 
 /* bufnew: allocation of a new buffer */
-struct buf *rmd_bufnew(size_t) __attribute__ ((malloc));
-#define bufnew rmd_bufnew
+struct buf *rstub_bufnew(size_t) __attribute__ ((malloc));
+#define bufnew rstub_bufnew
 
 /* bufnullterm: NUL-termination of the string array (making a C-string) */
-const char *rmd_bufcstr(struct buf *);
-#define bufcstr rmd_bufcstr
+const char *rstub_bufcstr(struct buf *);
+#define bufcstr rstub_bufcstr
 
 /* bufprefix: compare the beginning of a buffer with a string */
-int rmd_bufprefix(const struct buf *buf, const char *prefix);
-#define bufprefix rmd_bufprefix
+int rstub_bufprefix(const struct buf *buf, const char *prefix);
+#define bufprefix rstub_bufprefix
 
 /* bufput: appends raw data to a buffer */
-void rmd_bufput(struct buf *, const void *, size_t);
-#define bufput rmd_bufput
+void rstub_bufput(struct buf *, const void *, size_t);
+#define bufput rstub_bufput
 
 /* bufputs: appends a NUL-terminated string to a buffer */
-void rmd_bufputs(struct buf *, const char *);
-#define bufputs rmd_bufputs
+void rstub_bufputs(struct buf *, const char *);
+#define bufputs rstub_bufputs
 
 /* bufputc: appends a single char to a buffer */
-void rmd_bufputc(struct buf *, int);
-#define bufputc rmd_bufputc
+void rstub_bufputc(struct buf *, int);
+#define bufputc rstub_bufputc
 
 /* bufrelease: decrease the reference count and free the buffer if needed */
-void rmd_bufrelease(struct buf *);
-#define bufrelease rmd_bufrelease
+void rstub_bufrelease(struct buf *);
+#define bufrelease rstub_bufrelease
 
 /* bufreset: frees internal data of the buffer */
-void rmd_bufreset(struct buf *);
-#define bufreset rmd_bufreset
+void rstub_bufreset(struct buf *);
+#define bufreset rstub_bufreset
 
 /* bufslurp: removes a given number of bytes from the head of the array */
-void rmd_bufslurp(struct buf *, size_t);
-#define bufslurp rmd_bufslurp
+void rstub_bufslurp(struct buf *, size_t);
+#define bufslurp rstub_bufslurp
 
 /* bufprintf: formatted printing to a buffer */
-void rmd_bufprintf(struct buf *, const char *, ...) __attribute__ ((format (printf, 2, 3)));
-#define bufprintf rmd_bufprintf
+void rstub_bufprintf(struct buf *, const char *, ...) __attribute__ ((format (printf, 2, 3)));
+#define bufprintf rstub_bufprintf
 
 extern int
-rmd_sd_autolink_issafe(const uint8_t *link, size_t link_len);
-#define sd_autolink_issafe rmd_sd_autolink_issafe
+rstub_sd_autolink_issafe(const uint8_t *link, size_t link_len);
+#define sd_autolink_issafe rstub_sd_autolink_issafe
 
 extern size_t
-rmd_sd_autolink__www(size_t *rewind_p, struct buf *link, uint8_t *data,
+rstub_sd_autolink__www(size_t *rewind_p, struct buf *link, uint8_t *data,
                      size_t offset, size_t size);
-#define sd_autolink__www rmd_sd_autolink__www
+#define sd_autolink__www rstub_sd_autolink__www
 
 extern size_t
-rmd_sd_autolink__email(size_t *rewind_p, struct buf *link, uint8_t *data,
+rstub_sd_autolink__email(size_t *rewind_p, struct buf *link, uint8_t *data,
                        size_t offset, size_t size);
-#define sd_autolink__email rmd_sd_autolink__email
+#define sd_autolink__email rstub_sd_autolink__email
 
 extern size_t
-rmd_sd_autolink__url(size_t *rewind_p, struct buf *link, uint8_t *data,
+rstub_sd_autolink__url(size_t *rewind_p, struct buf *link, uint8_t *data,
                      size_t offset, size_t size);
-#define sd_autolink__url rmd_sd_autolink__url
+#define sd_autolink__url rstub_sd_autolink__url
 
 extern struct sd_markdown *
-rmd_sd_markdown_new(
+rstub_sd_markdown_new(
 	unsigned int extensions,
 	size_t max_nesting,
 	const struct sd_callbacks *callbacks,
 	void *opaque);
-#define sd_markdown_new rmd_sd_markdown_new
+#define sd_markdown_new rstub_sd_markdown_new
 
 extern void
-rmd_sd_markdown_render(struct buf *ob, const uint8_t *document, size_t doc_size,
+rstub_sd_markdown_render(struct buf *ob, const uint8_t *document, size_t doc_size,
                        struct sd_markdown *md);
-#define sd_markdown_render rmd_sd_markdown_render
+#define sd_markdown_render rstub_sd_markdown_render
 
 extern void
-rmd_sd_markdown_free(struct sd_markdown *md);
-#define sd_markdown_free rmd_sd_markdown_free
+rstub_sd_markdown_free(struct sd_markdown *md);
+#define sd_markdown_free rstub_sd_markdown_free
 
 extern void
-rmd_sd_version(int *major, int *minor, int *revision);
-#define sd_version rmd_sd_version
+rstub_sd_version(int *major, int *minor, int *revision);
+#define sd_version rstub_sd_version
+
+struct rmd_renderer {
+   char *name;
+   Rboolean (*render)(struct buf *,struct buf *, SEXP, SEXP);
+};
+
+Rboolean rstub_rmd_register_renderer(struct rmd_renderer *);
+#define rmd_register_renderer rstub_rmd_register_renderer
+
+SEXP rstub_rmd_renderer_exists(SEXP);
+#define rmd_renderer_exists rstub_rmd_renderer_exists
+
+Rboolean rstub_rmd_buf_to_output(struct buf *, SEXP, SEXP);
+#define rmd_buf_to_output rstub_rmd_buf_to_output
+
+Rboolean rstub_rmd_input_to_buf(SEXP, SEXP, struct buf *);
+#define rmd_input_to_buf rstub_rmd_input_to_buf
 
 #ifdef __cplusplus
 }

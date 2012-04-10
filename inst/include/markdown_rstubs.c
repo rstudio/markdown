@@ -15,16 +15,7 @@
 
 #include "markdown_rstubs.h"
 
-Rboolean rmd_register_renderer(struct rmd_renderer *renderer)
-{
-   static Rboolean (*fun)(struct rmd_renderer *) = NULL;
-   if (fun==NULL)
-      fun = (Rboolean (*)(struct rmd_renderer *))
-            R_GetCCallable("markdown","register_renderer");
-   return fun(renderer);
-}
-
-int rmd_bufgrow(struct buf *buf, size_t sz)
+int rstub_bufgrow(struct buf *buf, size_t sz)
 {
    static int (*fun)(struct buf *, size_t) = NULL;
    if (fun==NULL)
@@ -32,7 +23,7 @@ int rmd_bufgrow(struct buf *buf, size_t sz)
    return fun(buf,sz);
 }
 
-struct buf *rmd_bufnew(size_t sz)
+struct buf *rstub_bufnew(size_t sz)
 {
    static struct buf *(*fun)(size_t) = NULL;
    if (fun==NULL)
@@ -40,7 +31,7 @@ struct buf *rmd_bufnew(size_t sz)
    return fun(sz);
 }
 
-const char *rmd_bufcstr(struct buf *buf)
+const char *rstub_bufcstr(struct buf *buf)
 {
    static const char *(*fun)(struct buf *) = NULL;
    if (fun==NULL)
@@ -48,7 +39,7 @@ const char *rmd_bufcstr(struct buf *buf)
    return fun(buf);
 }
 
-int rmd_bufprefix(const struct buf *buf, const char *prefix)
+int rstub_bufprefix(const struct buf *buf, const char *prefix)
 {
    static int (*fun)(const struct buf *, const char *) = NULL;
    if (fun==NULL)
@@ -56,7 +47,7 @@ int rmd_bufprefix(const struct buf *buf, const char *prefix)
    return fun(buf,prefix);
 }
 
-void rmd_bufput(struct buf *buf, const void *v, size_t sz)
+void rstub_bufput(struct buf *buf, const void *v, size_t sz)
 {
    static void (*fun)(struct buf *, const void *, size_t) = NULL;
    if (fun==NULL)
@@ -64,7 +55,7 @@ void rmd_bufput(struct buf *buf, const void *v, size_t sz)
    return fun(buf,v,sz);
 }
 
-void rmd_bufputs(struct buf *buf, const char *c)
+void rstub_bufputs(struct buf *buf, const char *c)
 {
    static void (*fun)(struct buf *, const char *) = NULL;
    if (fun==NULL)
@@ -72,7 +63,7 @@ void rmd_bufputs(struct buf *buf, const char *c)
    return fun(buf,c);
 }
 
-void rmd_bufputc(struct buf *, int i);
+void rstub_bufputc(struct buf *, int i);
 {
    static void (*fun)(struct buf *, int) = NULL;
    if (fun==NULL)
@@ -80,7 +71,7 @@ void rmd_bufputc(struct buf *, int i);
    return fun(buf,i);
 }
 
-void rmd_bufrelease(struct buf *buf)
+void rstub_bufrelease(struct buf *buf)
 {
    static void (*fun)(struct buf *) = NULL;
    if (fun==NULL)
@@ -88,7 +79,7 @@ void rmd_bufrelease(struct buf *buf)
    return fun(buf);
 }
    
-void rmd_bufreset(struct buf *buf)
+void rstub_bufreset(struct buf *buf)
 {
    static void (*fun)(struct buf *) = NULL;
    if (fun==NULL)
@@ -96,7 +87,7 @@ void rmd_bufreset(struct buf *buf)
    return fun(buf);
 }
 
-void rmd_bufslurp(struct buf *buf, size_t sz)
+void rstub_bufslurp(struct buf *buf, size_t sz)
 {
    static int (*fun)(struct buf *, size_t) = NULL;
    if (fun==NULL)
@@ -104,7 +95,7 @@ void rmd_bufslurp(struct buf *buf, size_t sz)
    return fun(buf,sz);
 }
 
-void rmd_bufprintf(struct buf *buf, const char *fmt, ...)
+void rstub_bufprintf(struct buf *buf, const char *fmt, ...)
 {
    va_list ap;
    static int (*fun)(struct buf *, const char *, ...) = NULL;
@@ -117,8 +108,8 @@ void rmd_bufprintf(struct buf *buf, const char *fmt, ...)
    va_end(ap);
 }
 
-extern int
-rmd_sd_autolink_issafe(const uint8_t *link, size_t link_len){
+int
+rstub_sd_autolink_issafe(const uint8_t *link, size_t link_len){
    static int (*fun)(const uint8_t *, size_t) = NULL;
    if (fun==NULL)
       fun = (int (*)(const uint8_t *, size_t))
@@ -126,8 +117,8 @@ rmd_sd_autolink_issafe(const uint8_t *link, size_t link_len){
    return fun(link,sz);
 }
 
-extern size_t
-rmd_sd_autolink__www(size_t *rewind_p, struct buf *link, uint8_t *data,
+size_t
+rstub_sd_autolink__www(size_t *rewind_p, struct buf *link, uint8_t *data,
                      size_t offset, size_t size)
 {
    static size_t (*fun)(size_t *rewind_p, struct buf *link, uint8_t *data,
@@ -139,8 +130,8 @@ rmd_sd_autolink__www(size_t *rewind_p, struct buf *link, uint8_t *data,
    return fun(rewind_p,link,data,offset,size);
 }
 
-extern size_t
-rmd_sd_autolink__email(size_t *rewind_p, struct buf *link, uint8_t *data,
+size_t
+rstub_sd_autolink__email(size_t *rewind_p, struct buf *link, uint8_t *data,
                        size_t offset, size_t size)
 {
    static size_t (*fun)(size_t *rewind_p, struct buf *link, uint8_t *data,
@@ -152,8 +143,8 @@ rmd_sd_autolink__email(size_t *rewind_p, struct buf *link, uint8_t *data,
    return fun(rewind_p,link,data,offset,size);
 }
 
-extern size_t
-rmd_sd_autolink__url(size_t *rewind_p, struct buf *link, uint8_t *data,
+size_t
+rstub_sd_autolink__url(size_t *rewind_p, struct buf *link, uint8_t *data,
                      size_t offset, size_t size)
 {
    static size_t (*fun)(size_t *rewind_p, struct buf *link, uint8_t *data,
@@ -165,8 +156,8 @@ rmd_sd_autolink__url(size_t *rewind_p, struct buf *link, uint8_t *data,
    return fun(rewind_p,link,data,offset,size);
 }
 
-extern struct sd_markdown *
-rmd_sd_markdown_new(unsigned int extensions, size_t max_nesting,
+struct sd_markdown *
+rstub_sd_markdown_new(unsigned int extensions, size_t max_nesting,
                     const struct sd_callbacks *callbacks, void *opaque)
 {
    static struct sd_markdown *(*fun)(unsigned int, size_t,
@@ -180,8 +171,8 @@ rmd_sd_markdown_new(unsigned int extensions, size_t max_nesting,
    return fun(extensions,max_nesting,callbacks,opaque);
 }
 
-extern void
-rmd_sd_markdown_render(struct buf *ob, const uint8_t *document, 
+void
+rstub_sd_markdown_render(struct buf *ob, const uint8_t *document, 
                        size_t doc_size, struct sd_markdown *md)
 {
    static void (*fun)(struct buf *, const uint8_t *, size_t,
@@ -193,22 +184,59 @@ rmd_sd_markdown_render(struct buf *ob, const uint8_t *document,
    return fun(ob,document,doc_size,md);
 }
 
-extern void
-rmd_sd_markdown_free(struct sd_markdown *md)
+void
+rstub_sd_markdown_free(struct sd_markdown *md)
 {
    static void (*fun)(struct sd_markdown *) = NULL;
    if (fun==NULL)
       fun = (void (*)(struct sd_markdown *))
-         R_GetCCallable("markdown","rmd_sd_markdown_free");
+         R_GetCCallable("markdown","sd_markdown_free");
    return fun(md);
 }
 
-extern void
-rmd_sd_version(int *major, int *minor, int *revision)
+void
+rstub_sd_version(int *major, int *minor, int *revision)
 {
    static void (*fun)(int *, int *, int *) = NULL;
    if (fun==NULL)
       fun = (void (*)(inst *, inst *, int *))
-         R_GetCCallable("markdown","rmd_sd_version");
+         R_GetCCallable("markdown","sd_version");
    return fun(major,minor,revision);
+}
+
+Rboolean rstub_rmd_register_renderer(struct rmd_renderer *renderer)
+{
+   static Rboolean (*fun)(struct rmd_renderer *) = NULL;
+   if (fun==NULL)
+      fun = (Rboolean (*)(struct rmd_renderer *))
+         R_GetCCallable("markdown","rmd_register_renderer");
+   return fun(renderer);
+}
+
+SEXP rstub_rmd_renderer_exists(SEXP name)
+{
+   static SEXP (*fun)(SEXP) = NULL;
+   if (fun==NULL)
+      fun = (SEXP (*)(SEXP))
+         R_GetCCallable("markdown","rmd_renderer_exists");
+   return fun(name);
+}
+
+Rboolean rstub_rmd_buf_to_output(struct buf *ob, SEXP Soutput, 
+                                        SEXP *raw_vec)
+{
+   static Rboolean (*fun)(struct buf *, SEXP, SEXP *) = NULL;
+   if (fun==NULL)
+      fun = (Rboolean (*fun)(struct buf *, SEXP, SEXP *))
+         R_GetCCallable("markdown","rmd_buf_to_output");
+   return fun(ob,Soutput,raw_vec);
+}
+
+Rboolean rstub_rmd_input_to_buf(SEXP Sfile, SEXP Stext, struct buf *ib)
+{
+   static Rboolean (*fun)(SEXP, SEXP, struct buf *) = NULL;
+   if (fun==NULL)
+      fun = (Rboolean (*fun)(SEXP, SEXP, struct buf *))
+         R_GetCCallable("markdown","rmd_input_to_buf");
+   return fun(Sfile,Stext,ib);
 }

@@ -2,7 +2,8 @@
 \alias{markdownExtensions}
 \title{Markdown exensions}
 \description{
-   \code{markdownExensions} returns a character vector listing all the extensions that are available in the \code{markdown} package.
+   \code{markdownExensions} returns a character vector listing all 
+   the extensions that are available in the \code{markdown} package.
 
    They are all ON by default.
 }

@@ -1,8 +1,8 @@
 
-R version 2.14.2 (2012-02-29)
+R version 2.15.0 (2012-03-30)
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
-Platform: i486-pc-linux-gnu (32-bit)
+Platform: i686-pc-linux-gnu (32-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -69,9 +69,9 @@ Content Cell  | Content Cell
 + first line.
 + ~~~
 + ",extensions=c()))
-<p>~~~
-preformated text here without having to indent
-first line.
+<p>~~~<br/>
+preformated text here without having to indent<br/>
+first line.<br/>
 ~~~</p>
 > 
 > cat(markdownToHTML(text="
@@ -103,8 +103,8 @@ first line.
 + <div>_markdown_</div>
 + extra text.
 + ",extensions=c('')))
-<p>Embedding html without surrounding with empty newline.
-<div><em>markdown</em></div>
+<p>Embedding html without surrounding with empty newline.<br/>
+<div><em>markdown</em></div><br/>
 extra text.</p>
 > cat(markdownToHTML(text="
 + Embedding html without surrounding with empty newline.
@@ -129,7 +129,7 @@ extra text.</p>
 + #Not A Header
 + because there is no space between # and N.
 + ",extensions=c('space_headers')))
-<p>#Not A Header
+<p>#Not A Header<br/>
 because there is no space between # and N.</p>
 > 
 > # superscript example
@@ -187,6 +187,21 @@ because there is no space between # and N.</p>
 
 <p>p2</p>
 > cat(markdownToHTML(text=mkd,options=c('toc')))
+<div id="toc">
+<div id="toc_header">Table of Contents</div>
+<ul>
+<li>
+<a href="#toc_0">Header 1</a>
+<ul>
+<li>
+<a href="#toc_1">Header 2</a>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+
+
 <h1 id="toc_0">Header 1</h1>
 
 <p>p1</p>
@@ -219,5 +234,18 @@ bar</p>
 > cat(markdownToHTML(text=mkd,options=c('skip_html','escape')))
 <p>&lt;style&gt;&lt;/style&gt;&lt;img src=&quot;&quot;&gt;&lt;a href=&quot;&quot;&gt;Hello&lt;/a&gt;</p>
 > 
+> # smartypants example
+> cat(markdownToHTML(text='1/2 (c)',options=c('')))
+<p>1/2 (c)</p>
+> cat(markdownToHTML(text='1/2 (c)',options=c('smartypants')))
+<p>&frac12; &copy;</p>
+> 
+> cat(smartypants(text='1/2 (c)\n'))
+&frac12; &copy;
+> 
+> 
 > rm(mkd)
 > 
+> proc.time()
+   user  system elapsed 
+  0.448   0.036   0.461 

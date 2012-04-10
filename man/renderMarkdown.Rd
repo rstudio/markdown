@@ -19,7 +19,7 @@ renderMarkdown(file, output, text, renderer='HTML',
       read from. If it is omitted from the argument list, then it is
       presumed that the \code{text} argument will be used instead.}
    \item{output}{a character string giving the pathname of the file to
-      write to. If it is omitted, then it is presumed that the use expects
+      write to. If it is omitted, then it is presumed that the user expects
       the results returned as a \code{"raw"} vector.}
    \item{text}{a character vector containing the \emph{markdown} text to
       transform.}

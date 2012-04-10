@@ -13,7 +13,7 @@
 
 rendererExists <- function(name)
 {
-   .Call(renderer_exists,name)
+   .Call(rmd_renderer_exists,name)
 }
 
 renderMarkdown <-
@@ -65,8 +65,8 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
    if (!is.null(extensions) && !is.character(extensions))
       stop("extensions must be a character vector")
 
-   invisible(.Call(render_markdown,file,output,text,renderer,renderer.options,
-                   extensions))
+   invisible(.Call(rmd_render_markdown,file,output,text,renderer,
+                   renderer.options, extensions))
 }
 
 markdownToHTML <- function(file, output, text, 
@@ -75,6 +75,37 @@ markdownToHTML <- function(file, output, text,
 {
    ret <- renderMarkdown(file,output,text,renderer="HTML",
                   renderer.options=options,extensions=extensions)
+   if (is.raw(ret))
+      ret <- rawToChar(ret)
+
+   invisible(ret)
+}
+
+smartypants <- function(file,output,text)
+{
+   # Input from either a file or character vector
+   if (!missing(file) && is.character(file) && file.exists(file))
+   {
+      text <- NULL
+   }
+   else if (!missing(text) && !is.null(text) && is.character(text))
+   {
+      file <- NULL
+      if (length(text) > 1)
+         text <- paste(text,collapse='')
+   }
+   else 
+   {
+      stop("Need input from either a file or a text string")
+   }
+
+   # Output is either returned or written to a file
+   if (missing(output))
+      output <- NULL
+   else if (!is.character(output))
+      stop("output variable must be a file name!");
+
+   ret <- .Call(rmd_render_smartypants,file,output,text)
    if (is.raw(ret))
       ret <- rawToChar(ret)
 
@@ -110,12 +141,13 @@ markdownExtensions <- function()
 markdownHTMLOptions <- function()
 {
    c('skip_html', 'skip_style', 'skip_images', 'skip_links',
-     'safelink', 'toc', 'hard_wrap', 'use_xhtml', 'escape')
+     'safelink', 'toc', 'hard_wrap', 'use_xhtml', 'escape','smartypants')
 }
 
 .onLoad <- function(libname,pkgname)
 {
    options(markdown.extensions=markdownExtensions())
+   options(markdown.HTML.options=markdownHTMLOptions()[c(5,7,8,10)])
 }
 
 .onUnload <- function(libPath)
