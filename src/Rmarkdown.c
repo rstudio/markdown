@@ -54,8 +54,8 @@ static Rboolean render_to_html(struct buf *ib, struct buf *ob,
                         "STRIKETHROUGH") == 0)
             exts |= MKDEXT_STRIKETHROUGH;
          else if (strcasecmp(CHAR(STRING_ELT(Sextensions,i)),
-                        "LAX_HTML_BLOCKS") == 0)
-            exts |= MKDEXT_LAX_HTML_BLOCKS;
+                        "LAX_SPACING") == 0)
+            exts |= MKDEXT_LAX_SPACING;
          else if (strcasecmp(CHAR(STRING_ELT(Sextensions,i)),
                         "SPACE_HEADERS") == 0)
             exts |= MKDEXT_SPACE_HEADERS;

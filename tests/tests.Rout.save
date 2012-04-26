@@ -97,7 +97,7 @@ first line.
 > cat(markdownToHTML(text="~~awesome~~",extensions=c('strikethrough')))
 <p><del>awesome</del></p>
 > 
-> # lax_html_blocks
+> # lax_spacing
 > cat(markdownToHTML(text="
 + Embedding html without surrounding with empty newline.
 + <div>_markdown_</div>
@@ -110,7 +110,7 @@ extra text.</p>
 + Embedding html without surrounding with empty newline.
 + <div>_markdown_</div>
 + extra text.
-+ ",extensions=c('lax_html_blocks')))
++ ",extensions=c('lax_spacing')))
 <p>Embedding html without surrounding with empty newline.</p>
 
 <div>_markdown_</div>

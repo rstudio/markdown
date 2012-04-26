@@ -125,7 +125,7 @@ smartypants <- function(file,output,text)
 markdownExtensions <- function()
 {
    c('no_intra_emphasis','tables','fenced_code','autolink','strikethrough',
-     'lax_html_blocks','space_headers','superscript')
+     'lax_spacing','space_headers','superscript')
 }
 
 # HTML renderer options are OFF by default

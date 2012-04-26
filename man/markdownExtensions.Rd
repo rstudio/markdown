@@ -57,7 +57,7 @@ Content Cell  | Content Cell
          create strikethrouhs by surrounding text with ~~.
       }
 
-      \item{\code{'lax_html_blocks'}}{
+      \item{\code{'lax_spacing'}}{
          allow HTML tags inside paragraphs without being surrounded 
          by newlines.
       }
@@ -142,7 +142,7 @@ cat(markdownToHTML(text="http://www.r-project.org/",
 cat(markdownToHTML(text="~~awesome~~",extensions=c()))
 cat(markdownToHTML(text="~~awesome~~",extensions=c('strikethrough')))
 
-# lax_html_blocks
+# lax_spacing
 cat(markdownToHTML(text="
 Embedding html without surrounding with empty newline.
 <div>_markdown_</div>
@@ -152,7 +152,7 @@ cat(markdownToHTML(text="
 Embedding html without surrounding with empty newline.
 <div>_markdown_</div>
 extra text.
-",extensions=c('lax_html_blocks')))
+",extensions=c('lax_spacing')))
 
 # space_headers example
 cat(markdownToHTML(text="
