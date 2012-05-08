@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -e
+
+if [ ! -d "./rstudio" ]; then
+   git clone git@github.com:rstudio/rstudio.git
+fi
+
+cd rstudio
+git checkout master
+git pull
+
+# copy files
+RESOURCES_DIR=src/cpp/session/resources
+HTML_DIR=../../inst/html
+
+cp $RESOURCES_DIR/markdown.html $HTML_DIR
+cp $RESOURCES_DIR/markdown.css $HTML_DIR
+cp $RESOURCES_DIR/r_highlight.html $HTML_DIR
+cp $RESOURCES_DIR/mathjax.html $HTML_DIR
+
+# return to tools dir
+cd ..
