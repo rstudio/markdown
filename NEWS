@@ -1,3 +1,20 @@
+			      CHANGES IN markdown VERSION 0.5
+
+NEW FEATURES
+
+  o added new html rendering options base64_images, fragment_only,
+    mathjax, and highlight_code
+
+  o added new markdown extension ignore_math
+
+MAJOR CHANGES
+
+  o removed safelink from default html rendering options
+
+BUG FIXES
+
+  o fixed syntax errors in C exports
+
 			      CHANGES IN markdown VERSION 0.4
 
 NEW FEATURES

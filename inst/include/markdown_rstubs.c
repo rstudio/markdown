@@ -213,7 +213,7 @@ Rboolean rstub_rmd_register_renderer(struct rmd_renderer *renderer)
    return fun(renderer);
 }
 
-SEXP rstub_rmd_renderer_exists(SEXP name)
+Rboolean rstub_rmd_renderer_exists(const char *name)
 {
    static SEXP (*fun)(SEXP) = NULL;
    if (fun==NULL)

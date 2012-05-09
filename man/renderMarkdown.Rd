@@ -4,8 +4,7 @@
 \description{
    \code{renderMarkdown} transforms the \emph{markdown} text provided by the
    user in either the \code{file} or \code{text} variable. The transformation is
-   either written to the \code{output} file or returned to the user as a 
-   \code{"raw"} vector.
+   either written to the \code{output} file or returned to the user.
 
    The default rendering target is "HTML".
 }
@@ -35,7 +34,8 @@ renderMarkdown(file, output, text, renderer='HTML',
 }
 \value{
    \code{renderMarkdown} returns NULL invisibly when output is to a file, and
-   a \code{"raw"} vector otherwise.
+   either \code{"character"} or \code{"raw"} vector depending on the renderer
+   output type.
 }
 \details{
    \code{markdown} uses (and ships with) the popular Sundown library provided
@@ -59,7 +59,7 @@ renderMarkdown(file, output, text, renderer='HTML',
 
 \examples{
 
-rawToChar(renderMarkdown(text='Hello World!'))
+renderMarkdown(text='Hello World!')
 
 }
 \keyword{programming}

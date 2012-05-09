@@ -114,7 +114,7 @@ struct rmd_renderer {
 Rboolean rstub_rmd_register_renderer(struct rmd_renderer *);
 #define rmd_register_renderer rstub_rmd_register_renderer
 
-SEXP rstub_rmd_renderer_exists(SEXP);
+Rboolean rstub_rmd_renderer_exists(const char *);
 #define rmd_renderer_exists rstub_rmd_renderer_exists
 
 Rboolean rstub_rmd_buf_to_output(struct buf *, SEXP, SEXP *);

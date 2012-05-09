@@ -3,6 +3,8 @@ export(
    "markdownHTMLOptions",
    "markdownToHTML",
    "rendererExists",
+   "registeredRenderers",
+   "rendererOutputType",
    "renderMarkdown",
    "smartypants"
 )

@@ -11,9 +11,119 @@
 #
 #
 
+
+registeredRenderers <- function() .Call(rmd_registered_renderers)
+
 rendererExists <- function(name)
 {
-   .Call(rmd_renderer_exists,name)
+   name[1] %in% registeredRenderers()
+}
+
+rendererOutputType <- function(name)
+{
+   rnds <- registeredRenderers()
+   if (!name[1] %in% rnds)
+   {
+      warning("Renderer is not registered!")
+      return('')
+   }
+   names(which(rnds==name[1]))
+}
+
+# Basic GUID generator
+#
+# set.seed(2); x <- runif(10^5,0,1); length(unique(sort(x))) == length(x)
+# is TRUE, so we get 10^5 unique strings. Any more than that and we
+# get duplicates.
+#
+
+.GUIDgenerator <- function(){
+
+   GUIDgen <- list(nguid=0,prefix=0,old.seed=NULL)
+   prefix <- 'markdown_math'
+
+   if (exists('.Random.seed',globalenv()))
+      GUIDgen$old.seed <- get('.Random.seed',globalenv())
+
+   set.seed(2)
+
+   GUIDgen$restoreOldSeed <- function()
+   {
+      if (!is.null(GUIDgen$old.seed))
+         assign('.Random.seed',GUIDgen$old.seed,globalenv())
+      else
+         suppressWarnings(rm(list='.Random.seed',envir=globalenv()))
+   }
+
+   GUIDgen$GUID <- function()
+   {
+
+      if (GUIDgen$nguid!=0 && (GUIDgen$nguid %% 10^5) == 0)
+      {
+         GUIDgen$prefix <<- GUIDgen$prefix + 1
+         set.seed(2)
+      }
+
+      guid <- paste(prefix,GUIDgen$prefix,
+                    format(runif(1,0,1),digits=22,scientific=FALSE),sep='_')
+
+      GUIDgen$nguid <<- GUIDgen$nguid + 1
+
+      guid
+   }
+
+   GUIDgen
+}
+
+.filterMath <- function(file,text)
+{
+   if (!is.null(file))
+      text <- paste(readLines(file),collapse='\n')
+
+   if (nchar(text)==0)
+      stop("Input is empty!")
+
+   mFilter <- list(text=text, mathEnv=new.env(hash=TRUE))
+   gg <- .GUIDgenerator()
+   on.exit(gg$restoreOldSeed())
+
+   regexprs <- c( "\\${2}[^$]+\\${2}" , "\\$\\S[^$\n]+\\S\\$" )
+
+   for (r in regexprs)
+   {
+      matches <- gregexpr(r,mFilter$text)
+      if (matches[[1]][1] != -1)
+      {
+         guids <- unlist(lapply(seq_along(matches[[1]]),function(i)gg$GUID()))
+         guidStr <- regmatches(mFilter$text,matches)[[1]]
+         lapply(seq_along(guids),
+                function(i) assign(guids[i],guidStr[i],mFilter$mathEnv))
+         tmpText <- mFilter$text
+         regmatches(tmpText,matches) <- list(guids)
+         mFilter$text <- tmpText
+      }
+   }
+
+   mFilter
+}
+
+.unfilterMath <- function(mFilter)
+{
+
+   text <- mFilter$text
+
+   for (s in ls(envir=mFilter$mathEnv))
+   {
+      text <- sub(s,get(s,mFilter$mathEnv),text)
+   }
+
+   if (!is.null(mFilter$outputFile))
+   {
+      cat(text,file=mFilter$outputFile)
+      NULL
+   }
+   else
+      text
 }
 
 renderMarkdown <-
@@ -39,13 +149,13 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
    }
    else 
    {
-      stop("Need input from either a file or a text string")
+      stop("Need input from either a file or a text string!")
    }
 
    # Output is either returned or written to a file
    if (missing(output))
       output <- NULL
-   else if (!is.character(output))
+   else if (!is.null(output) && !is.character(output))
       stop("output variable must be a file name!");
 
 
@@ -65,18 +175,115 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
    if (!is.null(extensions) && !is.character(extensions))
       stop("extensions must be a character vector")
 
-   invisible(.Call(rmd_render_markdown,file,output,text,renderer,
-                   renderer.options, extensions))
+   if ('ignore_math' %in% extensions)
+   {
+      if (rendererOutputType(renderer) != 'character')
+      {
+         warning("Ignoring extension 'ignore_math'. Only works for renderers that output text.")
+      } 
+      else
+      {
+         mFilter <- .filterMath(file,text)
+         text <- mFilter$text
+         file <- NULL
+         if (!is.null(output))
+         {
+            mFilter$outputFile <- output
+            output <- NULL
+         }
+
+      }
+   }
+
+   ret <- .Call(rmd_render_markdown,file,output,text,renderer,
+                   renderer.options, extensions)
+
+   if ('ignore_math' %in% extensions && 
+       rendererOutputType(renderer)=='character')
+   {
+      mFilter$text <- rawToChar(ret);
+      ret <- .unfilterMath(mFilter)
+   }
+
+   if (is.raw(ret) && rendererOutputType(renderer)=='character')
+      ret <- rawToChar(ret)
+
+   invisible(ret)
 }
 
 markdownToHTML <- function(file, output, text, 
                            options=getOption('markdown.HTML.options'),
-                           extensions=getOption('markdown.extensions'))
+                           extensions=getOption('markdown.extensions'),
+                           title='', 
+                           stylesheet=system.file('html/markdown.css',package='markdown'))
 {
+   if (!'fragment_only' %in% options)
+   {
+      if (!missing(output))
+      {
+         outputFile <- output
+         output <- NULL
+      } 
+      else
+         outputFile <- NULL
+   }
+
    ret <- renderMarkdown(file,output,text,renderer="HTML",
                   renderer.options=options,extensions=extensions)
-   if (is.raw(ret))
-      ret <- rawToChar(ret)
+
+   if (!'fragment_only' %in% options)
+   {
+      html <- paste(readLines(
+              system.file('html/markdown.html',package='markdown')),collapse='\n')
+      html <- sub('#!html_output#',ret,html,fixed=TRUE)
+
+      if (is.character(stylesheet)){
+
+         # TODO - what to do if user misspelled file name?
+         if (file.exists(stylesheet))
+            stylesheet <- paste(readLines(stylesheet),collapse='\n')
+
+         html <- sub('#!markdown_css#',stylesheet,html,fixed=TRUE)
+
+      } else {
+        warning("stylsheet must either be valid CSS or a file containint CSS!")
+      }
+
+      if (!is.character(title) || title == '')
+      {
+         # Guess title
+         m <- regexpr("<[Hh][1-6].*?>(.*)</[Hh][1-6].*?>",html,perl=TRUE)
+         if (m > -1){
+            title <- regmatches(html,m)
+            title <- sub("<[Hh][1-6].*?>","",title)
+            title <- sub("</[Hh][1-6].*?>","",title)
+         } else {
+            title <- ''
+         }
+      }
+
+      # Need to scrub title more, e.g. strip html, etc.
+      html <- sub("#!title#",title,html,perl=TRUE)
+
+      if ('highlight_code' %in% options){
+         highlight <- paste(readLines(system.file('html/r_highlight.html',package='markdown')),collapse='\n')
+      } else {
+         highlight <- ''
+      }
+      html <- sub("#!r_highlight#",highlight,html,fixed=TRUE)
+
+      if ('mathjax' %in% options){
+         mathjax <- paste(readLines(system.file('html/mathjax.html',package='markdown')),collapse='\n')
+      } else {
+         mathjax <- ''
+      }
+      html <- sub("#!mathjax#",mathjax,html,fixed=TRUE)
+
+      if (is.character(outputFile))
+         cat(html,file=outputFile)
+      else
+         ret <- html
+   }
 
    invisible(ret)
 }
@@ -112,7 +319,7 @@ smartypants <- function(file,output,text)
    invisible(ret)
 }
 
-# Markdown extensions are ON by default
+# Markdown extensions.
 #
 # To turn on all extensions:
 #
@@ -125,10 +332,10 @@ smartypants <- function(file,output,text)
 markdownExtensions <- function()
 {
    c('no_intra_emphasis','tables','fenced_code','autolink','strikethrough',
-     'lax_spacing','space_headers','superscript')
+     'lax_spacing','space_headers','superscript','ignore_math')
 }
 
-# HTML renderer options are OFF by default
+# HTML renderer options.
 #
 # To turn on all options:
 #
@@ -140,14 +347,15 @@ markdownExtensions <- function()
 #
 markdownHTMLOptions <- function()
 {
-   c('skip_html', 'skip_style', 'skip_images', 'skip_links',
-     'safelink', 'toc', 'hard_wrap', 'use_xhtml', 'escape','smartypants')
+   c('skip_html', 'skip_style', 'skip_images', 'skip_links', 'safelink',
+     'toc', 'hard_wrap', 'use_xhtml', 'escape','smartypants','base64_images',
+     'fragment_only','mathjax','highlight_code')
 }
 
 .onLoad <- function(libname,pkgname)
 {
    options(markdown.extensions=markdownExtensions())
-   options(markdown.HTML.options=markdownHTMLOptions()[c(5,7,8,10)])
+   options(markdown.HTML.options=markdownHTMLOptions()[c(7,8,10)])
 }
 
 .onUnload <- function(libPath)

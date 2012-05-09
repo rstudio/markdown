@@ -10,7 +10,9 @@
 \usage{
 markdownToHTML(file, output, text, 
                options=getOption('markdown.HTML.options'),
-               extensions=getOption('markdown.extensions'))
+               extensions=getOption('markdown.extensions'),
+               title='',
+               stylesheet=system.file('html/markdown.css',package='markdown'))
 }
 \arguments{
    \item{file}{a character string giving the pathname of the file to
@@ -25,6 +27,9 @@ markdownToHTML(file, output, text,
       see \code{\link{markdownHTMLOptions}}.}
    \item{extensions}{options that are passed to the \emph{markdown} engine. See
       \code{\link{markdownExtensions}}.}
+   \item{title}{The HTML title.}
+   \item{stylesheet}{either valid CSS or a file containing CSS. will be included
+      the output.}
 }
 \value{
    \code{renderMarkdown} returns NULL invisibly when output is to a file, and
