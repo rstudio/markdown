@@ -12,7 +12,7 @@ git pull
 
 # copy files
 RESOURCES_DIR=src/cpp/session/resources
-HTML_DIR=../../inst/html
+HTML_DIR=../../inst/resources
 
 cp $RESOURCES_DIR/markdown.html $HTML_DIR
 cp $RESOURCES_DIR/markdown.css $HTML_DIR

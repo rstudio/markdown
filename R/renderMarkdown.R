@@ -170,7 +170,7 @@ markdownToHTML <- function(file, output, text,
                            options=getOption('markdown.HTML.options'),
                            extensions=getOption('markdown.extensions'),
                            title='', 
-                           stylesheet=system.file('html/markdown.css',package='markdown'))
+                           stylesheet=system.file('resources/markdown.css',package='markdown'))
 {
    if (!'fragment_only' %in% options)
    {
@@ -189,7 +189,7 @@ markdownToHTML <- function(file, output, text,
    if (!'fragment_only' %in% options)
    {
       html <- paste(readLines(
-              system.file('html/markdown.html',package='markdown')),collapse='\n')
+              system.file('resources/markdown.html',package='markdown')),collapse='\n')
       html <- sub('#!html_output#',ret,html,fixed=TRUE)
 
       if (is.character(stylesheet)){
@@ -221,14 +221,14 @@ markdownToHTML <- function(file, output, text,
       html <- sub("#!title#",title,html,perl=TRUE)
 
       if ('highlight_code' %in% options){
-         highlight <- paste(readLines(system.file('html/r_highlight.html',package='markdown')),collapse='\n')
+         highlight <- paste(readLines(system.file('resources/r_highlight.html',package='markdown')),collapse='\n')
       } else {
          highlight <- ''
       }
       html <- sub("#!r_highlight#",highlight,html,fixed=TRUE)
 
       if ('mathjax' %in% options){
-         mathjax <- paste(readLines(system.file('html/mathjax.html',package='markdown')),collapse='\n')
+         mathjax <- paste(readLines(system.file('resources/mathjax.html',package='markdown')),collapse='\n')
       } else {
          mathjax <- ''
       }
