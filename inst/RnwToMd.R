@@ -2,6 +2,17 @@
 RweaveMarkdownDriver <- function()
 {
    commandEnv <- new.env()
+
+   with(commandEnv,
+      `unwrap` <- function(matchedString)
+      {
+         ret <- regmatches(matchedString,regexpr("\\{[^{}]+\\}",matchedString))
+         ret <- gsub("[{}]","",ret)
+         ret <- gsub("\\n"," ",ret)
+         ret
+      }
+   )
+
    with(commandEnv,
       `documentclass` <- function(matchedString) ''
    )
@@ -16,35 +27,42 @@ RweaveMarkdownDriver <- function()
    with(commandEnv,
       `title` <- function(matchedString)
       {
-         sub("\\\\title\\{\\s*([^}]+)\\s*\\}","\n# \\1\n",matchedString)
+         paste("\n# ",unwrap(matchedString),"\n",sep='')
+      }
+   )
+
+   with(commandEnv,
+      `author` <- function(matchedString)
+      {
+         paste("\n### By ",unwrap(matchedString),"\n",sep='')
       }
    )
 
    with(commandEnv,
       `section` <- function(matchedString)
       {
-         sub("\\\\section\\{\\s*([^}]+)\\s*\\}","\n## \\1\n",matchedString)
+         paste("##",unwrap(matchedString),"\n")
       }
    )
 
    with(commandEnv,
       `subsection` <- function(matchedString)
       {
-         sub("\\\\subsection\\{\\s*([^}]+)\\s*\\}","\n### \\1\n",matchedString)
+         paste("###",unwrap(matchedString),"\n")
       }
    )
 
    with(commandEnv,
       `texttt` <- function(matchedString)
       {
-         sub("\\\\texttt\\{\\s*([^}]+)\\s*\\}","`\\1`",matchedString)
+         paste("`",unwrap(matchedString),"`",sep='')
       }
    )
 
    with(commandEnv,
       `begin` <- function(matchedString)
       {
-         cmd <- sub("\\\\begin\\{\\s*([^}]+)\\s*\\}\\s*","\\1",matchedString)
+         cmd <- unwrap(matchedString)
          if (grepl('verbatim',cmd,ignore.case=TRUE)==TRUE)
             return('```\n')
          else
@@ -55,7 +73,7 @@ RweaveMarkdownDriver <- function()
    with(commandEnv,
       `end` <- function(matchedString)
       {
-         cmd <- sub("\\\\end\\{\\s*([^}]+)\\s*\\}\\s*","\\1",matchedString)
+         cmd <- unwrap(matchedString)
          if (grepl('verbatim',cmd,ignore.case=TRUE)==TRUE)
             return('\n```\n')
          else
@@ -63,9 +81,63 @@ RweaveMarkdownDriver <- function()
       }
    )
 
-   transformChunk <- function(fun,matchedString){
-      if (exists(fun,commandEnv) && is.function(get(fun,commandEnv))){
+   with(commandEnv,
+      `pkg` <- function(matchedString)
+      {
+         paste("**",unwrap(matchedString),"**",sep='')
+      }
+   )
+
+   with(commandEnv,
+      `proglang` <- function(matchedString)
+      {
+         paste("**",unwrap(matchedString),"**",sep='')
+      }
+   )
+
+   with(commandEnv,
+      `emph` <- function(matchedString)
+      {
+         paste("**",unwrap(matchedString),"**",sep='')
+      }
+   )
+
+   with(commandEnv,
+      `citep` <- function(matchedString)
+      {
+         paste("[",unwrap(matchedString),"]",sep='')
+      }
+   )
+
+   with(commandEnv,
+      `cite` <- function(matchedString)
+      {
+         paste("[",unwrap(matchedString),"]",sep='')
+      }
+   )
+
+   with(commandEnv,
+      `doublebslash` <- function(matchedString)
+      {
+         sub("(\\w+)\\\\\\\\(\\w+)?","\\1 \\2",matchedString)
+      }
+   )
+
+   with(commandEnv,
+      `eliminate` <- function(matchedString)
+      {
+         ''
+      }
+   )
+
+
+   transformChunk <- function(fun,matchedString,reg){
+      if (!is.null(reg$replace)){
+         sub(reg$reg,reg$replace,matchedString,perl=TRUE)
+      } else if (exists(fun,commandEnv,inherits=FALSE) && is.function(get(fun,commandEnv))){
          do.call(fun,list(matchedString),envir=commandEnv)
+      } else if (!is.null(reg$final)){
+         do.call(reg$final,list(matchedString),envir=commandEnv)
       } else {
          #cat('ignoreing <',matchedString,'>\n')
          # Would be nice to do the following
@@ -97,7 +169,7 @@ RweaveMarkdownDriver <- function()
          with(drobj$debugEnv,code[length(code)+1] <- paste(chunk,collapse='\n'))
          return(drobj)
       }
-      cat('``` {r}\n',file=drobj$output)
+      cat('\n``` {r}\n',file=drobj$output)
       cat(chunk[2:length(chunk)],sep='\n',file=drobj$output)
       cat('```\n',file=drobj$output)
 
@@ -117,13 +189,115 @@ RweaveMarkdownDriver <- function()
 
       regs <- list(
             list(
+               reg = "\\s*\\\\documentclass[^\n]*\n",
+               fun = "eliminate"
+            ),
+            list(
+               reg = "\\s*\\\\usepackage[^\n]*\n",
+               fun = "eliminate"
+            ),
+            list(
+               reg = "\\s*\\\\newcommand[^\n]*\n",
+               fun = "eliminate"
+            ),
+            list(
+               reg = "\\s*\\\\definecolor[^\n]*\n",
+               fun = "eliminate"
+            ),
+            list(
+               reg = "\\s*\\\\setlength[^\n]*\n",
+               fun = "eliminate"
+            ),
+            list(
+               reg = "\\s*\\\\bibliography[^\n]*\n",
+               fun = "eliminate"
+            ),
+            list(
+               reg = "\\s*\\\\bibliographystyle[^\n]*\n",
+               fun = "eliminate"
+            ),
+            list(
+               reg = "\\s*\\\\pagestyle[^\n]*\n",
+               fun = "eliminate"
+            ),
+            list(
+               reg = "\\s*\\\\thispagestyle[^\n]*\n",
+               fun = "eliminate"
+            ),
+            list(
+               reg = "\\s*\\\\maketitle[^\n]*\n",
+               fun = "eliminate"
+            ),
+            list(
+               reg = "\\s*\\\\renewcommand[^\n]*\n",
+               fun = "eliminate"
+            ),
+            list(
+               reg = "\\s*\\\\DeclareGraphicsExtensions[^\n]*\n",
+               fun = "eliminate"
+            ),
+            list(
+               reg = "\\s*\\\\lhead[^\n]*\n",
+               fun = "eliminate"
+            ),
+            list(
+               reg = "\\s*\\\\chead[^\n]*\n",
+               fun = "eliminate"
+            ),
+            list(
+               reg = "\\s*\\\\lfoot[^\n]*\n",
+               fun = "eliminate"
+            ),
+            list(
+               reg = "\\s*\\\\cfoot[^\n]*\n",
+               fun = "eliminate"
+            ),
+            list(
+               reg = "\\s*\\\\rfoot[^\n]*\n",
+               fun = "eliminate"
+            ),
+
+            list(
+               reg = "\\s*\\\\newpage[^\n]*\n",
+               replace = "\n***\n"
+            ),
+
+            list(
+               reg = "\\s*\\\\clearpage[^\n]*\n",
+               replace = "\n***\n"
+            ),
+
+            list(
+               reg ="\\s+(\\\\And)",
+               replace = " &"
+            ),
+
+            list(
+               reg = "(\\s+)\\\\\\\\(\\s+)",
+               replace = "\\1 \\2"
+            ),
+
+            list(
+               reg = "\\w+\\\\\\\\(\\w+)?",
+               fun = "doublebslash"
+            ),
+            list(
                reg = "\\{\\s*\\\\(\\w+)\\s+[^}]+\\}"
             ),
             list(
                reg = "\\\\(\\w+)\\{\\s*\\}"
             ),
             list(
-               reg = "\\\\(\\w+)((\\[[^]]*\\])+|\\s+|(\\{([^{}]*)\\}+))*"
+               reg = "\\\\href\\{([^{}]+)\\}\\s*\\{([^{}]+)\\}",
+               replace = "[\\2] (\\1)"
+            ),
+            list(
+               reg = "\\\\color\\{([^{}]+)\\}\\s*\\{([^{}]+)\\}",
+               replace = "\\2"
+            ),
+            list(
+               reg = "\\\\(\\w+)\\*?(\\[[^]]*\\])?\\{[^{}]*\\}",
+               final = "unwrap"
             )
       )
       for (r in regs){
@@ -132,7 +306,7 @@ RweaveMarkdownDriver <- function()
             loopIter <- loopIter - 1
             if (loopIter <=0) {
                warning("Maximum loop iterations!")
-               cat(chunk)
+               #cat(chunk)
                break
             }
             m <- regexpr(r$reg,chunk,perl=TRUE)
@@ -140,9 +314,12 @@ RweaveMarkdownDriver <- function()
 
             
             mChunk <- regmatches(chunk,m)
-            fun <- sub(r$reg,'\\1',mChunk)
+            if (!is.null(r$fun))
+               fun <- r$fun
+            else
+               fun <- sub(r$reg,'\\1',mChunk)
 
-            regmatches(chunk,m) <- transformChunk(fun,mChunk)
+            regmatches(chunk,m) <- transformChunk(fun,mChunk,r)
          }
       }
 

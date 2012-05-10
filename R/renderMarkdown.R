@@ -30,53 +30,10 @@ rendererOutputType <- function(name)
    names(which(rnds==name[1]))
 }
 
-# Basic GUID generator
-#
-# set.seed(2); x <- runif(10^5,0,1); length(unique(sort(x))) == length(x)
-# is TRUE, so we get 10^5 unique strings. Any more than that and we
-# get duplicates.
-#
-
-.GUIDgenerator <- function(){
-
-   GUIDgen <- list(nguid=0,prefix=0,old.seed=NULL)
-   prefix <- 'markdown_math'
-
-   if (exists('.Random.seed',globalenv()))
-      GUIDgen$old.seed <- get('.Random.seed',globalenv())
-
-   set.seed(2)
-
-   GUIDgen$restoreOldSeed <- function()
-   {
-      if (!is.null(GUIDgen$old.seed))
-         assign('.Random.seed',GUIDgen$old.seed,globalenv())
-      else
-         suppressWarnings(rm(list='.Random.seed',envir=globalenv()))
-   }
-
-   GUIDgen$GUID <- function()
-   {
-
-      if (GUIDgen$nguid!=0 && (GUIDgen$nguid %% 10^5) == 0)
-      {
-         GUIDgen$prefix <<- GUIDgen$prefix + 1
-         set.seed(2)
-      }
-
-      guid <- paste(prefix,GUIDgen$prefix,
-                    format(runif(1,0,1),digits=22,scientific=FALSE),sep='_')
-
-      GUIDgen$nguid <<- GUIDgen$nguid + 1
-
-      guid
-   }
-
-   GUIDgen
-}
-
 .filterMath <- function(file,text)
 {
+   gg <- .GUIDgenerator()
+
    if (!is.null(file))
       text <- paste(readLines(file),collapse='\n')
 
@@ -84,8 +41,6 @@ rendererOutputType <- function(name)
       stop("Input is empty!")
 
    mFilter <- list(text=text, mathEnv=new.env(hash=TRUE))
-   gg <- .GUIDgenerator()
-   on.exit(gg$restoreOldSeed())
 
    regexprs <- c( "\\${2}[^$]+\\${2}" , "\\$\\S[^$\n]+\\S\\$" )
 
