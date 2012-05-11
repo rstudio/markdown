@@ -12,7 +12,7 @@ markdownToHTML(file, output, text,
                options=getOption('markdown.HTML.options'),
                extensions=getOption('markdown.extensions'),
                title='',
-               stylesheet=system.file('html/markdown.css',package='markdown'))
+               stylesheet=system.file('resources/markdown.css',package='markdown'))
 }
 \arguments{
    \item{file}{a character string giving the pathname of the file to

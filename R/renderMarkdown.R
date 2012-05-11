@@ -309,12 +309,10 @@ markdownHTMLOptions <- function()
 
 .onLoad <- function(libname,pkgname)
 {
-   options(markdown.extensions=markdownExtensions())
-   options(markdown.HTML.options=markdownHTMLOptions()[c(7,8,10)])
-}
 
-.onUnload <- function(libPath)
-{
-   options(markdown.extensions=NULL)
-   options(markdown.HTML.options=NULL)
+   if (is.null(getOption('markdown.extensions')))
+      options(markdown.extensions=markdownExtensions())
+
+   if (is.null(getOption('markdown.HTML.options')))
+      options(markdown.HTML.options=markdownHTMLOptions()[c(7,8,10)])
 }
