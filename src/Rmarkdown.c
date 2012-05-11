@@ -13,11 +13,8 @@
 
 #include "Rmarkdown.h"
 
-#define READ_UNIT 1024
-#define OUTPUT_UNIT 64
-#define RMD_WARNING_NOMEM warning("Out of memory!")
-
 #define NREND 8
+
 static struct rmd_renderer RENDERERS[NREND];
 
 static struct rmd_renderer *renderer(const char *name);

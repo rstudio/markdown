@@ -169,7 +169,17 @@ RweaveMarkdownDriver <- function()
          with(drobj$debugEnv,code[length(code)+1] <- paste(chunk,collapse='\n'))
          return(drobj)
       }
-      cat('\n``` {r}\n',file=drobj$output)
+
+      opts <- ''
+      if (!is.null(chunkopts$label)){
+         opts <- chunkopts$label
+         chunkopts$label <- NULL
+      }
+      opts <- paste(opts, 
+               paste(names(chunkopts),chunkopts,sep='=',collapse=', '),
+               sep=', ')
+
+      cat('\n``` {r ',opts,'} \n',sep='',file=drobj$output)
       cat(chunk[2:length(chunk)],sep='\n',file=drobj$output)
       cat('```\n',file=drobj$output)
 
@@ -354,4 +364,15 @@ RnwToMd <- function(file,output=NULL,debug=FALSE){
       paste(paste(output,collapse='\n'),'\n')
    else
       invisible(NULL)
+}
+
+RnwToHTML <- function(file,output)
+{
+   require(knitr)
+   temp <- tempfile()
+   temp2 <- tempfile()
+   RnwToMd(file,temp)
+   knit(temp,temp2)
+   Md2HTMLPage(temp2,output)
+   unlink(c(temp,temp2))
 }

@@ -16,6 +16,10 @@
 #include "markdown.h"
 #include "html.h"
 
+#define READ_UNIT 1024
+#define OUTPUT_UNIT 64
+#define RMD_WARNING_NOMEM warning("Out of memory!")
+
 /* 
  * output_type should be either "raw" or "character"
  */
@@ -42,3 +46,5 @@ extern SEXP rmd_render_markdown(SEXP Sfile, SEXP Soutput, SEXP Stext,
                             SEXP Soptions);
 
 extern SEXP rmd_render_smartypants(SEXP Sfile, SEXP Soutput, SEXP Stext);
+
+extern SEXP rmd_b64encode_data( SEXP Sdata);

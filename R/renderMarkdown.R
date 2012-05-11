@@ -69,7 +69,7 @@ rendererOutputType <- function(name)
 
    for (s in ls(envir=mFilter$mathEnv))
    {
-      text <- sub(s,get(s,mFilter$mathEnv),text)
+      text <- sub(s,get(s,mFilter$mathEnv),text,fixed=TRUE)
    }
 
    if (!is.null(mFilter$outputFile))
@@ -166,6 +166,55 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
    invisible(ret)
 }
 
+.mimeType <- function(file){
+   if      (grepl('.png$',file,perl=TRUE,ignore.case=TRUE))
+      'image/png'
+   else if (grepl('.gif$',file,perl=TRUE,ignore.case=TRUE))
+      'image/gif'
+   else if (grepl('(.jpg$|.jpeg$)',file,perl=TRUE,ignore.case=TRUE))
+      'image/jpeg'
+   else if (grepl('.tiff?$',file,perl=TRUE,ignore.case=TRUE))
+      'image/tiff'
+   else
+      ''
+}
+
+.b64EncodeFile <- function(inFile)
+{
+   fileSize <- file.info(inFile)$size
+
+   if (fileSize > 0){
+      paste( "data:", .mimeType(inFile),";base64,",
+         .Call(rmd_b64encode_data,readBin(inFile,'raw',n=fileSize)),
+         sep='')
+   } else {
+      warning(inFile,'is empty!')
+      inFile
+   }
+}
+
+
+.b64EncodeImages <- function(html)
+{
+   reg <- "<\\s*[Ii][Mm][Gg]\\s+[Ss][Rr][Cc]\\s*=\\s*[\"']([^\"']+)[\"']"
+   m <- gregexpr(reg,html)
+   if (m[[1]][1] != -1)
+   {
+      .b64EncodeImgSrc <- function(imgSrc)
+      {
+         inFile <- sub(reg,"\\1",imgSrc)
+         if (length(inFile) && file.exists(inFile))
+            imgSrc <- sub(inFile,.b64EncodeFile(inFile),imgSrc,fixed=TRUE)
+
+         imgSrc
+      }
+      regmatches(html,m) <- lapply(regmatches(html,m)[[1]],.b64EncodeImgSrc)
+   }
+
+   html
+}
+
+
 markdownToHTML <- function(file, output, text, 
                            options=getOption('markdown.HTML.options'),
                            extensions=getOption('markdown.extensions'),
@@ -234,6 +283,14 @@ markdownToHTML <- function(file, output, text,
       }
       html <- sub("#!mathjax#",mathjax,html,fixed=TRUE)
 
+      if ('base64_images' %in% options){
+         if (!missing(file) && is.character(file) && file.exists(file)){
+            oldwd <- setwd(dirname(file))
+            on.exit(setwd(oldwd))
+         }
+         html <- .b64EncodeImages(html);
+      }
+
       if (is.character(outputFile))
          cat(html,file=outputFile)
       else
@@ -241,6 +298,31 @@ markdownToHTML <- function(file, output, text,
    }
 
    invisible(ret)
+}
+
+Md2HTMLFrag <- function(file, output, text, 
+                           options=getOption('markdown.HTML.options'),
+                           extensions=getOption('markdown.extensions'))
+{
+
+   if (!'fragment_only' %in% options)
+      options <- c(options,'fragment_only')
+
+   remove <- c('base64_images','mathjax','highlight_code')
+   options <- options[which(!options %in% remove)]
+
+   markdownToHTML(file,output,text,options,extensions)
+}
+
+Md2HTMLPage <- function(file, output, text, 
+                           options=getOption('markdown.HTML.options'),
+                           extensions=getOption('markdown.extensions'),
+                           title='',
+                           stylesheet=system.file('resources/markdown.css',package='markdown'))
+{
+   options <- options[which(!options %in% 'fragment_only')]
+   options <- c(options,'base64_images','mathjax','highlight_code')
+   markdownToHTML(file,output,text,options,extensions)
 }
 
 smartypants <- function(file,output,text)
