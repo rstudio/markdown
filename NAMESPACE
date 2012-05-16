@@ -8,6 +8,7 @@ export(
    "registeredRenderers",
    "rendererOutputType",
    "renderMarkdown",
-   "smartypants"
+   "smartypants",
+   "rpubsUpload"
 )
 useDynLib(markdown,.registration=TRUE)
