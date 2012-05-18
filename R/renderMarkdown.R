@@ -42,11 +42,11 @@ rendererOutputType <- function(name)
 
    mFilter <- list(text=text, mathEnv=new.env(hash=TRUE))
 
-   regexprs <- c( "\\${2}[^$]+\\${2}" , "\\$\\S[^$\n]+\\S\\$" )
+   regexprs <- c( "\\${2}[\\s\\S]+?\\${2}" , "\\$(?!\\s)[^$]*[^$\\s]\\$" )
 
    for (r in regexprs)
    {
-      matches <- gregexpr(r,mFilter$text)
+      matches <- gregexpr(r,mFilter$text,perl=TRUE)
       if (matches[[1]][1] != -1)
       {
          guids <- unlist(lapply(seq_along(matches[[1]]),function(i)gg$GUID()))
