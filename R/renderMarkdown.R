@@ -219,8 +219,12 @@ markdownToHTML <- function(file, output, text,
                            options=getOption('markdown.HTML.options'),
                            extensions=getOption('markdown.extensions'),
                            title='', 
-                           stylesheet=system.file('resources/markdown.css',package='markdown'))
+         stylesheet=system.file('resources/markdown.css',package='markdown'),
+                           fragment.only=FALSE)
 {
+   if (fragment.only==TRUE)
+      options <- c(options,'fragment_only')
+
    if (!'fragment_only' %in% options)
    {
       if (!missing(output))
@@ -300,31 +304,6 @@ markdownToHTML <- function(file, output, text,
    invisible(ret)
 }
 
-Md2HTMLFrag <- function(file, output, text, 
-                           options=getOption('markdown.HTML.options'),
-                           extensions=getOption('markdown.extensions'))
-{
-
-   if (!'fragment_only' %in% options)
-      options <- c(options,'fragment_only')
-
-   remove <- c('base64_images','mathjax','highlight_code')
-   options <- options[which(!options %in% remove)]
-
-   markdownToHTML(file,output,text,options,extensions)
-}
-
-Md2HTMLPage <- function(file, output, text, 
-                           options=getOption('markdown.HTML.options'),
-                           extensions=getOption('markdown.extensions'),
-                           title='',
-                           stylesheet=system.file('resources/markdown.css',package='markdown'))
-{
-   options <- options[which(!options %in% 'fragment_only')]
-   options <- c(options,'base64_images','mathjax','highlight_code')
-   markdownToHTML(file,output,text,options,extensions)
-}
-
 smartypants <- function(file,output,text)
 {
    # Input from either a file or character vector
@@ -377,16 +356,25 @@ markdownExtensions <- function()
 # To turn on all options:
 #
 # options(markdown.HTML.options=markdownHTMLOptions())
+#
+# To turn on default options:
+#
+# options(markdown.HTML.options=markdownHTMLOptions(defaults=TRUE))
 # 
 # To turn off all options:
 # 
 # options(markdown.HTML.options=c())
 #
-markdownHTMLOptions <- function()
+markdownHTMLOptions <- function(defaults=FALSE)
 {
-   c('skip_html', 'skip_style', 'skip_images', 'skip_links', 'safelink',
-     'toc', 'hard_wrap', 'use_xhtml', 'escape','smartypants','base64_images',
-     'fragment_only','mathjax','highlight_code')
+   allOptions <- c('skip_html', 'skip_style', 'skip_images', 'skip_links', 
+                   'safelink', 'toc', 'escape', 'fragment_only', 'hard_wrap',
+                   'use_xhtml', 'smartypants','base64_images', 'mathjax',
+                   'highlight_code')
+   if (!defaults)
+      allOptions
+   else
+      allOptions[seq(9,14)]
 }
 
 .onLoad <- function(libname,pkgname)
@@ -396,5 +384,5 @@ markdownHTMLOptions <- function()
       options(markdown.extensions=markdownExtensions())
 
    if (is.null(getOption('markdown.HTML.options')))
-      options(markdown.HTML.options=markdownHTMLOptions()[c(7,8,10)])
+      options(markdown.HTML.options=markdownHTMLOptions(defaults=TRUE))
 }

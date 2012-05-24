@@ -2,6 +2,8 @@
 
 NEW FEATURES
 
+  o added fragment.only parameter to markdownToHTML
+
   o added new html rendering options base64_images, fragment_only,
     mathjax, and highlight_code
 
@@ -10,6 +12,9 @@ NEW FEATURES
 MAJOR CHANGES
 
   o removed safelink from default html rendering options
+
+  o the default html rendering options are now hard_wrap, use_xhtml,
+    smartypants, base64_images, mathjax, and highlight_code.
 
 BUG FIXES
 

@@ -1,5 +1,7 @@
 library(markdown)
 
+options(markdown.HTML.options='fragment_only')
+
 # EXTENSIONS
 
 # no_intra_emphasis example
@@ -74,26 +76,27 @@ cat(markdownToHTML(text="2^10",extensions=c('superscript')))
 
 # HTML OPTIONS
 
+tOpt <- 'fragment_only'
 # skip_html example
 mkd='<style></style><img src=""><a href="">Hello</a>'
-cat(markdownToHTML(text=mkd,options=c()))
-cat(markdownToHTML(text=mkd,options=c('skip_html')))
+cat(markdownToHTML(text=mkd,options=c(tOpt)))
+cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_html')))
 
 # skip_style example
-cat(markdownToHTML(text=mkd,options=c()))
-cat(markdownToHTML(text=mkd,options=c('skip_style')))
+cat(markdownToHTML(text=mkd,options=c(tOpt)))
+cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_style')))
 
 # skip_images example
-cat(markdownToHTML(text=mkd,options=c()))
-cat(markdownToHTML(text=mkd,options=c('skip_images')))
+cat(markdownToHTML(text=mkd,options=c(tOpt)))
+cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_images')))
 
 # skip_links example
-cat(markdownToHTML(text=mkd,options=c()))
-cat(markdownToHTML(text=mkd,options=c('skip_links')))
+cat(markdownToHTML(text=mkd,options=c(tOpt)))
+cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_links')))
 
 # safelink example
-cat(markdownToHTML(text='[foo](foo://bar "baz")',options=c('')))
-cat(markdownToHTML(text='[foo](foo://bar "baz")',options=c('safelink')))
+cat(markdownToHTML(text='[foo](foo://bar "baz")',options=c(tOpt)))
+cat(markdownToHTML(text='[foo](foo://bar "baz")',options=c(tOpt,'safelink')))
 
 # toc example
 mkd <- '
@@ -102,28 +105,29 @@ p1
 ## Header 2
 p2
 '
-cat(markdownToHTML(text=mkd,options=c()))
-cat(markdownToHTML(text=mkd,options=c('toc')))
+cat(markdownToHTML(text=mkd,options=c(tOpt)))
+cat(markdownToHTML(text=mkd,options=c(tOpt,'toc')))
 
 # hard_wrap example
-cat(markdownToHTML(text='foo\nbar\n',options=c('')))
-cat(markdownToHTML(text='foo\nbar\n',options=c('hard_wrap')))
+cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt)))
+cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt,'hard_wrap')))
 
 # use_xhtml example
-cat(markdownToHTML(text='foo\nbar\n',options=c('hard_wrap')))
-cat(markdownToHTML(text='foo\nbar\n',options=c('hard_wrap','use_xhtml')))
+cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt,'hard_wrap')))
+cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt,'hard_wrap','use_xhtml')))
 
 # escape example
 mkd='<style></style><img src=""><a href="">Hello</a>'
-cat(markdownToHTML(text=mkd,options=c('skip_html')))
+cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_html')))
 # overrides all 'skip_*' options
-cat(markdownToHTML(text=mkd,options=c('skip_html','escape')))
+cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_html','escape')))
 
 # smartypants example
-cat(markdownToHTML(text='1/2 (c)',options=c('')))
-cat(markdownToHTML(text='1/2 (c)',options=c('smartypants')))
+cat(markdownToHTML(text='1/2 (c)',options=c(tOpt)))
+cat(markdownToHTML(text='1/2 (c)',options=c(tOpt,'smartypants')))
 
 cat(smartypants(text='1/2 (c)\n'))
 
 
 rm(mkd)
+rm(tOpt)

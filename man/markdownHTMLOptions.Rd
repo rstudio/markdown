@@ -3,17 +3,21 @@
 \title{Markdown HTML rendering options}
 \description{
    \code{markdownHTMLOptions} returns a character vector listing all the 
-   extensions that are available for the HTML renderer in the \code{markdown}
+   options that are available for the HTML renderer in the \code{markdown}
    package.
 
-   The following options are ON by default: \code{'safelink'}, 
-   \code{'hard_wrap'}, \code{'use_xhtml'}, and \code{'smartypants'}.
+   As a convenience, the package default options were chosen to render 
+   well-formed stand-alone HTML pages. The default options are 
+   \code{'hard_wrap'}, \code{'use_xhml'}, \code{'smartypants'}, 
+   \code{'base64_images'}, \code{'mathjax'}, and \code{'highlight_code'}.
+
 }
 \usage{
-markdownHTMLOptions()
+markdownHTMLOptions(defaults=FALSE)
 }
 \arguments{
-   None.
+   \item{defaults}{If \code{TRUE}, then only the default options are returned.
+         Otherwise all options are returned.}
 }
 \details{
    The HTML renderer provides several options described below. To turn
@@ -22,6 +26,10 @@ markdownHTMLOptions()
    \code{markdown.HTML.options} like so:
 
    \code{options(markdown.HTML.options=markdownHTMLOptions())}
+
+   To reset the options to package default, use:
+
+   \code{options(markdown.HTML.options=markdownHTMLOptions(default=TRUE))}
 
    To override the global option, pass the \code{options} as an argument:
 
@@ -62,6 +70,15 @@ markdownHTMLOptions()
       \item{\code{'smartypants'}}{
          translates plain ASCII punctuation characters into \emph{smart}
          typographic punctuation HTML entities. }
+      \item{\code{'fragment_only'}}{
+         eliminates the inclusion of any HTML header or body tags, CSS, or 
+         Javascript components. }
+      \item{\code{'base64_images'}}{
+         Any local images linked with the \code{'<img>'} tag to the output HTML will automatically be converted to base64 and included along with output. }
+      \item{\code{'mathjax'}}{
+         includes appropriate Javascript libraries to render math markup.}
+      \item{\code{'highlight_code'}}{
+         includes appropriate Javascript libraries to highliht code chunks.}
    }
 
    See the EXAMPLES section to see the output of each option turned on
@@ -69,7 +86,8 @@ markdownHTMLOptions()
 }
 
 \value{
-   A \code{"character"} vector listing all available options.
+   A \code{"character"} vector listing either all available options or just 
+   the default options.
 }
 
 \seealso{
@@ -87,28 +105,32 @@ options(markdown.HTML.options=markdownHTMLOptions())
 
 # To turn off all HTML options globally:
 options(markdown.HTML.options=NULL)
+
+# To turn on package default HTML options globally:
+options(markdown.HTML.options=markdownHTMLOptions(default=TRUE))
 }
 
+tOpt <- 'fragment_only'
 # skip_html example
 mkd='<style></style><img src=""><a href="">Hello</a>'
-cat(markdownToHTML(text=mkd,options=c()))
-cat(markdownToHTML(text=mkd,options=c('skip_html')))
+cat(markdownToHTML(text=mkd,options=c(tOpt)))
+cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_html')))
 
 # skip_style example
-cat(markdownToHTML(text=mkd,options=c()))
-cat(markdownToHTML(text=mkd,options=c('skip_style')))
+cat(markdownToHTML(text=mkd,options=c(tOpt)))
+cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_style')))
 
 # skip_images example
-cat(markdownToHTML(text=mkd,options=c()))
-cat(markdownToHTML(text=mkd,options=c('skip_images')))
+cat(markdownToHTML(text=mkd,options=c(tOpt)))
+cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_images')))
 
 # skip_links example
-cat(markdownToHTML(text=mkd,options=c()))
-cat(markdownToHTML(text=mkd,options=c('skip_links')))
+cat(markdownToHTML(text=mkd,options=c(tOpt)))
+cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_links')))
 
 # safelink example
-cat(markdownToHTML(text='[foo](foo://bar "baz")',options=c('')))
-cat(markdownToHTML(text='[foo](foo://bar "baz")',options=c('safelink')))
+cat(markdownToHTML(text='[foo](foo://bar "baz")',options=c(tOpt)))
+cat(markdownToHTML(text='[foo](foo://bar "baz")',options=c(tOpt,'safelink')))
 
 # toc example
 mkd <- '
@@ -117,28 +139,26 @@ p1
 ## Header 2
 p2
 '
-cat(markdownToHTML(text=mkd,options=c()))
-cat(markdownToHTML(text=mkd,options=c('toc')))
+cat(markdownToHTML(text=mkd,options=c(tOpt)))
+cat(markdownToHTML(text=mkd,options=c(tOpt,'toc')))
 
 # hard_wrap example
-cat(markdownToHTML(text='foo\nbar\n',options=c('')))
-cat(markdownToHTML(text='foo\nbar\n',options=c('hard_wrap')))
+cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt)))
+cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt,'hard_wrap')))
 
 # use_xhtml example
-cat(markdownToHTML(text='foo\nbar\n',options=c('hard_wrap')))
-cat(markdownToHTML(text='foo\nbar\n',options=c('hard_wrap','use_xhtml')))
+cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt,'hard_wrap')))
+cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt,'hard_wrap','use_xhtml')))
 
 # escape example
 mkd='<style></style><img src=""><a href="">Hello</a>'
-cat(markdownToHTML(text=mkd,options=c('skip_html')))
+cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_html')))
 # overrides all 'skip_*' options
-cat(markdownToHTML(text=mkd,options=c('skip_html','escape')))
+cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_html','escape')))
 
 # smartypants example
-cat(markdownToHTML(text='1/2 (c)',options=c('')))
-cat(markdownToHTML(text='1/2 (c)',options=c('smartypants')))
-
-rm(mkd)
+cat(markdownToHTML(text='1/2 (c)',options=c(tOpt)))
+cat(markdownToHTML(text='1/2 (c)',options=c(tOpt,'smartypants')))
 
 }
 \keyword{programming}

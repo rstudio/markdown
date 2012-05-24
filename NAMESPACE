@@ -2,8 +2,6 @@ export(
    "markdownExtensions",
    "markdownHTMLOptions",
    "markdownToHTML",
-   "Md2HTMLPage",
-   "Md2HTMLFrag",
    "rendererExists",
    "registeredRenderers",
    "rendererOutputType",

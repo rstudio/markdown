@@ -18,6 +18,8 @@ Type 'q()' to quit R.
 
 > library(markdown)
 > 
+> options(markdown.HTML.options='fragment_only')
+> 
 > # EXTENSIONS
 > 
 > # no_intra_emphasis example
@@ -69,9 +71,9 @@ Content Cell  | Content Cell
 + first line.
 + ~~~
 + ",extensions=c()))
-<p>~~~<br/>
-preformated text here without having to indent<br/>
-first line.<br/>
+<p>~~~
+preformated text here without having to indent
+first line.
 ~~~</p>
 > 
 > cat(markdownToHTML(text="
@@ -103,8 +105,8 @@ first line.
 + <div>_markdown_</div>
 + extra text.
 + ",extensions=c('')))
-<p>Embedding html without surrounding with empty newline.<br/>
-<div><em>markdown</em></div><br/>
+<p>Embedding html without surrounding with empty newline.
+<div><em>markdown</em></div>
 extra text.</p>
 > cat(markdownToHTML(text="
 + Embedding html without surrounding with empty newline.
@@ -129,7 +131,7 @@ extra text.</p>
 + #Not A Header
 + because there is no space between # and N.
 + ",extensions=c('space_headers')))
-<p>#Not A Header<br/>
+<p>#Not A Header
 because there is no space between # and N.</p>
 > 
 > # superscript example
@@ -140,35 +142,36 @@ because there is no space between # and N.</p>
 > 
 > # HTML OPTIONS
 > 
+> tOpt <- 'fragment_only'
 > # skip_html example
 > mkd='<style></style><img src=""><a href="">Hello</a>'
-> cat(markdownToHTML(text=mkd,options=c()))
+> cat(markdownToHTML(text=mkd,options=c(tOpt)))
 <p><style></style><img src=""><a href="">Hello</a></p>
-> cat(markdownToHTML(text=mkd,options=c('skip_html')))
+> cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_html')))
 <p>Hello</p>
 > 
 > # skip_style example
-> cat(markdownToHTML(text=mkd,options=c()))
+> cat(markdownToHTML(text=mkd,options=c(tOpt)))
 <p><style></style><img src=""><a href="">Hello</a></p>
-> cat(markdownToHTML(text=mkd,options=c('skip_style')))
+> cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_style')))
 <p><img src=""><a href="">Hello</a></p>
 > 
 > # skip_images example
-> cat(markdownToHTML(text=mkd,options=c()))
+> cat(markdownToHTML(text=mkd,options=c(tOpt)))
 <p><style></style><img src=""><a href="">Hello</a></p>
-> cat(markdownToHTML(text=mkd,options=c('skip_images')))
+> cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_images')))
 <p><style></style><a href="">Hello</a></p>
 > 
 > # skip_links example
-> cat(markdownToHTML(text=mkd,options=c()))
+> cat(markdownToHTML(text=mkd,options=c(tOpt)))
 <p><style></style><img src=""><a href="">Hello</a></p>
-> cat(markdownToHTML(text=mkd,options=c('skip_links')))
+> cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_links')))
 <p><style></style><img src="">Hello</p>
 > 
 > # safelink example
-> cat(markdownToHTML(text='[foo](foo://bar "baz")',options=c('')))
+> cat(markdownToHTML(text='[foo](foo://bar "baz")',options=c(tOpt)))
 <p><a href="foo://bar" title="baz">foo</a></p>
-> cat(markdownToHTML(text='[foo](foo://bar "baz")',options=c('safelink')))
+> cat(markdownToHTML(text='[foo](foo://bar "baz")',options=c(tOpt,'safelink')))
 <p>[foo](foo://bar &quot;baz&quot;)</p>
 > 
 > # toc example
@@ -178,7 +181,7 @@ because there is no space between # and N.</p>
 + ## Header 2
 + p2
 + '
-> cat(markdownToHTML(text=mkd,options=c()))
+> cat(markdownToHTML(text=mkd,options=c(tOpt)))
 <h1>Header 1</h1>
 
 <p>p1</p>
@@ -186,7 +189,7 @@ because there is no space between # and N.</p>
 <h2>Header 2</h2>
 
 <p>p2</p>
-> cat(markdownToHTML(text=mkd,options=c('toc')))
+> cat(markdownToHTML(text=mkd,options=c(tOpt,'toc')))
 <div id="toc">
 <div id="toc_header">Table of Contents</div>
 <ul>
@@ -211,33 +214,33 @@ because there is no space between # and N.</p>
 <p>p2</p>
 > 
 > # hard_wrap example
-> cat(markdownToHTML(text='foo\nbar\n',options=c('')))
+> cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt)))
 <p>foo
 bar</p>
-> cat(markdownToHTML(text='foo\nbar\n',options=c('hard_wrap')))
+> cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt,'hard_wrap')))
 <p>foo<br>
 bar</p>
 > 
 > # use_xhtml example
-> cat(markdownToHTML(text='foo\nbar\n',options=c('hard_wrap')))
+> cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt,'hard_wrap')))
 <p>foo<br>
 bar</p>
-> cat(markdownToHTML(text='foo\nbar\n',options=c('hard_wrap','use_xhtml')))
+> cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt,'hard_wrap','use_xhtml')))
 <p>foo<br/>
 bar</p>
 > 
 > # escape example
 > mkd='<style></style><img src=""><a href="">Hello</a>'
-> cat(markdownToHTML(text=mkd,options=c('skip_html')))
+> cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_html')))
 <p>Hello</p>
 > # overrides all 'skip_*' options
-> cat(markdownToHTML(text=mkd,options=c('skip_html','escape')))
+> cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_html','escape')))
 <p>&lt;style&gt;&lt;/style&gt;&lt;img src=&quot;&quot;&gt;&lt;a href=&quot;&quot;&gt;Hello&lt;/a&gt;</p>
 > 
 > # smartypants example
-> cat(markdownToHTML(text='1/2 (c)',options=c('')))
+> cat(markdownToHTML(text='1/2 (c)',options=c(tOpt)))
 <p>1/2 (c)</p>
-> cat(markdownToHTML(text='1/2 (c)',options=c('smartypants')))
+> cat(markdownToHTML(text='1/2 (c)',options=c(tOpt,'smartypants')))
 <p>&frac12; &copy;</p>
 > 
 > cat(smartypants(text='1/2 (c)\n'))
@@ -245,7 +248,8 @@ bar</p>
 > 
 > 
 > rm(mkd)
+> rm(tOpt)
 > 
 > proc.time()
    user  system elapsed 
-  0.448   0.036   0.461 
+  0.472   0.024   0.474 

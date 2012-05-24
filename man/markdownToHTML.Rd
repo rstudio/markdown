@@ -12,7 +12,8 @@ markdownToHTML(file, output, text,
                options=getOption('markdown.HTML.options'),
                extensions=getOption('markdown.extensions'),
                title='',
-               stylesheet=system.file('resources/markdown.css',package='markdown'))
+          stylesheet=system.file('resources/markdown.css',package='markdown'),
+               fragment.only=FALSE)
 }
 \arguments{
    \item{file}{a character string giving the pathname of the file to
@@ -30,6 +31,7 @@ markdownToHTML(file, output, text,
    \item{title}{The HTML title.}
    \item{stylesheet}{either valid CSS or a file containing CSS. will be included
       the output.}
+   \item{fragment.only}{Whether or not to produce an HTML fragment without the HTML header and body tags, CSS, and Javascript components.}
 }
 \value{
    \code{renderMarkdown} returns NULL invisibly when output is to a file, and
