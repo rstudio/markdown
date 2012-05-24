@@ -23,8 +23,7 @@ void encodeblock( unsigned char in[3], unsigned char out[4], int len )
 SEXP rmd_b64encode_data( SEXP Sdata)
 {
    unsigned char in[3], out[4];
-   int i, len, blocksout = 0;
-   int linesize=72; /* default */
+   int i, len;
 
    int data_len = LENGTH(Sdata);
    int data_elem = 0;
@@ -55,13 +54,6 @@ SEXP rmd_b64encode_data( SEXP Sdata)
          for( i = 0; i < 4; i++ ) {
             bufputc(databuf,out[i]);
          }
-         blocksout++;
-      }
-      if( blocksout >= (linesize/4) || data_elem == data_len ) {
-         if( blocksout ) {
-            bufputs(databuf,"\r\n");
-         }
-         blocksout = 0;
       }
    }
 
