@@ -8,8 +8,8 @@
 
    As a convenience, the package default options were chosen to render 
    well-formed stand-alone HTML pages. The default options are 
-   \code{'hard_wrap'}, \code{'use_xhml'}, \code{'smartypants'}, 
-   \code{'base64_images'}, \code{'mathjax'}, and \code{'highlight_code'}.
+   \code{'hard_wrap'}, \code{'use_xhml'}, \code{'smartypants'}, and
+   \code{'base64_images'}.
 
 }
 \usage{

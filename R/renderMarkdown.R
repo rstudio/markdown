@@ -42,17 +42,35 @@ rendererOutputType <- function(name)
 
    mFilter <- list(text=text, mathEnv=new.env(hash=TRUE))
 
-   regexprs <- c( "\\${2}[\\s\\S]+?\\${2}" , "\\$(?!\\s)[^$]*[^$\\s]\\$" )
+   regexprs <- list(
+                  list(
+                     pat="\\${2}latex(\\s[\\s\\S]+?)\\${2}",
+                     repl="\\\\[\\1\\\\]"
+                  ),
+                  list(
+                     pat="\\$latex(\\s[\\s\\S]+?)\\$",
+                     repl="\\\\(\\1\\\\)"
+                  )
+               )
 
    for (r in regexprs)
    {
-      matches <- gregexpr(r,mFilter$text,perl=TRUE)
+      matches <- gregexpr(r$pat,mFilter$text,perl=TRUE)
       if (matches[[1]][1] != -1)
       {
          guids <- unlist(lapply(seq_along(matches[[1]]),function(i)gg$GUID()))
          guidStr <- regmatches(mFilter$text,matches)[[1]]
-         lapply(seq_along(guids),
-                function(i) assign(guids[i],guidStr[i],mFilter$mathEnv))
+         lapply(
+            seq_along(guids),
+            function(i)
+            {
+               assign(
+                  guids[i],
+                  sub(r$pat,r$repl,guidStr[i],perl=TRUE),
+                  mFilter$mathEnv
+               )
+            }
+         )
          tmpText <- mFilter$text
          regmatches(tmpText,matches) <- list(guids)
          mFilter$text <- tmpText
@@ -197,7 +215,7 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
 .b64EncodeImages <- function(html)
 {
    reg <- "<\\s*[Ii][Mm][Gg]\\s+[Ss][Rr][Cc]\\s*=\\s*[\"']([^\"']+)[\"']"
-   m <- gregexpr(reg,html)
+   m <- gregexpr(reg,html,perl=TRUE)
    if (m[[1]][1] != -1)
    {
       .b64EncodeImgSrc <- function(imgSrc)
@@ -214,6 +232,28 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
    html
 }
 
+
+.requiresMathJax <- function(html)
+{
+   regs <- c(
+              "\\\\\\(([\\s\\S]+?)\\\\\\)",
+              "\\\\\\[([\\s\\S]+?)\\\\\\]"
+            )
+   for(i in regs){
+      if (regexpr(i,html,perl=TRUE) > -1)
+         return(TRUE)
+   }
+   FALSE
+}
+
+.requiresHighlighting <- function(html)
+{
+   reg <- "<pre><code class=\"r\""
+   if (regexpr(reg,html,perl=TRUE) > -1)
+      TRUE
+   else
+      FALSE
+}
 
 markdownToHTML <- function(file, output, text, 
                            options=getOption('markdown.HTML.options'),
@@ -273,14 +313,14 @@ markdownToHTML <- function(file, output, text,
       # Need to scrub title more, e.g. strip html, etc.
       html <- sub("#!title#",title,html,perl=TRUE)
 
-      if ('highlight_code' %in% options){
+      if ('highlight_code' %in% options || .requiresHighlighting(html)){
          highlight <- paste(readLines(system.file('resources/r_highlight.html',package='markdown')),collapse='\n')
       } else {
          highlight <- ''
       }
       html <- sub("#!r_highlight#",highlight,html,fixed=TRUE)
 
-      if ('mathjax' %in% options){
+      if ('mathjax' %in% options || .requiresMathJax(html)){
          mathjax <- paste(readLines(system.file('resources/mathjax.html',package='markdown')),collapse='\n')
       } else {
          mathjax <- ''
@@ -374,7 +414,7 @@ markdownHTMLOptions <- function(defaults=FALSE)
    if (!defaults)
       allOptions
    else
-      allOptions[seq(9,14)]
+      allOptions[seq(9,12)]
 }
 
 .onLoad <- function(libname,pkgname)

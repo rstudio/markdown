@@ -14,7 +14,7 @@ MAJOR CHANGES
   o removed safelink from default html rendering options
 
   o the default html rendering options are now hard_wrap, use_xhtml,
-    smartypants, base64_images, mathjax, and highlight_code.
+    smartypants, and base64_images.
 
 BUG FIXES
 

@@ -29,9 +29,29 @@ markdownToHTML(file, output, text,
    \item{extensions}{options that are passed to the \emph{markdown} engine. See
       \code{\link{markdownExtensions}}.}
    \item{title}{The HTML title.}
-   \item{stylesheet}{either valid CSS or a file containing CSS. will be included
-      the output.}
-   \item{fragment.only}{Whether or not to produce an HTML fragment without the HTML header and body tags, CSS, and Javascript components.}
+   \item{stylesheet}{either valid CSS or a file containing CSS. will be 
+      included in the output.}
+   \item{fragment.only}{Whether or not to produce an HTML fragment without 
+      the HTML header and body tags, CSS, and Javascript components.}
+}
+\details{
+   There are two basic modes to \code{markdownToHTML} determined by the value
+   of the \code{fragment.only} argument:
+
+   When \code{FALSE}, \code{markdownToHTML} creates well-formed stand-alone
+   HTML pages complete with HTML header, title, and body tags. The default
+   template used for this mode may be found here:
+
+      system.file('resources/markdown.html',package='markdown')
+
+   Also, \code{markdownToHTML} will automatically determine whether or not
+   mathjax and R code highlighting are needed and will include the appropriate
+   javascript libraries in the output. Thus, there's no need to explicitely
+   set the \code{'mathjax'} or \code{'highlight_code'} options (see 
+   \code{\link{markdownHTMLOptions}} for more details).
+
+   When \code{fragment.only} is TRUE, nothing extra is added.
+   
 }
 \value{
    \code{renderMarkdown} returns NULL invisibly when output is to a file, and
