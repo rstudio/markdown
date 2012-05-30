@@ -46,7 +46,7 @@ markdownToHTML(file, output, text,
 
    Also, \code{markdownToHTML} will automatically determine whether or not
    mathjax and R code highlighting are needed and will include the appropriate
-   javascript libraries in the output. Thus, there's no need to explicitely
+   Javascript libraries in the output. Thus, there's no need to explicitly
    set the \code{'mathjax'} or \code{'highlight_code'} options (see 
    \code{\link{markdownHTMLOptions}} for more details).
 

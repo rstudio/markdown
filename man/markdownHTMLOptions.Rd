@@ -48,7 +48,7 @@ markdownHTMLOptions(defaults=FALSE)
          suppress output of HTML image tags.}
 
       \item{\code{'skip_links'}}{
-         supress output of HTML achor tags.}
+         suppress output of HTML anchor tags.}
 
       \item{\code{'safelink'}}{
          only create links for known url types, e.g. http, ftp, http, etc.}
@@ -78,7 +78,7 @@ markdownHTMLOptions(defaults=FALSE)
       \item{\code{'mathjax'}}{
          includes appropriate Javascript libraries to render math markup.}
       \item{\code{'highlight_code'}}{
-         includes appropriate Javascript libraries to highliht code chunks.}
+         includes appropriate Javascript libraries to highlight code chunks.}
    }
 
    See the EXAMPLES section to see the output of each option turned on

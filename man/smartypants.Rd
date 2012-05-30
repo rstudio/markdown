@@ -3,7 +3,7 @@
 \title{smartypants: ASCII punctuation to HTML entities}
 \description{
    \code{smartypants} transforms plain ASCII punctuation characters into
-   \emph{smart} tyopgraphic punctuation HTML entities.
+   \emph{smart} typographic punctuation HTML entities.
 }
 \usage{
 smartypants(file, output, text)
