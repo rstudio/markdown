@@ -9,7 +9,7 @@
       if (is.na(GUID))
       {
          GUID <<- -.Machine$integer.max
-         GUIDprefix <<- .GUIDprefix + 1L
+         GUIDprefix <<- GUIDprefix + 1L
       }
       c(guid,GUIDprefix)
    }
