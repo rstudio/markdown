@@ -226,7 +226,7 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
 
          imgSrc
       }
-      regmatches(html,m) <- lapply(regmatches(html,m)[[1]],.b64EncodeImgSrc)
+      regmatches(html,m) <- list(unlist(lapply(regmatches(html,m)[[1]],.b64EncodeImgSrc)))
    }
 
    html
