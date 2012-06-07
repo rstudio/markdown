@@ -1,3 +1,13 @@
+			      CHANGES IN markdown VERSION 0.5.1
+
+BUG FIXES
+
+  o fixed a GUIDgenerator bug; for escaping math equations before
+    markdown parsing begins.
+
+  o image encoding was fixed for the case when there are more than
+    one included in a markdown document.
+
 			      CHANGES IN markdown VERSION 0.5
 
 NEW FEATURES
