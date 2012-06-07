@@ -110,7 +110,10 @@ options(markdown.HTML.options=NULL)
 options(markdown.HTML.options=markdownHTMLOptions(default=TRUE))
 }
 
+# The following examples are short, so we allways add the HTML option 
+# 'fragment_only'
 tOpt <- 'fragment_only'
+
 # skip_html example
 mkd='<style></style><img src=""><a href="">Hello</a>'
 cat(markdownToHTML(text=mkd,options=c(tOpt)))

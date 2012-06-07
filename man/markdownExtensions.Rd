@@ -97,6 +97,11 @@ options(markdown.extensions=NULL)
 
 }
 
+# The following examples are short, so we set the HTML option 'fragment_only'
+# to TRUE.
+
+options(markdown.HTML.options='fragment_only')
+
 # no_intra_emphasis example
 cat(markdownToHTML(text='foo_bar_function',extensions=c()))
 cat(markdownToHTML(text='foo_bar_function',

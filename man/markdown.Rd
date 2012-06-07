@@ -21,7 +21,7 @@ Markdown rendering for R
 \author{
 JJ Allaire, Jeffrey Horner, Vicent Marti, and Natacha Porte
 
-Maintainer: JJ Allaire <jj@rstudio.org>
+Maintainer: Jeffrey Horner <jeffrey.horner@gmail.com>
 }
 \keyword{ package }
 \seealso{
