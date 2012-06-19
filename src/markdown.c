@@ -1386,6 +1386,7 @@ prefix_uli(uint8_t *data, size_t size)
 }
 
 
+
 /* parse_block • parsing of one block, returning next uint8_t to parse */
 static void parse_block(struct buf *ob, struct sd_markdown *rndr,
 			uint8_t *data, size_t size);
@@ -1827,10 +1828,138 @@ parse_atxheader(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t 
 	return skip;
 }
 
+/* prefix_mathblock • returns prefix length of math blocks, one of:
+ * $$latex
+ * $$
+ * \[
+ */ 
+static size_t
+prefix_mathblock(uint8_t *data, size_t size, struct buf *delim)
+{
+	size_t i = 0, length = 0;
+
+	/* skipping initial spaces */
+	if (size < 3) return 0;
+	if (data[0] == ' ') { i++;
+	if (data[1] == ' ') { i++;
+	if (data[2] == ' ') { i++; } } }
+
+	/* $$latex */
+	if (i + 7 < size && data[i] == '$' && data[i+1] == '$' && 
+		data[i+2] == 'l' && data[i+3] == 'a' && data[i+4] == 't' && 
+		data[i+5] == 'e' && data[i+6] == 'x')
+		length = i + 7;
+	/* $$ */
+	else if (i + 2 < size && data[i] == '$' && data[i+1] == '$')
+		length = i + 2;
+	/* \[ */
+	else if (i + 2 < size && data[i] == '\\' && data[i+1] == '[')
+		length = i + 2;
+
+	if (length > 0 && delim) {
+		delim->data = data + i;
+		delim->size = length;
+	}
+
+	return length;
+}
+
+
+/* mathblock_end • returns length of data up to 
+ * the mathblock end delimiters, one of:
+ * \]
+ * $$
+ */ 
+static size_t
+mathblock_end(uint8_t *data, size_t size, struct buf *beg_delim, struct buf *end_delim)
+{
+	size_t i = 0, end = 0;
+
+	while (i < size) {
+		while (i < size && !(data[i] == '\\' || data[i] == '$'))
+			i++;
+
+		if (i == size) return 0;
+
+		if ( i + 1 < size) {
+		   	if ((data[i] == '\\' && data[i + 1] == ']') ||
+				(data[i] == '$'  && data[i + 1] == '$') ) {
+
+
+				/* Match correct begin and end delimiters:
+				 * $latex ... $$
+				 * $$ ... $$
+				 * \[ ... \]
+				 */
+				if ((beg_delim->data[0] == '$' && data[i] == '$') ||
+					(beg_delim->data[0] == '\\' && data[i] == '\\')) {
+
+					if (end_delim) {
+						end_delim->data = data + i;
+						end_delim->size = 2;
+					}
+
+					return i - 1;
+				}
+			}
+		}
+
+		i++;
+	}
+
+	return 0;
+}
+
+/* prefix_mathspan • returns prefix length of math spans, one of:
+ * \(
+ * $
+ */ 
+static size_t
+prefix_mathspan(uint8_t *data, size_t size)
+{
+	size_t i = 0;
+
+	/* skipping initial spaces */
+	if (size < 3) return 0;
+	if (data[0] == ' ') { i++;
+	if (data[1] == ' ') { i++;
+	if (data[2] == ' ') { i++; } } }
+
+	/* \( */
+	if (i + 2 < size && data[i] == '\\' && data[i+1] == '(')
+		return i + 2;
+	/* $ */
+	else if (i + 1 < size && data[i] == '$')
+		return i + 1;
+
+	return 0;
+}
+
 /* parse_mathblock • parsing of latex and mathjax style blocks */
 static size_t
 parse_mathblock(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size)
 {
+	size_t beg, length;
+	struct buf beg_delim = { 0, 0, 0, 0};
+	struct buf end_delim = { 0, 0, 0, 0};
+
+	beg = prefix_mathblock(data,size,&beg_delim);
+	if (beg == 0) return 0;
+
+	length = mathblock_end(data + beg,size, &beg_delim, &end_delim);
+	if (length == 0) return 0;
+
+	if (rndr->cb.mathblock){
+		struct buf *work = rndr_newbuf(rndr, BUFFER_BLOCK);
+
+		bufput(work, data + beg, length);
+
+		rndr->cb.mathblock(ob, work, rndr->opaque);
+
+		rndr_popbuf(rndr, BUFFER_BLOCK);
+	}
+
+	return beg + length + end_delim.size + 1;
 }
 
 
@@ -2237,9 +2366,9 @@ parse_block(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size
 			(i = parse_fencedcode(ob, rndr, txt_data, end)) != 0)
 			beg += i;
 
-      else if ((rndr->ext_flags & MKDEXT_LATEX_MATH) != 0 &&
-         (i = parse_mathblock(ob, rndr, txt_data, end)) != 0)
-         beg += i;
+		else if ((rndr->ext_flags & MKDEXT_LATEX_MATH) != 0 &&
+			(i = parse_mathblock(ob, rndr, txt_data, end)) != 0)
+			beg += i;
 
 		else if ((rndr->ext_flags & MKDEXT_TABLES) != 0 &&
 			(i = parse_table(ob, rndr, txt_data, end)) != 0)

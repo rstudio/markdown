@@ -59,6 +59,9 @@ static Rboolean render_to_html(struct buf *ib, struct buf *ob,
          else if (strcasecmp(CHAR(STRING_ELT(Sextensions,i)),
                         "SUPERSCRIPT") == 0)
             exts |= MKDEXT_SUPERSCRIPT;
+         else if (strcasecmp(CHAR(STRING_ELT(Sextensions,i)),
+                        "LATEX_MATH") == 0)
+            exts |= MKDEXT_LATEX_MATH;
       }
    }
 
