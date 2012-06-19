@@ -74,6 +74,7 @@ static size_t char_autolink_email(struct buf *ob, struct sd_markdown *rndr, uint
 static size_t char_autolink_www(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size);
 static size_t char_link(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size);
 static size_t char_superscript(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size);
+static size_t char_latex_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size);
 
 enum markdown_char_t {
 	MD_CHAR_NONE = 0,
@@ -88,6 +89,7 @@ enum markdown_char_t {
 	MD_CHAR_AUTOLINK_EMAIL,
 	MD_CHAR_AUTOLINK_WWW,
 	MD_CHAR_SUPERSCRIPT,
+	MD_CHAR_LATEXMATH,
 };
 
 static char_trigger markdown_char_ptrs[] = {
@@ -103,6 +105,7 @@ static char_trigger markdown_char_ptrs[] = {
 	&char_autolink_email,
 	&char_autolink_www,
 	&char_superscript,
+	&char_latex_math
 };
 
 /* render • structure containing one particular render */
@@ -1106,6 +1109,16 @@ char_superscript(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t
 	return (sup_start == 2) ? sup_len + 1 : sup_len;
 }
 
+static size_t
+char_latex_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size)
+{
+	if (!rndr->cb.superscript)
+		return 0;
+
+	if (size < 2)
+		return 0;
+}
+
 /*********************************
  * BLOCK-LEVEL PARSING FUNCTIONS *
  *********************************/
@@ -1814,6 +1827,12 @@ parse_atxheader(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t 
 	return skip;
 }
 
+/* parse_mathblock • parsing of latex and mathjax style blocks */
+static size_t
+parse_mathblock(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size)
+{
+}
+
 
 /* htmlblock_end • checking end of HTML block : </tag>[ \t]*\n[ \t*]\n */
 /*	returns the length on match, 0 otherwise */
@@ -2218,6 +2237,10 @@ parse_block(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size
 			(i = parse_fencedcode(ob, rndr, txt_data, end)) != 0)
 			beg += i;
 
+      else if ((rndr->ext_flags & MKDEXT_LATEX_MATH) != 0 &&
+         (i = parse_mathblock(ob, rndr, txt_data, end)) != 0)
+         beg += i;
+
 		else if ((rndr->ext_flags & MKDEXT_TABLES) != 0 &&
 			(i = parse_table(ob, rndr, txt_data, end)) != 0)
 			beg += i;
@@ -2438,6 +2461,9 @@ sd_markdown_new(
 
 	if (extensions & MKDEXT_SUPERSCRIPT)
 		md->active_char['^'] = MD_CHAR_SUPERSCRIPT;
+
+   if (extensions & MKDEXT_LATEX_MATH)
+		md->active_char['$'] = MD_CHAR_LATEXMATH;
 
 	/* Extension data */
 	md->ext_flags = extensions;
