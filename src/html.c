@@ -169,6 +169,14 @@ rndr_mathblock(struct buf *ob, const struct buf *text, void *opaque)
 	BUFPUTSL(ob, "\\]\n");
 }
 
+static void
+rndr_mathspan(struct buf *ob, const struct buf *text, void *opaque)
+{
+	BUFPUTSL(ob, "\\(");
+	if (text) bufput(ob, text->data, text->size);
+	BUFPUTSL(ob, "\\)");
+}
+
 static int
 rndr_codespan(struct buf *ob, const struct buf *text, void *opaque)
 {
@@ -619,7 +627,7 @@ sdhtml_renderer(struct sd_callbacks *callbacks, struct html_renderopt *options, 
 		rndr_triple_emphasis,
 		rndr_strikethrough,
 		rndr_superscript,
-		NULL,
+		rndr_mathspan,
 
 		NULL,
 		rndr_normal_text,

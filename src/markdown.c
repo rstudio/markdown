@@ -1109,14 +1109,55 @@ char_superscript(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t
 	return (sup_start == 2) ? sup_len + 1 : sup_len;
 }
 
+/* org-mode inline latex math, e.g. $...$
+ *
+ * Rules for parsing:
+ *
+ *  1. eqations must be attached to begin and end $
+ *  2. at most two newlines in the equation
+ *  3. the closing $ must be followed by whitespace, punctuation, or a dash.
+ */
 static size_t
 char_latex_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size)
 {
-	if (!rndr->cb.superscript)
+	static const char *punct = " .?!:;'/,-\"";
+	size_t i = 1, nl = 0, length = 0;
+
+	if (!rndr->cb.mathspan) return 0;
+
+	if (data[i] == ' ')
 		return 0;
 
-	if (size < 2)
-		return 0;
+	while(i < size){
+		while (i < size && !(data[i] == '\n' || data[i] == '$')) {
+			i++;
+			length++;
+		}
+
+		if (i == size) return 0;
+
+		if (data[i] == '\n') nl++;
+
+		if (nl > 2) return 0;
+
+		if (data[i] == '$'){
+			i++;
+			if (i < size && strchr(punct,data[i]) != NULL) {
+				struct buf *work = rndr_newbuf(rndr, BUFFER_SPAN);
+				bufput(work, data + 1, length);
+				rndr->cb.mathspan(ob,work, rndr->opaque);
+				rndr_popbuf(rndr, BUFFER_SPAN);
+				return i;
+			} else {
+				return 0;
+			}
+
+		}
+
+		i++;
+	}
+
+	return 0;
 }
 
 /*********************************
