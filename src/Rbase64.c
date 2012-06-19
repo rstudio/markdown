@@ -41,11 +41,10 @@ SEXP rmd_b64encode_data( SEXP Sdata)
    while( data_elem < data_len ) {
       len = 0;
       for( i = 0; i < 3; i++ ) {
-         in[i] = (unsigned char) data[data_elem++];
          if( data_elem < data_len ) {
+            in[i] = (unsigned char) data[data_elem++];
             len++;
-         }
-         else {
+         } else {
             in[i] = 0;
          }
       }
