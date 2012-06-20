@@ -165,19 +165,24 @@ markdownToHTML <- function(file, output, text,
    if (fragment.only==TRUE)
       options <- c(options,'fragment_only')
 
-   if (!'fragment_only' %in% options)
+   if (!missing(output))
    {
-      if (!missing(output))
-      {
-         outputFile <- output
-         output <- NULL
-      } 
-      else
-         outputFile <- NULL
-   }
+      outputFile <- output
+      output <- NULL
+   } 
+   else
+      outputFile <- NULL
 
    ret <- renderMarkdown(file,output,text,renderer="HTML",
                   renderer.options=options,extensions=extensions)
+
+   if ('base64_images' %in% options){
+      if (!missing(file) && is.character(file) && file.exists(file)){
+         oldwd <- setwd(dirname(file))
+         on.exit(setwd(oldwd))
+      }
+      ret <- .b64EncodeImages(ret);
+   }
 
    if (!'fragment_only' %in% options)
    {
@@ -228,18 +233,13 @@ markdownToHTML <- function(file, output, text,
       }
       html <- sub("#!mathjax#",mathjax,html,fixed=TRUE)
 
-      if ('base64_images' %in% options){
-         if (!missing(file) && is.character(file) && file.exists(file)){
-            oldwd <- setwd(dirname(file))
-            on.exit(setwd(oldwd))
-         }
-         html <- .b64EncodeImages(html);
-      }
+      ret <- html
+   }
 
-      if (is.character(outputFile))
-         cat(html,file=outputFile)
-      else
-         ret <- html
+   if (is.character(outputFile))
+   {
+      cat(ret,file=outputFile)
+      ret <- NULL
    }
 
    invisible(ret)
