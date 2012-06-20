@@ -683,6 +683,40 @@ char_codespan(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t of
 	return end;
 }
 
+/* char_mathspan • '\\(' ... '\\)' */
+static size_t 
+char_mathspan(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size)
+{
+	size_t i = 1, length = 0;
+
+	if (!rndr->cb.mathspan) return 0;
+
+	if (i + 1 < size && data[i++] != '(')
+		return 0;
+
+	while (i < size) {
+		while (i < size && data[i] != '\\') {
+			i++;
+			length++;
+		}
+		
+		if (i == size) return 0;
+
+		if (i + 1 < size && data[i + 1] == ')'){
+			i += 2;
+			struct buf *work = rndr_newbuf(rndr, BUFFER_SPAN);
+			bufput(work, data + 2, length);
+			rndr->cb.mathspan(ob,work, rndr->opaque);
+			rndr_popbuf(rndr, BUFFER_SPAN);
+			return i;
+		}
+
+		i++;
+		length++;
+	}
+
+	return 0;
+}
 
 /* char_escape • '\\' backslash escape */
 static size_t
@@ -692,8 +726,14 @@ char_escape(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offs
 	struct buf work = { 0, 0, 0, 0 };
 
 	if (size > 1) {
+		size_t i;
 		if (strchr(escape_chars, data[1]) == NULL)
 			return 0;
+
+		if (size > 2 && data[1] == '(' && 
+			((rndr->ext_flags & MKDEXT_LATEX_MATH) != 0)  &&
+			((i = char_mathspan(ob, rndr, data, offset, size)) != 0) )
+			return i;
 
 		if (rndr->cb.normal_text) {
 			work.data = data + 1;
@@ -1120,12 +1160,13 @@ char_superscript(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t
 static size_t
 char_latex_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size)
 {
+	/* actually negate this and don't allow a letter number or back-tick */
 	static const char *punct = " .?!:;'/,-\"";
 	size_t i = 1, nl = 0, length = 0;
 
 	if (!rndr->cb.mathspan) return 0;
 
-	if (data[i] == ' ')
+	if (i < size && data[i] == ' ')
 		return 0;
 
 	while(i < size){
