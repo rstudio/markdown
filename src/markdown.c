@@ -1955,7 +1955,7 @@ prefix_mathblock(uint8_t *data, size_t size, struct buf *delim)
 static size_t
 mathblock_end(uint8_t *data, size_t size, struct buf *beg_delim, struct buf *end_delim)
 {
-	size_t i = 0, end = 0;
+	size_t i = 0;
 
 	while (i < size) {
 		while (i < size && !(data[i] == '\\' || data[i] == '$'))

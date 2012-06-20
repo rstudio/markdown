@@ -169,12 +169,13 @@ rndr_mathblock(struct buf *ob, const struct buf *text, void *opaque)
 	BUFPUTSL(ob, "\\]\n");
 }
 
-static void
+static int
 rndr_mathspan(struct buf *ob, const struct buf *text, void *opaque)
 {
 	BUFPUTSL(ob, "\\(");
 	if (text) bufput(ob, text->data, text->size);
 	BUFPUTSL(ob, "\\)");
+	return 1;
 }
 
 static int
