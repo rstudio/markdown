@@ -1992,31 +1992,6 @@ mathblock_end(uint8_t *data, size_t size, struct buf *beg_delim, struct buf *end
 	return 0;
 }
 
-/* prefix_mathspan • returns prefix length of math spans, one of:
- * \(
- * $
- */ 
-static size_t
-prefix_mathspan(uint8_t *data, size_t size)
-{
-	size_t i = 0;
-
-	/* skipping initial spaces */
-	if (size < 3) return 0;
-	if (data[0] == ' ') { i++;
-	if (data[1] == ' ') { i++;
-	if (data[2] == ' ') { i++; } } }
-
-	/* \( */
-	if (i + 2 < size && data[i] == '\\' && data[i+1] == '(')
-		return i + 2;
-	/* $ */
-	else if (i + 1 < size && data[i] == '$')
-		return i + 1;
-
-	return 0;
-}
-
 /* parse_mathblock • parsing of latex and mathjax style blocks */
 static size_t
 parse_mathblock(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size)
