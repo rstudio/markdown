@@ -159,7 +159,7 @@ markdownToHTML <- function(file, output, text,
                            options=getOption('markdown.HTML.options'),
                            extensions=getOption('markdown.extensions'),
                            title='', 
-         stylesheet=system.file('resources/markdown.css',package='markdown'),
+                           stylesheet=getOption('markdown.HTML.stylesheet'),
                            fragment.only=FALSE)
 {
    if (fragment.only==TRUE)
@@ -187,14 +187,15 @@ markdownToHTML <- function(file, output, text,
 
       if (is.character(stylesheet)){
 
-         # TODO - what to do if user misspelled file name?
+         # what to do if user misspelled file name?
          if (file.exists(stylesheet))
             stylesheet <- paste(readLines(stylesheet),collapse='\n')
 
+         # presume the character vector contains CSS.
          html <- sub('#!markdown_css#',stylesheet,html,fixed=TRUE)
 
       } else {
-        warning("stylsheet must either be valid CSS or a file containint CSS!")
+        warning("stylesheet must either be valid CSS or a file containint CSS!")
       }
 
       if (!is.character(title) || title == '')
@@ -325,4 +326,9 @@ markdownHTMLOptions <- function(defaults=FALSE)
 
    if (is.null(getOption('markdown.HTML.options')))
       options(markdown.HTML.options=markdownHTMLOptions(defaults=TRUE))
+
+   if (is.null(getOption('markdown.HTML.stylesheet'))){
+      sheet <- system.file('resources/markdown.css',package='markdown')
+      options(markdown.HTML.stylesheet=sheet)
+   }
 }

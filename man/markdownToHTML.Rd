@@ -11,8 +11,9 @@
    reproducible research. They are as follows:
 
    \itemize{
-   \item Any latex math expressions enclosed by either the single line
-      $latex ... $ expression or the multi-line $$latex ... $$ expression 
+   \item Latex math expressions enclosed by one of the block level syntaxes,
+      $latex ... $ , $$ ... $$, or \\[ ... \\], or one of the inline syntaxes,
+      $...$, or \\( ... \),
       will be rendered in real-time by the MathJax Javascript library.
    \item \emph{R} code blocks enclosed by ```r ... \\n``` will automatically
       be syntax highlighted.
@@ -26,11 +27,11 @@
 
 \usage{
 markdownToHTML(file, output, text, 
-               options=getOption('markdown.HTML.options'),
-               extensions=getOption('markdown.extensions'),
-               title='',
-          stylesheet=system.file('resources/markdown.css',package='markdown'),
-               fragment.only=FALSE)
+                        options=getOption('markdown.HTML.options'),
+                        extensions=getOption('markdown.extensions'),
+                        title='', 
+                        stylesheet=getOption('markdown.HTML.stylesheet'),
+                        fragment.only=FALSE)
 }
 \arguments{
    \item{file}{a character string giving the pathname of the file to
