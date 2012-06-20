@@ -76,7 +76,6 @@ struct sd_callbacks {
 	void (*table)(struct buf *ob, const struct buf *header, const struct buf *body, void *opaque);
 	void (*table_row)(struct buf *ob, const struct buf *text, void *opaque);
 	void (*table_cell)(struct buf *ob, const struct buf *text, int flags, void *opaque);
-	void (*mathblock)(struct buf *ob, const struct buf *text, void *opaque);
 
 
 	/* span level callbacks - NULL or return 0 prints the span verbatim */
@@ -91,7 +90,8 @@ struct sd_callbacks {
 	int (*triple_emphasis)(struct buf *ob, const struct buf *text, void *opaque);
 	int (*strikethrough)(struct buf *ob, const struct buf *text, void *opaque);
 	int (*superscript)(struct buf *ob, const struct buf *text, void *opaque);
-	int (*mathspan)(struct buf *ob, const struct buf *text, void *opaque);
+	int (*inlinemath)(struct buf *ob, const struct buf *text, void *opaque);
+	int (*displayedmath)(struct buf *ob, const struct buf *text, void *opaque);
 
 	/* low level callbacks - NULL copies input directly into the output */
 	void (*entity)(struct buf *ob, const struct buf *entity, void *opaque);

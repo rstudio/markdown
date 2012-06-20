@@ -74,7 +74,7 @@ static size_t char_autolink_email(struct buf *ob, struct sd_markdown *rndr, uint
 static size_t char_autolink_www(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size);
 static size_t char_link(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size);
 static size_t char_superscript(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size);
-static size_t char_latex_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size);
+static size_t char_dollar(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size);
 
 enum markdown_char_t {
 	MD_CHAR_NONE = 0,
@@ -89,7 +89,7 @@ enum markdown_char_t {
 	MD_CHAR_AUTOLINK_EMAIL,
 	MD_CHAR_AUTOLINK_WWW,
 	MD_CHAR_SUPERSCRIPT,
-	MD_CHAR_LATEXMATH,
+	MD_CHAR_DOLLAR,
 };
 
 static char_trigger markdown_char_ptrs[] = {
@@ -105,7 +105,7 @@ static char_trigger markdown_char_ptrs[] = {
 	&char_autolink_email,
 	&char_autolink_www,
 	&char_superscript,
-	&char_latex_math
+	&char_dollar
 };
 
 /* render • structure containing one particular render */
@@ -252,6 +252,188 @@ _isspace(int c)
 {
 	return c == ' ' || c == '\n';
 }
+
+
+/********************************
+ * LATEX MATH PARSING FUNCTIONS *
+ ********************************/
+
+/* org-mode inline latex math, e.g. $...$
+ *
+ * Rules for parsing:
+ *
+ *  1. eqations must be attached to begin and end $
+ *  2. at most two newlines in the equation
+ *  3. the closing $ must be followed by whitespace, punctuation, or a dash.
+ */
+static size_t
+parse_orgmode_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size)
+{
+	/* actually negate this and don't allow a letter number or back-tick */
+	static const char *punct = " .?!:;'/,-\"";
+	size_t i = 1, nl = 0, length = 0;
+
+	if (!rndr->cb.inlinemath) return 0;
+
+	if (i < size && data[i] == ' ')
+		return 0;
+
+	while(i < size){
+		while (i < size && !(data[i] == '\n' || data[i] == '$')) {
+			i++;
+			length++;
+		}
+
+		if (i == size) return 0;
+
+		if (data[i] == '\n') nl++;
+
+		if (nl > 2) return 0;
+
+		if (data[i] == '$'){
+			i++;
+			if (i < size && strchr(punct,data[i]) != NULL) {
+				struct buf *work = rndr_newbuf(rndr, BUFFER_SPAN);
+				bufput(work, data + 1, length);
+				rndr->cb.inlinemath(ob,work, rndr->opaque);
+				rndr_popbuf(rndr, BUFFER_SPAN);
+				return i;
+			} else {
+				return 0;
+			}
+
+		}
+
+		i++;
+		length++;
+	}
+
+	return 0;
+}
+
+/* parse_escape_math • parse \(...\) or \[...\] and return */
+static size_t
+parse_escape_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size)
+{
+	int (*render_method)(struct buf *ob, const struct buf *text, void *opaque);
+	size_t i = 1, length = 0;
+	uint8_t c;
+
+	if (i < size) {
+		switch (data[i]) {
+			case '(':
+				if (!rndr->cb.inlinemath) return 0;
+				render_method = rndr->cb.inlinemath;
+				c = ')';
+				break;
+			case '[':
+				if (!rndr->cb.displayedmath) return 0;
+				render_method = rndr->cb.displayedmath;
+				c = ']';
+			   	break;
+			default:
+				return 0;
+		}
+	}
+
+	i++;
+
+	while (i < size) {
+		while (i < size && data[i] != '\\') {
+			i++;
+			length++;
+		}
+		
+		if (i == size) return 0;
+
+		if (i + 1 < size && data[i + 1] == c){
+			i += 2;
+			struct buf *work = rndr_newbuf(rndr, BUFFER_SPAN);
+			bufput(work, data + 2, length);
+			render_method(ob,work, rndr->opaque);
+			rndr_popbuf(rndr, BUFFER_SPAN);
+			return i;
+		}
+
+		i++;
+		length++;
+	}
+
+	return 0;
+}
+
+static size_t
+parse_inline_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size)
+{
+	size_t i = 0;
+	struct buf *work;
+
+	if (!rndr->cb.inlinemath) return 0;
+
+	while (i < size && data[i] != '$')
+		i++;
+		
+	if (i == size) return 0;
+
+	work = rndr_newbuf(rndr, BUFFER_SPAN);
+	bufput(work, data , i);
+	rndr->cb.inlinemath(ob,work, rndr->opaque);
+	rndr_popbuf(rndr, BUFFER_SPAN);
+
+	i++; 
+
+	return i;
+}
+
+static size_t
+parse_displayed_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size)
+{
+	size_t i = 0;
+	struct buf *work;
+
+	if (!rndr->cb.displayedmath) return 0;
+
+	while (i + 1 < size && !(data[i] == '$' && data[i + 1] == '$') )
+		i++;
+		
+	if (i == size) return 0;
+
+	work = rndr_newbuf(rndr, BUFFER_SPAN);
+	bufput(work, data , i);
+	rndr->cb.displayedmath(ob,work, rndr->opaque);
+	rndr_popbuf(rndr, BUFFER_SPAN);
+
+	i += 2; /* passed the $$ */
+
+	return i;
+}
+
+static size_t 
+char_dollar(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size)
+{
+	size_t i = 0, length = 0;
+
+	/* $$latex */
+	if (i + 7 < size && data[i] == '$' && data[i+1] == '$' && 
+		data[i+2] == 'l' && data[i+3] == 'a' && data[i+4] == 't' && 
+		data[i+5] == 'e' && data[i+6] == 'x')
+		return parse_displayed_math(ob, rndr, data + 7, size - 7) + 7;
+	/* $latex */
+	if (i + 6 < size && data[i] == '$' &&
+		data[i+1] == 'l' && data[i+2] == 'a' && data[i+3] == 't' && 
+		data[i+4] == 'e' && data[i+5] == 'x')
+		return parse_inline_math(ob, rndr, data + 6, size - 6) + 6;
+	/* $$ */
+	else if (i + 2 < size && data[i] == '$' && data[i+1] == '$')
+		return parse_displayed_math(ob, rndr, data + 2, size - 2) + 2;
+	/* $ */
+	else 
+		return parse_orgmode_math(ob, rndr, data, size);
+
+	/* not reached */
+	return 0;
+}
+
 
 /****************************
  * INLINE PARSING FUNCTIONS *
@@ -683,40 +865,6 @@ char_codespan(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t of
 	return end;
 }
 
-/* char_mathspan • '\\(' ... '\\)' */
-static size_t 
-char_mathspan(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size)
-{
-	size_t i = 1, length = 0;
-
-	if (!rndr->cb.mathspan) return 0;
-
-	if (i + 1 < size && data[i++] != '(')
-		return 0;
-
-	while (i < size) {
-		while (i < size && data[i] != '\\') {
-			i++;
-			length++;
-		}
-		
-		if (i == size) return 0;
-
-		if (i + 1 < size && data[i + 1] == ')'){
-			i += 2;
-			struct buf *work = rndr_newbuf(rndr, BUFFER_SPAN);
-			bufput(work, data + 2, length);
-			rndr->cb.mathspan(ob,work, rndr->opaque);
-			rndr_popbuf(rndr, BUFFER_SPAN);
-			return i;
-		}
-
-		i++;
-		length++;
-	}
-
-	return 0;
-}
 
 /* char_escape • '\\' backslash escape */
 static size_t
@@ -730,9 +878,9 @@ char_escape(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offs
 		if (strchr(escape_chars, data[1]) == NULL)
 			return 0;
 
-		if (size > 2 && data[1] == '(' && 
+		if (size > 2 && (data[1] == '(' || data[1] == '[') && 
 			((rndr->ext_flags & MKDEXT_LATEX_MATH) != 0)  &&
-			((i = char_mathspan(ob, rndr, data, offset, size)) != 0) )
+			((i = parse_escape_math(ob, rndr, data, size)) != 0) )
 			return i;
 
 		if (rndr->cb.normal_text) {
@@ -1149,57 +1297,6 @@ char_superscript(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t
 	return (sup_start == 2) ? sup_len + 1 : sup_len;
 }
 
-/* org-mode inline latex math, e.g. $...$
- *
- * Rules for parsing:
- *
- *  1. eqations must be attached to begin and end $
- *  2. at most two newlines in the equation
- *  3. the closing $ must be followed by whitespace, punctuation, or a dash.
- */
-static size_t
-char_latex_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size)
-{
-	/* actually negate this and don't allow a letter number or back-tick */
-	static const char *punct = " .?!:;'/,-\"";
-	size_t i = 1, nl = 0, length = 0;
-
-	if (!rndr->cb.mathspan) return 0;
-
-	if (i < size && data[i] == ' ')
-		return 0;
-
-	while(i < size){
-		while (i < size && !(data[i] == '\n' || data[i] == '$')) {
-			i++;
-			length++;
-		}
-
-		if (i == size) return 0;
-
-		if (data[i] == '\n') nl++;
-
-		if (nl > 2) return 0;
-
-		if (data[i] == '$'){
-			i++;
-			if (i < size && strchr(punct,data[i]) != NULL) {
-				struct buf *work = rndr_newbuf(rndr, BUFFER_SPAN);
-				bufput(work, data + 1, length);
-				rndr->cb.mathspan(ob,work, rndr->opaque);
-				rndr_popbuf(rndr, BUFFER_SPAN);
-				return i;
-			} else {
-				return 0;
-			}
-
-		}
-
-		i++;
-	}
-
-	return 0;
-}
 
 /*********************************
  * BLOCK-LEVEL PARSING FUNCTIONS *
@@ -1910,114 +2007,6 @@ parse_atxheader(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t 
 	return skip;
 }
 
-/* prefix_mathblock • returns prefix length of math blocks, one of:
- * $$latex
- * $$
- * \[
- */ 
-static size_t
-prefix_mathblock(uint8_t *data, size_t size, struct buf *delim)
-{
-	size_t i = 0, length = 0;
-
-	/* skipping initial spaces */
-	if (size < 3) return 0;
-	if (data[0] == ' ') { i++;
-	if (data[1] == ' ') { i++;
-	if (data[2] == ' ') { i++; } } }
-
-	/* $$latex */
-	if (i + 7 < size && data[i] == '$' && data[i+1] == '$' && 
-		data[i+2] == 'l' && data[i+3] == 'a' && data[i+4] == 't' && 
-		data[i+5] == 'e' && data[i+6] == 'x')
-		length = i + 7;
-	/* $$ */
-	else if (i + 2 < size && data[i] == '$' && data[i+1] == '$')
-		length = i + 2;
-	/* \[ */
-	else if (i + 2 < size && data[i] == '\\' && data[i+1] == '[')
-		length = i + 2;
-
-	if (length > 0 && delim) {
-		delim->data = data + i;
-		delim->size = length;
-	}
-
-	return length;
-}
-
-
-/* mathblock_end • returns length of data up to 
- * the mathblock end delimiters, one of:
- * \]
- * $$
- */ 
-static size_t
-mathblock_end(uint8_t *data, size_t size, struct buf *beg_delim, struct buf *end_delim)
-{
-	size_t i = 0;
-
-	while (i < size) {
-		while (i < size && !(data[i] == '\\' || data[i] == '$'))
-			i++;
-
-		if (i == size) return 0;
-
-		if ( i + 1 < size) {
-		   	if ((data[i] == '\\' && data[i + 1] == ']') ||
-				(data[i] == '$'  && data[i + 1] == '$') ) {
-
-
-				/* Match correct begin and end delimiters:
-				 * $latex ... $$
-				 * $$ ... $$
-				 * \[ ... \]
-				 */
-				if ((beg_delim->data[0] == '$' && data[i] == '$') ||
-					(beg_delim->data[0] == '\\' && data[i] == '\\')) {
-
-					if (end_delim) {
-						end_delim->data = data + i;
-						end_delim->size = 2;
-					}
-
-					return i - 1;
-				}
-			}
-		}
-
-		i++;
-	}
-
-	return 0;
-}
-
-/* parse_mathblock • parsing of latex and mathjax style blocks */
-static size_t
-parse_mathblock(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size)
-{
-	size_t beg, length;
-	struct buf beg_delim = { 0, 0, 0, 0};
-	struct buf end_delim = { 0, 0, 0, 0};
-
-	beg = prefix_mathblock(data,size,&beg_delim);
-	if (beg == 0) return 0;
-
-	length = mathblock_end(data + beg,size, &beg_delim, &end_delim);
-	if (length == 0) return 0;
-
-	if (rndr->cb.mathblock){
-		struct buf *work = rndr_newbuf(rndr, BUFFER_BLOCK);
-
-		bufput(work, data + beg, length);
-
-		rndr->cb.mathblock(ob, work, rndr->opaque);
-
-		rndr_popbuf(rndr, BUFFER_BLOCK);
-	}
-
-	return beg + length + end_delim.size + 1;
-}
 
 
 /* htmlblock_end • checking end of HTML block : </tag>[ \t]*\n[ \t*]\n */
@@ -2423,10 +2412,6 @@ parse_block(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size
 			(i = parse_fencedcode(ob, rndr, txt_data, end)) != 0)
 			beg += i;
 
-		else if ((rndr->ext_flags & MKDEXT_LATEX_MATH) != 0 &&
-			(i = parse_mathblock(ob, rndr, txt_data, end)) != 0)
-			beg += i;
-
 		else if ((rndr->ext_flags & MKDEXT_TABLES) != 0 &&
 			(i = parse_table(ob, rndr, txt_data, end)) != 0)
 			beg += i;
@@ -2649,7 +2634,7 @@ sd_markdown_new(
 		md->active_char['^'] = MD_CHAR_SUPERSCRIPT;
 
    if (extensions & MKDEXT_LATEX_MATH)
-		md->active_char['$'] = MD_CHAR_LATEXMATH;
+		md->active_char['$'] = MD_CHAR_DOLLAR;
 
 	/* Extension data */
 	md->ext_flags = extensions;
