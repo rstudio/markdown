@@ -69,6 +69,9 @@ Content Cell  | Content Cell
       \item{\code{'superscript'}}{
          translate ^ and subsequent text into HTML superscript.
       }
+      \item{\code{'latex_math'}}{
+         transforms all math equations into syntactically correct MathJax equations.
+      }
 
    }
 

@@ -1,3 +1,20 @@
+			      CHANGES IN markdown VERSION 0.5.2
+
+NEW FEATURES
+
+  o with the new 'latex_math' markdown extensions, users can
+    include math equations using several syntaxes. For
+    block level equations, use $latex ... $, $$ ... $$, or
+    \[ ... \]. For inline equations, use $...$ or \( ... \).
+
+MAJOR CHANGES
+
+  o the markdown extension 'ingore_math' was replaced with
+    'latex_math'.
+
+  o users can now use the markdown.HTML.stylesheet option to
+    override the package default stylesheet.
+
 			      CHANGES IN markdown VERSION 0.5.1
 
 BUG FIXES
