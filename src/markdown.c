@@ -266,16 +266,40 @@ _isspace(int c)
  *  2. at most two newlines in the equation
  *  3. the closing $ must be followed by whitespace, punctuation, or a dash.
  */
+
+static size_t
+prefix_math(uint8_t *data, size_t size)
+{
+	/* $$latex */
+	if (7 < size && data[0] == '$' && data[1] == '$' && 
+		data[2] == 'l' && data[3] == 'a' && data[4] == 't' && 
+		data[5] == 'e' && data[6] == 'x')
+		return 7;
+	/* $latex */
+	if (6 < size && data[0] == '$' &&
+		data[1] == 'l' && data[2] == 'a' && data[3] == 't' && 
+		data[4] == 'e' && data[5] == 'x')
+		return 6;
+	/* $$ */
+	else if (2 < size && data[0] == '$' && data[1] == '$')
+		return 2;
+	/* $ */
+	else if (1 < size && data[0] == '$')
+		return 1;
+
+	return 0;
+}
 static size_t
 parse_orgmode_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size)
 {
-	/* actually negate this and don't allow a letter number or back-tick */
-	static const char *punct = " .?!:;'/,-\"";
+	static const char *punct = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 	size_t i = 1, nl = 0, length = 0;
+	struct buf *work;
+	int r;
 
 	if (!rndr->cb.inlinemath) return 0;
 
-	if (i < size && data[i] == ' ')
+	if (i < size && (data[i] == ' ' || data[i] == '\n') )
 		return 0;
 
 	while(i < size){
@@ -291,13 +315,26 @@ parse_orgmode_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size
 		if (nl > 2) return 0;
 
 		if (data[i] == '$'){
+
+			/* bail if there's whitespace before the dollar or */
+			if (data[i - 1] == ' ' || data[i - 1] == '\n')
+				return 0;
+
+			/* bail if there's not whitespace or punctuation following the 
+			 * dollar.
+			 */
+			if (i + 1 < size && data[i + 1] != ' ' && data[i + 1] != '\n' &&
+				(strchr(punct,data[i + 1]) == NULL) )
+				return 0;
+
 			i++;
-			if (i < size && strchr(punct,data[i]) != NULL) {
-				struct buf *work = rndr_newbuf(rndr, BUFFER_SPAN);
+
+			if (i < size) {
+				work = rndr_newbuf(rndr, BUFFER_SPAN);
 				bufput(work, data + 1, length);
-				rndr->cb.inlinemath(ob,work, rndr->opaque);
+				r = rndr->cb.inlinemath(ob,work, rndr->opaque);
 				rndr_popbuf(rndr, BUFFER_SPAN);
-				return i;
+				return  r ? i : 0;
 			} else {
 				return 0;
 			}
@@ -318,6 +355,8 @@ parse_escape_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_
 	int (*render_method)(struct buf *ob, const struct buf *text, void *opaque);
 	size_t i = 1, length = 0;
 	uint8_t c;
+	struct buf *work;
+	int r;
 
 	if (i < size) {
 		switch (data[i]) {
@@ -348,11 +387,11 @@ parse_escape_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_
 
 		if (i + 1 < size && data[i + 1] == c){
 			i += 2;
-			struct buf *work = rndr_newbuf(rndr, BUFFER_SPAN);
+			work = rndr_newbuf(rndr, BUFFER_SPAN);
 			bufput(work, data + 2, length);
-			render_method(ob,work, rndr->opaque);
+			r = render_method(ob,work, rndr->opaque);
 			rndr_popbuf(rndr, BUFFER_SPAN);
-			return i;
+			return r ? i : 0;
 		}
 
 		i++;
@@ -365,10 +404,17 @@ parse_escape_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_
 static size_t
 parse_inline_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size)
 {
-	size_t i = 0;
+	size_t i = 0, pre;
 	struct buf *work;
+	int r;
 
 	if (!rndr->cb.inlinemath) return 0;
+
+	pre = prefix_math(data, size);
+
+	if (pre == 0) return 0;
+
+	i = pre;
 
 	while (i < size && data[i] != '$')
 		i++;
@@ -376,61 +422,69 @@ parse_inline_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_
 	if (i == size) return 0;
 
 	work = rndr_newbuf(rndr, BUFFER_SPAN);
-	bufput(work, data , i);
-	rndr->cb.inlinemath(ob,work, rndr->opaque);
+	bufput(work, data + pre, i - pre);
+	r = rndr->cb.inlinemath(ob,work, rndr->opaque);
 	rndr_popbuf(rndr, BUFFER_SPAN);
 
 	i++; 
 
-	return i;
+	return r ? i : 0;
 }
 
 static size_t
 parse_displayed_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size)
 {
-	size_t i = 0;
+	size_t i = 0, pre;
 	struct buf *work;
+	int r;
 
 	if (!rndr->cb.displayedmath) return 0;
+
+	pre = prefix_math(data, size);
+
+	if (pre == 0) return 0;
+
+	i = pre;
 
 	while (i + 1 < size && !(data[i] == '$' && data[i + 1] == '$') )
 		i++;
 		
-	if (i == size) return 0;
+	if (i == size - 1) return 0;
 
 	work = rndr_newbuf(rndr, BUFFER_SPAN);
-	bufput(work, data , i);
-	rndr->cb.displayedmath(ob,work, rndr->opaque);
+	bufput(work, data + pre, i - pre);
+	r = rndr->cb.displayedmath(ob,work, rndr->opaque);
 	rndr_popbuf(rndr, BUFFER_SPAN);
 
 	i += 2; /* passed the $$ */
 
-	return i;
+	return r ? i : 0;
 }
 
 static size_t 
 char_dollar(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size)
 {
-	size_t i = 0, length = 0;
+	size_t i;
 
-	/* $$latex */
-	if (i + 7 < size && data[i] == '$' && data[i+1] == '$' && 
-		data[i+2] == 'l' && data[i+3] == 'a' && data[i+4] == 't' && 
-		data[i+5] == 'e' && data[i+6] == 'x')
-		return parse_displayed_math(ob, rndr, data + 7, size - 7) + 7;
-	/* $latex */
-	if (i + 6 < size && data[i] == '$' &&
-		data[i+1] == 'l' && data[i+2] == 'a' && data[i+3] == 't' && 
-		data[i+4] == 'e' && data[i+5] == 'x')
-		return parse_inline_math(ob, rndr, data + 6, size - 6) + 6;
-	/* $$ */
-	else if (i + 2 < size && data[i] == '$' && data[i+1] == '$')
-		return parse_displayed_math(ob, rndr, data + 2, size - 2) + 2;
+	i = prefix_math(data, size);
+
+	if (i == 0) return 0;
+
+	if (i > 1) {
+
+		/* $$latex or $$ */
+		if (data[0] == '$' && data[1] == '$')
+			return parse_displayed_math(ob, rndr, data, size);
+		
+		/* $latex */
+		return parse_inline_math(ob, rndr, data, size);
+
+	} 
+
 	/* $ */
-	else 
+	if (i == 1)
 		return parse_orgmode_math(ob, rndr, data, size);
 
-	/* not reached */
 	return 0;
 }
 

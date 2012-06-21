@@ -163,6 +163,9 @@ rndr_blockquote(struct buf *ob, const struct buf *text, void *opaque)
 static int
 rndr_displayedmath(struct buf *ob, const struct buf *text, void *opaque)
 {
+	if (!text || !text->size)
+		return 0;
+
 	BUFPUTSL(ob, "\\[");
 	if (text) bufput(ob, text->data, text->size);
 	BUFPUTSL(ob, "\\]");
@@ -172,6 +175,9 @@ rndr_displayedmath(struct buf *ob, const struct buf *text, void *opaque)
 static int
 rndr_inlinemath(struct buf *ob, const struct buf *text, void *opaque)
 {
+	if (!text || !text->size)
+		return 0;
+
 	BUFPUTSL(ob, "\\(");
 	if (text) bufput(ob, text->data, text->size);
 	BUFPUTSL(ob, "\\)");
