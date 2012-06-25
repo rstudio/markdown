@@ -4,8 +4,9 @@ NEW FEATURES
 
   o with the new 'latex_math' markdown extensions, users can
     include math equations using several syntaxes. For
-    block level equations, use $latex ... $, $$ ... $$, or
-    \[ ... \]. For inline equations, use $...$ or \( ... \).
+    block level equations, use $$latex ... $$, $$ ... $$, or
+    \[ ... \]. For inline equations, use $latex...$, $...$,
+    or \( ... \).
 
 MAJOR CHANGES
 
@@ -14,6 +15,10 @@ MAJOR CHANGES
 
   o users can now use the markdown.HTML.stylesheet option to
     override the package default stylesheet.
+
+  o setting the fragment_only rendering option or the fragment.only
+    parameter to markdownToHTML will base64 encode images if
+    applicable. version 0.5.1 did not.
 
 			      CHANGES IN markdown VERSION 0.5.1
 
