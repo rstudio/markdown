@@ -168,7 +168,7 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
    fileExt <- function (x) 
    {
       pos <- regexpr("\\.([[:alnum:]]+)$", x)
-      ifelse(pos > -1L, substring(x, pos + 1L), "")
+      ifelse(pos > -1L, tolower(substring(x, pos + 1L)), "")
    }
    ext <- fileExt(f)
    ifelse(nchar(ext) > 1L && exists(ext,.MIMEMAP),.MIMEMAP[[ext]], "")
