@@ -292,7 +292,7 @@ prefix_math(uint8_t *data, size_t size)
 static size_t
 parse_orgmode_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size)
 {
-	static const char *punct = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+	static const char *punct = "!\"#$%&'()*+,-./:;<=>?@[\\]^_{|}~";
 	size_t i = 1, nl = 0, length = 0;
 	struct buf *work;
 	int r;
@@ -323,13 +323,13 @@ parse_orgmode_math(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size
 			/* bail if there's not whitespace or punctuation following the 
 			 * dollar.
 			 */
-			if (i + 1 < size && data[i + 1] != ' ' && data[i + 1] != '\n' &&
+			if (i < size && data[i + 1] != ' ' && data[i + 1] != '\n' &&
 				(strchr(punct,data[i + 1]) == NULL) )
 				return 0;
 
 			i++;
 
-			if (i < size) {
+			if (i <= size) {
 				work = rndr_newbuf(rndr, BUFFER_SPAN);
 				bufput(work, data + 1, length);
 				r = rndr->cb.inlinemath(ob,work, rndr->opaque);
