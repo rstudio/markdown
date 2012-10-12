@@ -392,7 +392,7 @@ markdownHTMLOptions <- function(defaults=FALSE)
    if (!defaults)
       allOptions
    else
-      allOptions[seq(9,12)]
+      allOptions[seq(10,12)]
 }
 
 .onLoad <- function(libname,pkgname)
