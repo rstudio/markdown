@@ -296,14 +296,14 @@ markdownToHTML <- function(file, output, text,
       # Need to scrub title more, e.g. strip html, etc.
       html <- sub("#!title#",title,html,perl=TRUE)
 
-      if ('highlight_code' %in% options || .requiresHighlighting(html)){
+      if ('highlight_code' %in% options && .requiresHighlighting(html)){
          highlight <- paste(readLines(system.file('resources/r_highlight.html',package='markdown')),collapse='\n')
       } else {
          highlight <- ''
       }
       html <- sub("#!r_highlight#",highlight,html,fixed=TRUE)
 
-      if ('mathjax' %in% options || .requiresMathJax(html)){
+      if ('mathjax' %in% options && .requiresMathJax(html)){
          mathjax <- paste(readLines(system.file('resources/mathjax.html',package='markdown')),collapse='\n')
       } else {
          mathjax <- ''
@@ -392,7 +392,7 @@ markdownHTMLOptions <- function(defaults=FALSE)
    if (!defaults)
       allOptions
    else
-      allOptions[seq(10,12)]
+      allOptions[seq(10,14)]
 }
 
 .onLoad <- function(libname,pkgname)
