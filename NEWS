@@ -1,3 +1,19 @@
+			      CHANGES IN markdown VERSION 0.5.3
+
+NEW FEATURES
+
+  o C/C++ is now a supported language for code block highlighting.
+
+MAJOR CHANGES
+
+  o 'hard_wrap' has been dropped while 'mathjax' and 'highlight_code'
+    have been added to the default list of html options.
+
+BUG FIXES
+
+  o fixed parsing of math equations when located at the end of
+    a line.
+
 			      CHANGES IN markdown VERSION 0.5.2
 
 NEW FEATURES
