@@ -4,5 +4,4 @@
 ^\.Rproj\.user$
 ^\.git$
 ^tools$
-
-
+.lvimrc
