@@ -376,7 +376,7 @@ void skip_pandoc_title_block(struct buf *ib){
 
       /* Search for end of line */
       while (pos < ib->size && ib->data[pos] != '\n') pos++;
-      if (pos+1 < ib->size) pos++;
+      if (pos < ib->size) pos++;
       else break;
 
       do {
@@ -385,7 +385,7 @@ void skip_pandoc_title_block(struct buf *ib){
           */
          if (ib->data[pos] == ' ' && i < 2){
             while (pos < ib->size && ib->data[pos] != '\n') pos++;
-            if (pos+1 < ib->size) pos++;
+            if (pos < ib->size) pos++;
             else break;
          } else {
             break;
@@ -399,7 +399,37 @@ void skip_pandoc_title_block(struct buf *ib){
    if (pos > 0) bufslurp(ib,pos);
 }
 
+/* Jekyll front matter begins on the first line and the first three characters
+ * of the line are '---'. Front matter ends when a line is started with '---'.
+ * We skip everything in between including the ending '---'.
+ */
 void skip_jekyll_front_matter(struct buf *ib){
+	int i = 0; int front_matter_found = 0;
+   size_t pos = 0;
+
+   /* Jekyll 0.12.0 expects front matter to start on the first line */
+   if (ib->size < 3 || !(ib->data[0] == '-' && ib->data[1] == '-' && 
+      ib->data[2] == '-') ) return;
+
+   pos = 3;
+   do {
+      while (pos < ib->size && ib->data[pos] != '\n') pos++;
+      if (pos == ib->size) break;
+      if (pos+3 < ib->size){
+         if (ib->data[pos+1] == '-' && ib->data[pos+2] == '-' && ib->data[pos+3] == '-'){
+            front_matter_found = 1;
+            pos += 4;
+            break;
+         } else {
+            pos++;
+         }
+      } else {
+         break;
+      }
+   } while(1);
+
+   if (front_matter_found && pos > 0)
+      bufslurp(ib,pos);
 }
 
 SEXP rmd_render_markdown(SEXP Sfile, SEXP Soutput, SEXP Stext, SEXP Srenderer,
