@@ -1,3 +1,9 @@
+			      CHANGES IN markdown VERSION 0.5.4
+NEW FEATURES
+
+  o Both Pandoc title blocks and Jekyll front matter sections are
+    skipped when rendering markdown documents.
+
 			      CHANGES IN markdown VERSION 0.5.3
 
 NEW FEATURES
