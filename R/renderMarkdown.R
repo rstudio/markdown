@@ -285,11 +285,8 @@ markdownToHTML <- function(file, output, text,
          # what to do if user misspelled file name?
          if (file.exists(header))
             header <- paste(readLines(header),collapse='\n')
-
-      } else {
-        header <- ''
       }
-       html <- sub('#!header#',header,html,fixed=TRUE)
+      html <- sub('#!header#',header,html,fixed=TRUE)
 
       if (!is.character(title) || title == '')
       {
