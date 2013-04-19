@@ -236,7 +236,7 @@ markdownToHTML <- function(file, output, text,
                            options=getOption('markdown.HTML.options'),
                            extensions=getOption('markdown.extensions'),
                            title='', 
-                           stylesheet='',
+                           stylesheet=getOption('markdown.HTML.stylesheet'),
                            header='',
                            fragment.only=FALSE)
 {
@@ -268,36 +268,25 @@ markdownToHTML <- function(file, output, text,
               system.file('resources/markdown.html',package='markdown')),collapse='\n')
       html <- sub('#!html_output#',ret,html,fixed=TRUE)
 
-      if (!'skip_style' %in% options){
-         default_stylesheet = getOption('markdown.HTML.stylesheet')
-         if(is.character(default_stylesheet)){
-            # what to do if user misspelled file name?
-            if (file.exists(default_stylesheet))
-               default_stylesheet <- paste(readLines(default_stylesheet),collapse='\n')
-            # presume the character vector contains CSS.
-            html <- sub('#!default_markdown_css#',default_stylesheet,html,fixed=TRUE)
-         }
-         else {
-            warning("stylesheet must either be valid CSS or a file containing CSS!")
-         }
-      }
-      if (is.character(header)){
-         # what to do if user misspelled file name?
-         if (file.exists(header))
-            header <- paste(readLines(header),collapse='\n')
-      }
-      html <- sub('#!header#',header,html,fixed=TRUE)
-
       if (is.character(stylesheet)){
 
          # what to do if user misspelled file name?
          if (file.exists(stylesheet))
             stylesheet <- paste(readLines(stylesheet),collapse='\n')
 
+         # presume the character vector contains CSS.
          html <- sub('#!markdown_css#',stylesheet,html,fixed=TRUE)
+
       } else {
         warning("stylesheet must either be valid CSS or a file containing CSS!")
       }
+
+      if (is.character(header)){
+         # what to do if user misspelled file name?
+         if (file.exists(header))
+            header <- paste(readLines(header),collapse='\n')
+      }
+      html <- sub('#!header#',header,html,fixed=TRUE)
 
       if (!is.character(title) || title == '')
       {
