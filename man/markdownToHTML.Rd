@@ -31,6 +31,7 @@ markdownToHTML(file, output, text,
                         extensions=getOption('markdown.extensions'),
                         title='', 
                         stylesheet=getOption('markdown.HTML.stylesheet'),
+                        header='',
                         fragment.only=FALSE)
 }
 \arguments{
@@ -49,6 +50,8 @@ markdownToHTML(file, output, text,
    \item{title}{The HTML title.}
    \item{stylesheet}{either valid CSS or a file containing CSS. will be 
       included in the output.}
+   \item{header}{either valid HTML or a file containing HTML will be 
+      included in the header of the output.}
    \item{fragment.only}{Whether or not to produce an HTML fragment without 
       the HTML header and body tags, CSS, and Javascript components.}
 }

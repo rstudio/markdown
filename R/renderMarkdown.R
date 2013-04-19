@@ -165,7 +165,7 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
 
 .mimeType <- function(f){
    f <- f[1]
-   fileExt <- function (x) 
+   fileExt <- function (x)
    {
       pos <- regexpr("\\.([[:alnum:]]+)$", x)
       ifelse(pos > -1L, tolower(substring(x, pos + 1L)), "")
@@ -237,6 +237,7 @@ markdownToHTML <- function(file, output, text,
                            extensions=getOption('markdown.extensions'),
                            title='', 
                            stylesheet=getOption('markdown.HTML.stylesheet'),
+                           header='',
                            fragment.only=FALSE)
 {
    if (fragment.only==TRUE)
@@ -246,7 +247,7 @@ markdownToHTML <- function(file, output, text,
    {
       outputFile <- output
       output <- NULL
-   } 
+   }
    else
       outputFile <- NULL
 
@@ -277,8 +278,15 @@ markdownToHTML <- function(file, output, text,
          html <- sub('#!markdown_css#',stylesheet,html,fixed=TRUE)
 
       } else {
-        warning("stylesheet must either be valid CSS or a file containint CSS!")
+        warning("stylesheet must either be valid CSS or a file containing CSS!")
       }
+
+      if (is.character(header)){
+         # what to do if user misspelled file name?
+         if (file.exists(header))
+            header <- paste(readLines(header),collapse='\n')
+      }
+      html <- sub('#!header#',header,html,fixed=TRUE)
 
       if (!is.character(title) || title == '')
       {
