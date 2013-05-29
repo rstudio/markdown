@@ -197,9 +197,10 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
    {
       .b64EncodeImgSrc <- function(imgSrc)
       {
-         inFile <- sub(reg,"\\1",imgSrc)
+         src <- sub(reg,"\\1",imgSrc)
+         inFile <- URLdecode(src)
          if (length(inFile) && file.exists(inFile))
-            imgSrc <- sub(inFile,.b64EncodeFile(inFile),imgSrc,fixed=TRUE)
+            imgSrc <- sub(src,.b64EncodeFile(inFile),imgSrc,fixed=TRUE)
 
          imgSrc
       }
