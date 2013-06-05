@@ -30,7 +30,7 @@ rendererOutputType(name)
 \examples{
 
 # List all available renderers
-rendererOutputType('HTML')
+rendererOutputType("HTML")
 
 }
 \keyword{programming}

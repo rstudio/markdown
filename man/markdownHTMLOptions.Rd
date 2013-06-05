@@ -13,7 +13,7 @@
 
 }
 \usage{
-markdownHTMLOptions(defaults=FALSE)
+markdownHTMLOptions(defaults = FALSE)
 }
 \arguments{
    \item{defaults}{If \code{TRUE}, then only the default options are returned.
@@ -101,39 +101,39 @@ markdownHTMLOptions()
 
 \dontrun{
 # To turn on all HTML options globally:
-options(markdown.HTML.options=markdownHTMLOptions())
+options(markdown.HTML.options = markdownHTMLOptions())
 
 # To turn off all HTML options globally:
-options(markdown.HTML.options=NULL)
+options(markdown.HTML.options = NULL)
 
 # To turn on package default HTML options globally:
-options(markdown.HTML.options=markdownHTMLOptions(default=TRUE))
+options(markdown.HTML.options = markdownHTMLOptions(default = TRUE))
 }
 
-# The following examples are short, so we allways add the HTML option 
+# The following examples are short, so we allways add the HTML option
 # 'fragment_only'
-tOpt <- 'fragment_only'
+tOpt <- "fragment_only"
 
 # skip_html example
-mkd='<style></style><img src=""><a href="">Hello</a>'
-cat(markdownToHTML(text=mkd,options=c(tOpt)))
-cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_html')))
+mkd = "<style></style><img src=\"\"><a href=\"\">Hello</a>"
+cat(markdownToHTML(text = mkd, options = c(tOpt)))
+cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html")))
 
 # skip_style example
-cat(markdownToHTML(text=mkd,options=c(tOpt)))
-cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_style')))
+cat(markdownToHTML(text = mkd, options = c(tOpt)))
+cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_style")))
 
 # skip_images example
-cat(markdownToHTML(text=mkd,options=c(tOpt)))
-cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_images')))
+cat(markdownToHTML(text = mkd, options = c(tOpt)))
+cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_images")))
 
 # skip_links example
-cat(markdownToHTML(text=mkd,options=c(tOpt)))
-cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_links')))
+cat(markdownToHTML(text = mkd, options = c(tOpt)))
+cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_links")))
 
 # safelink example
-cat(markdownToHTML(text='[foo](foo://bar "baz")',options=c(tOpt)))
-cat(markdownToHTML(text='[foo](foo://bar "baz")',options=c(tOpt,'safelink')))
+cat(markdownToHTML(text = "[foo](foo://bar \"baz\")", options = c(tOpt)))
+cat(markdownToHTML(text = "[foo](foo://bar \"baz\")", options = c(tOpt, "safelink")))
 
 # toc example
 mkd <- '
@@ -142,26 +142,26 @@ p1
 ## Header 2
 p2
 '
-cat(markdownToHTML(text=mkd,options=c(tOpt)))
-cat(markdownToHTML(text=mkd,options=c(tOpt,'toc')))
+cat(markdownToHTML(text = mkd, options = c(tOpt)))
+cat(markdownToHTML(text = mkd, options = c(tOpt, "toc")))
 
 # hard_wrap example
-cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt)))
-cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt,'hard_wrap')))
+cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt)))
+cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt, "hard_wrap")))
 
 # use_xhtml example
-cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt,'hard_wrap')))
-cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt,'hard_wrap','use_xhtml')))
+cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt, "hard_wrap")))
+cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt, "hard_wrap", "use_xhtml")))
 
 # escape example
-mkd='<style></style><img src=""><a href="">Hello</a>'
-cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_html')))
+mkd = "<style></style><img src=\"\"><a href=\"\">Hello</a>"
+cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html")))
 # overrides all 'skip_*' options
-cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_html','escape')))
+cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html", "escape")))
 
 # smartypants example
-cat(markdownToHTML(text='1/2 (c)',options=c(tOpt)))
-cat(markdownToHTML(text='1/2 (c)',options=c(tOpt,'smartypants')))
+cat(markdownToHTML(text = "1/2 (c)", options = c(tOpt)))
+cat(markdownToHTML(text = "1/2 (c)", options = c(tOpt, "smartypants")))
 
 }
 \keyword{programming}

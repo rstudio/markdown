@@ -40,7 +40,7 @@ smartypants(file, output, text)
 
 \examples{
 
-cat(smartypants(text='1/2 (c)\n'))
+cat(smartypants(text = "1/2 (c)\n"))
 
 }
 \keyword{programming}

@@ -59,7 +59,7 @@ renderMarkdown(file, output, text, renderer='HTML',
 
 \examples{
 
-renderMarkdown(text='Hello World!')
+renderMarkdown(text = "Hello World!")
 
 }
 \keyword{programming}

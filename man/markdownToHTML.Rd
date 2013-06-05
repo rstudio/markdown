@@ -85,7 +85,7 @@ markdownToHTML(file, output, text,
 
 \examples{
 
-print(markdownToHTML(text='Hello World!'))
+print(markdownToHTML(text = "Hello World!"))
 
 }
 \keyword{programming}
