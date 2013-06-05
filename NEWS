@@ -1,3 +1,25 @@
+			      CHANGES IN markdown VERSION 0.5.5
+NEW FEATURES
+
+  o added a new argument 'header' to markdownToHTML() to insert code
+  into the HTML header (e.g. custom CSS styles)
+
+BUG FIXES
+
+  o fixed #25 and #27: minor documentation problems
+
+  o fixed #26: the HTML output file will be written relative to the
+  current working directory now when it contains images that need to
+  be base64 encoded
+
+  o fixed #28: the image URL should be decoded before the image is
+  based64 encoded
+
+MISC
+
+  o Yihui Xie has taken over the maintainership for this package
+  from Jeffrey Horner
+
 			      CHANGES IN markdown VERSION 0.5.4
 NEW FEATURES
 
