@@ -15,8 +15,8 @@
       $latex ... $ , $$ ... $$, or \\[ ... \\], or one of the inline syntaxes,
       $...$, or \\( ... \),
       will be rendered in real-time by the MathJax Javascript library.
-   \item \emph{R} code blocks enclosed by ```r ... \\n``` will automatically
-      be syntax highlighted.
+   \item \emph{R} code blocks enclosed between \verb{```r} and \verb{```} will
+      automatically be syntax highlighted.
    \item Any local images linked using the <img> tag will be base64 encoded and
       included in the output HTML.
    }
