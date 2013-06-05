@@ -8,7 +8,7 @@
 
    As a convenience, the package default options were chosen to render 
    well-formed stand-alone HTML pages. The default options are 
-   \code{'use_xhml'}, \code{'smartypants'}, \code{'base64_images'},
+   \code{'use_xhtml'}, \code{'smartypants'}, \code{'base64_images'},
    \code{'mathjax'}, and \code{'highlight_code'}.
 
 }
