@@ -238,7 +238,7 @@ markdownToHTML <- function(file, output, text,
                            extensions=getOption('markdown.extensions'),
                            title='', 
                            stylesheet=getOption('markdown.HTML.stylesheet'),
-                           header=getOption('markdown.HTML.header'),
+                           header=getOption('markdown.HTML.header', ''),
                            fragment.only=FALSE)
 {
    if (fragment.only==TRUE)
