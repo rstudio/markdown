@@ -1,8 +1,8 @@
 Package: markdown
 Type: Package
 Title: Markdown rendering for R
-Version: 0.5.4
-Date: 2013-01-24
+Version: 0.5.5
+Date: 2013-05-05
 Author: JJ Allaire, Jeffrey Horner, Vicent Marti, and Natacha Porte
 Maintainer: Yihui Xie <xie@yihui.name>
 Description: Markdown is a plain-text formatting syntax that can be
