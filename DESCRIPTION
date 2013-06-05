@@ -5,7 +5,7 @@ Version: 0.5.4
 Date: 2013-01-24
 Author: JJ Allaire, Jeffrey Horner, Vicent Marti, and Natacha Porte
 Maintainer: Yihui Xie <xie@yihui.name>
-Description: Markdown is a plain-text formatting syntax that can be 
+Description: Markdown is a plain-text formatting syntax that can be
  converted to XHTML or other formats. This package provides R bindings
  to the Sundown markdown rendering library.
 Depends: R (>= 2.11.1)
