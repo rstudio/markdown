@@ -256,11 +256,14 @@ markdownToHTML <- function(file, output, text,
                   renderer.options=options,extensions=extensions)
 
    if ('base64_images' %in% options){
-      if (!missing(file) && is.character(file) && file.exists(file)){
-         oldwd <- setwd(dirname(file))
-         on.exit(setwd(oldwd))
-      }
-      ret <- .b64EncodeImages(ret);
+       filedir <- if (!missing(file) && is.character(file) && file.exists(file)) {
+           dirname(file)
+       } else '.'
+       ret <- local({
+           oldwd <- setwd(filedir)
+           on.exit(setwd(oldwd))
+           .b64EncodeImages(ret)
+       })
    }
 
    if (!'fragment_only' %in% options)
