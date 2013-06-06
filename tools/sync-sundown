@@ -9,7 +9,7 @@ fi
 cd sundown
 git clean -dfx
 
-# Use the branch with rstudio-specific changes 
+# Use the branch with rstudio-specific changes
 git checkout master
 git pull
 VERSION=`git rev-parse HEAD`
