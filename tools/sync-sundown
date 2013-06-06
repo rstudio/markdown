@@ -15,7 +15,7 @@ git pull
 VERSION=`git rev-parse HEAD`
 
 # copy files
-MARKDOWN_DIR=../..
+MARKDOWN_DIR=../markdown
 echo "#define RSTUDIO_SUNDOWN_VERSION $VERSION" > src/sundown_version.h
 cp src/autolink.h $MARKDOWN_DIR/inst/include
 cp src/buffer.h $MARKDOWN_DIR/inst/include
