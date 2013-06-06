@@ -249,6 +249,3 @@ bar</p>
 > rm(mkd)
 > rm(tOpt)
 > 
-> proc.time()
-   user  system elapsed 
-  0.300   0.028   0.317 
