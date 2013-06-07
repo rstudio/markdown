@@ -25,7 +25,7 @@
 #include <assert.h>
 
 /* MSVC compat */
-#if defined(_MSC_VER)
+#if defined(__MINGW32__)
 #	define _buf_vsnprintf _vsnprintf
 #else
 #	define _buf_vsnprintf vsnprintf
@@ -126,7 +126,7 @@ bufprintf(struct buf *buf, const char *fmt, ...)
 	va_end(ap);
 
 	if (n < 0) {
-#ifdef _MSC_VER
+#ifdef __MINGW32__ 
 		va_start(ap, fmt);
 		n = _vscprintf(fmt, ap);
 		va_end(ap);
