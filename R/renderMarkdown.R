@@ -51,7 +51,7 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
       if (length(text) > 1)
          text <- paste(text,collapse='')
    }
-   else 
+   else
    {
       stop("Need input from either a file or a text string!")
    }
@@ -68,7 +68,7 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
       renderer.options <- getOption(paste('markdown',renderer,'options',
                                           sep='.'))
 
-   # HTML options must be a character vector. 
+   # HTML options must be a character vector.
    if (renderer=="HTML")
    {
       if (!is.null(renderer.options) && !is.character(renderer.options))
@@ -126,7 +126,7 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
 
 .MIMEMAP$tif <- "image/tiff"
 .MIMEMAP$tiff <- "image/tiff"
-.MIMEMAP$bmp <- "image/bmp" 
+.MIMEMAP$bmp <- "image/bmp"
 .MIMEMAP$ps <- "application/postscript"
 .MIMEMAP$eps <- "application/postscript"
 .MIMEMAP$dvi <-   "application/x-dvi"
@@ -233,10 +233,10 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
       FALSE
 }
 
-markdownToHTML <- function(file, output, text, 
+markdownToHTML <- function(file, output, text,
                            options=getOption('markdown.HTML.options'),
                            extensions=getOption('markdown.extensions'),
-                           title='', 
+                           title='',
                            stylesheet=getOption('markdown.HTML.stylesheet'),
                            header=getOption('markdown.HTML.header', ''),
                            fragment.only=FALSE)
@@ -347,7 +347,7 @@ smartypants <- function(file,output,text)
       if (length(text) > 1)
          text <- paste(text,collapse='')
    }
-   else 
+   else
    {
       stop("Need input from either a file or a text string")
    }
@@ -370,9 +370,9 @@ smartypants <- function(file,output,text)
 # To turn on all extensions:
 #
 # options(markdown.extensions=markdownExtensions())
-# 
+#
 # To turn off all extensions:
-# 
+#
 # options(markdown.extensions=c())
 #
 markdownExtensions <- function()
@@ -390,14 +390,14 @@ markdownExtensions <- function()
 # To turn on default options:
 #
 # options(markdown.HTML.options=markdownHTMLOptions(defaults=TRUE))
-# 
+#
 # To turn off all options:
-# 
+#
 # options(markdown.HTML.options=c())
 #
 markdownHTMLOptions <- function(defaults=FALSE)
 {
-   allOptions <- c('skip_html', 'skip_style', 'skip_images', 'skip_links', 
+   allOptions <- c('skip_html', 'skip_style', 'skip_images', 'skip_links',
                    'safelink', 'toc', 'escape', 'fragment_only', 'hard_wrap',
                    'use_xhtml', 'smartypants','base64_images', 'mathjax',
                    'highlight_code')
