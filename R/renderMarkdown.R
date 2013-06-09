@@ -28,6 +28,15 @@
 #' registeredRenderers()
 registeredRenderers <- function() .Call(rmd_registered_renderers)
 
+
+#' Testing for existence of a markdown renderer
+#'
+#' \code{rendererExists} determines whether or not a certain renderer exists in
+#' the markdown library.
+#' @param name name of renderer.
+#' @return \code{TRUE} or \code{FALSE} for whether or not the renderer exists.
+#' @export rendererExists
+#' @examples rendererExists("HTML")
 rendererExists <- function(name)
 {
    name[1] %in% registeredRenderers()
