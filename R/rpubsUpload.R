@@ -39,15 +39,14 @@
 #'   should be opened to in order to complete publishing of the document. If the
 #'   upload fails then the list contains an \code{error} element which contains
 #'   an explanation of the error that occurred.
+#' @export rpubsUpload
 #' @examples
 #' \dontrun{
 #' # upload a document
 #' result <- rpubsUpload("My document title", "Document.html")
 #' if (!is.null(result$continueUrl))
-#'    browseURL(result$continueUrl)
-#' else
-#'    stop(result$error)
-#'    
+#'     browseURL(result$continueUrl) else stop(result$error)
+#'
 #' # update the same document with a new title
 #' updateResult <- rpubsUpload("My updated title", "Document.html", result$id)
 #' }
