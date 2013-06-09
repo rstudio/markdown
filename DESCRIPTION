@@ -16,3 +16,4 @@ License: GPL-3
 Collate:
     'renderMarkdown.R'
     'rpubsUpload.R'
+    'markdown-package.R'
