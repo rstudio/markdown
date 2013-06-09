@@ -42,6 +42,21 @@ rendererExists <- function(name)
    name[1] %in% registeredRenderers()
 }
 
+
+#' Fetch the Renderer Output Type
+#'
+#' \pkg{markdown} allows up to seven renderers to be registered by users, and
+#' each must provide the type of output returned, either \code{"character"} or
+#' \code{"raw"} for binary output. HTML is provided by the package and outputs
+#' \code{"character"}.
+#' @param name a character string naming the renderer.
+#' @return The character string with a value of either \code{"character"} or
+#'   \code{"raw"}.
+#' @seealso \link{markdownToHTML}, \link{registeredRenderers}
+#' @export rendererOutputType
+#' @examples
+#' # List all available renderers
+#' rendererOutputType("HTML")
 rendererOutputType <- function(name)
 {
    rnds <- registeredRenderers()
