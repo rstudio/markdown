@@ -12,6 +12,20 @@
 #
 
 
+#' List of Registered Markdown Renderers
+#'
+#' \code{registeredRenderers} returns a named character vector listing all the
+#' registered renderers known to the \code{markdown} package. \pkg{markdown}
+#' allows up to seven renderers to be registered by users; HTML is provided by
+#' the package.
+#' @return A named \code{"character"} vector listing all available renderers.
+#'   Vector value contain renderer names, and named values contain the renderer
+#'   output type, either \code{"character"} or \code{"raw"}.
+#' @seealso \link{markdownToHTML}, \link{rendererOutputType}
+#' @export registeredRenderers
+#' @examples
+#' # List all available renderers
+#' registeredRenderers()
 registeredRenderers <- function() .Call(rmd_registered_renderers)
 
 rendererExists <- function(name)
