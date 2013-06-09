@@ -13,9 +13,9 @@ registeredRenderers()
 \description{
   \code{registeredRenderers} returns a named character
   vector listing all the registered renderers known to the
-  \code{markdown} package. \pkg{markdown} allows up to
-  seven renderers to be registered by users; HTML is
-  provided by the package.
+  \pkg{markdown} package. \pkg{markdown} allows up to seven
+  renderers to be registered by users; HTML is provided by
+  the package.
 }
 \examples{
 # List all available renderers

@@ -27,7 +27,7 @@ renderMarkdown(file, output, text, renderer = "HTML", renderer.options = NULL,
   \code{\link{markdownHTMLOptions}}.}
 
   \item{extensions}{options that are passed to the
-  \emph{markdown} engine. See
+  \pkg{markdown} engine. See
   \code{\link{markdownExtensions}}.}
 }
 \value{

@@ -15,7 +15,7 @@
 #' List of Registered Markdown Renderers
 #'
 #' \code{registeredRenderers} returns a named character vector listing all the
-#' registered renderers known to the \code{markdown} package. \pkg{markdown}
+#' registered renderers known to the \pkg{markdown} package. \pkg{markdown}
 #' allows up to seven renderers to be registered by users; HTML is provided by
 #' the package.
 #' @return A named \code{"character"} vector listing all available renderers.
@@ -90,7 +90,7 @@ rendererOutputType <- function(name)
 #'   \code{file} or \code{text}.
 #' @param renderer.options options that are passed to the renderer.  For
 #'   \code{HTML} renderer options see \code{\link{markdownHTMLOptions}}.
-#' @param extensions options that are passed to the \emph{markdown} engine. See
+#' @param extensions options that are passed to the \pkg{markdown} engine. See
 #'   \code{\link{markdownExtensions}}.
 #' @return \code{renderMarkdown} returns NULL invisibly when output is to a
 #'   file, and either \code{"character"} or \code{"raw"} vector depending on the
