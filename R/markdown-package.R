@@ -19,7 +19,7 @@
 #' @docType package
 #' @author JJ Allaire, Jeffrey Horner, Vicent Marti, and Natacha Porte
 #'
-#'   Maintainer: Jeffrey Horner <jeffrey.horner@@gmail.com>
+#'   Maintainer: Yihui Xie <xie@@yihui.name>
 #' @seealso \code{\link{markdownToHTML}} \code{\link{renderMarkdown}}
 #' @keywords package
 NULL
