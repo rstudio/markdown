@@ -2,7 +2,8 @@
 \alias{rpubsUpload}
 \title{Upload an HTML file to RPubs}
 \usage{
-rpubsUpload(title, htmlFile, id = NULL, properties = list(), method = getOption("rpubs.upload.method"))
+rpubsUpload(title, htmlFile, id = NULL, properties = list(), 
+    method = getOption("rpubs.upload.method"))
 }
 \arguments{
   \item{title}{The title of the document.}
@@ -57,6 +58,7 @@ if (!is.null(result$continueUrl))
     browseURL(result$continueUrl) else stop(result$error)
 
 # update the same document with a new title
-updateResult <- rpubsUpload("My updated title", "Document.html", result$id)
+updateResult <- rpubsUpload("My updated title", "Document.html", 
+    result$id)
 }
 }
