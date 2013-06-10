@@ -4,8 +4,8 @@
 \usage{
 markdownToHTML(file, output, text, options = getOption("markdown.HTML.options"), 
     extensions = getOption("markdown.extensions"), title = "", 
-    stylesheet = getOption("markdown.HTML.stylesheet"), header = getOption("markdown.HTML.header", 
-        ""), fragment.only = FALSE)
+    stylesheet = getOption("markdown.HTML.stylesheet"), 
+    header = getOption("markdown.HTML.header", ""), fragment.only = FALSE)
 }
 \arguments{
   \item{file}{a character string giving the pathname of the

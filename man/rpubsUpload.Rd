@@ -58,7 +58,6 @@ if (!is.null(result$continueUrl))
     browseURL(result$continueUrl) else stop(result$error)
 
 # update the same document with a new title
-updateResult <- rpubsUpload("My updated title", "Document.html", 
-    result$id)
+updateResult <- rpubsUpload("My updated title", "Document.html", result$id)
 }
 }
