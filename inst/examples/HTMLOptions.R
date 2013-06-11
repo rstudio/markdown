@@ -1,7 +1,6 @@
 # HTML OPTIONS
 
-# The following examples are short, so we allways add the HTML option
-# 'fragment_only'
+# The following examples are short, so we allways add the HTML option 'fragment_only'
 tOpt <- "fragment_only"
 
 # skip_html example
@@ -23,7 +22,7 @@ cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_links")))
 
 # safelink example
 cat(markdownToHTML(text = '[foo](foo://bar "baz")', options = c(tOpt)))
-cat(markdownToHTML(text = '[foo](foo://bar "baz")', options = c(tOpt, "safelink"))) 
+cat(markdownToHTML(text = '[foo](foo://bar "baz")', options = c(tOpt, "safelink")))
 
 # toc example
 mkd <- paste(c("# Header 1", "p1", "## Header 2", "p2"), collapse = "\n")
@@ -49,4 +48,4 @@ cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html", "escape")))
 cat(markdownToHTML(text = "1/2 (c)", options = c(tOpt)))
 cat(markdownToHTML(text = "1/2 (c)", options = c(tOpt, "smartypants")))
 
-cat(smartypants(text = "1/2 (c)\n")) 
+cat(smartypants(text = "1/2 (c)\n"))
