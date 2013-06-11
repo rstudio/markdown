@@ -558,6 +558,73 @@ smartypants <- function(file,output,text)
 #
 # options(markdown.extensions=c())
 #
+
+
+#' Markdown extensions
+#'
+#' \code{markdownExtensions} returns a character vector listing all the
+#' extensions that are available in the \pkg{markdown} package.
+#'
+#' They are all ON by default.
+#'
+#' The \pkg{Sundown} library (upon which \pkg{markdown} is built) has optional
+#' support for several extensions described below. To turn these on globally in
+#' the \pkg{markdown} package, simply place some or all of them in a character
+#' vector and assign to the global option \code{markdown.extensions} like so:
+#'
+#' \code{options(markdown.extensions=markdownExtensions())}
+#'
+#' To override the global option, pass the \code{extensions} as an argument to
+#' one of the render functions, e.g.:
+#'
+#' \code{markdownToHTML(...,extensions=c('no_intra_emphasis'))}
+#'
+#' Description of all extensions:
+#'
+#' \describe{
+#'
+#' \item{\code{'no_intra_emphasis'}}{ skip markdown embedded in words.  }
+#'
+#' \item{\code{'tables'}}{ create HTML tables (see Examples). }
+#'
+#' \item{\code{'fenced_code'}}{ treat text as verbatim when surrounded with
+#' begin and ending lines with three ~ or \emph{`} characters.  }
+#'
+#' \item{\code{'autolink'}}{ create HTML links from urls and email addresses. }
+#'
+#' \item{\code{'strikethrough'}}{ create strikethroughs by surrounding text with
+#' ~~.  }
+#'
+#' \item{\code{'lax_spacing'}}{ allow HTML tags inside paragraphs without being
+#' surrounded by newlines.  }
+#'
+#' \item{\code{'space_headers'}}{ add a space between header hashes and the
+#' header itself.  }
+#'
+#' \item{\code{'superscript'}}{ translate ^ and subsequent text into HTML
+#' superscript. }
+#'
+#' \item{\code{'latex_math'}}{ transforms all math equations into syntactically
+#' correct MathJax equations.  }
+#'
+#' }
+#'
+#' See the EXAMPLES section to see the output of each extension turned on or
+#' off.
+#' @return A \code{"character"} vector listing all available extensions.
+#' @seealso \link{markdownHTMLOptions}
+#' @export markdownExtensions
+#' @examples
+#' # List all available extensions:
+#' markdownExtensions()
+#'
+#' # To turn on all markdown extensions globally:
+#' options(markdown.extensions=markdownExtensions())
+#'
+#' # To turn off all markdown extensions globally:
+#' options(markdown.extensions=NULL)
+#'
+#' @example inst/examples/markdownExtensions.R
 markdownExtensions <- function()
 {
    c('no_intra_emphasis','tables','fenced_code','autolink','strikethrough',
