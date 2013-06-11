@@ -11,8 +11,10 @@ Description: Markdown is a plain-text formatting syntax that can be
 Depends:
     R (>= 2.11.1)
 Suggests:
+    knitr,
     RCurl
 License: GPL-3
+VignetteBuilder: knitr
 Collate:
     'renderMarkdown.R'
     'rpubsUpload.R'
