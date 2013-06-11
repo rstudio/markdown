@@ -6,3 +6,4 @@
 ^tools$
 .lvimrc
 tests/.RData
+Makefile
