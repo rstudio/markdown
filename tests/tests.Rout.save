@@ -7,6 +7,8 @@ R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
 
+  Natural language support but running in an English locale
+
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
 'citation()' on how to cite R or R packages in publications.
@@ -17,36 +19,24 @@ Type 'q()' to quit R.
 
 > library(markdown)
 > 
-> options(markdown.HTML.options='fragment_only')
-> 
-> # EXTENSIONS
-> 
-> # no_intra_emphasis example
-> cat(markdownToHTML(text='foo_bar_function',extensions=c()))
+> source(system.file('examples', 'markdownExtensions.R', package = 'markdown'), echo = TRUE)
+
+> options(markdown.HTML.options = "fragment_only")
+
+> cat(markdownToHTML(text = "foo_bar_function", extensions = c()))
 <p>foo<em>bar</em>function</p>
-> cat(markdownToHTML(text='foo_bar_function',extensions=c('no_intra_emphasis')))
+
+> cat(markdownToHTML(text = "foo_bar_function", extensions = c("no_intra_emphasis")))
 <p>foo_bar_function</p>
-> 
-> # tables example (need 4 spaces at beginning of line here)
-> cat(markdownToHTML(text="
-+     First Header  | Second Header
-+     ------------- | -------------
-+     Content Cell  | Content Cell
-+     Content Cell  | Content Cell
-+ ",extensions=c()))
+
+> cat(markdownToHTML(text = "\n    First Header  | Second Header\n    ------------- | -------------\n    Content Cell  | Content Cell\n    Content Cel ..." ... [TRUNCATED] 
 <pre><code>First Header  | Second Header
 ------------- | -------------
 Content Cell  | Content Cell
 Content Cell  | Content Cell
 </code></pre>
-> 
-> # but not here
-> cat(markdownToHTML(text="
-+ First Header  | Second Header
-+ ------------- | -------------
-+ Content Cell  | Content Cell
-+ Content Cell  | Content Cell
-+ ",extensions=c('tables')))
+
+> cat(markdownToHTML(text = "\nFirst Header  | Second Header\n------------- | -------------\nContent Cell  | Content Cell\nContent Cell  | Content Cel ..." ... [TRUNCATED] 
 <table><thead>
 <tr>
 <th>First Header</th>
@@ -62,125 +52,111 @@ Content Cell  | Content Cell
 <td>Content Cell</td>
 </tr>
 </tbody></table>
-> 
-> # fenced_code example (need at lest three leading ~ or `)
-> cat(markdownToHTML(text="
-+ ~~~
-+ preformated text here without having to indent
-+ first line.
-+ ~~~
-+ ",extensions=c()))
-<p>~~~
-preformated text here without having to indent
+
+> fenced_block <- function(text, x = "`", n = 3) {
++     fence <- paste(rep(x, n), collapse = "")
++     paste(fence, text, fence, sep = "")
++ }
+
+> cat(markdownToHTML(text = fenced_block("\npreformatted text here without having to indent\nfirst line.\n"), 
++     extensions = c()))
+<p><code>
+preformatted text here without having to indent
 first line.
-~~~</p>
-> 
-> cat(markdownToHTML(text="
-+ ```
-+ preformated text here without having to indent
-+ first line.
-+ ```
-+ ",extensions=c('fenced_code')))
-<pre><code>preformated text here without having to indent
+</code></p>
+
+> cat(markdownToHTML(text = fenced_block("\npreformatted text here without having to indent\nfirst line.\n"), 
++     extensions = c("fenced_code")))
+<pre><code>preformatted text here without having to indent
 first line.
 </code></pre>
-> 
-> # autolink example
-> cat(markdownToHTML(text="http://www.r-project.org/",extensions=c()))
+
+> cat(markdownToHTML(text = "http://www.r-project.org/", 
++     extensions = c()))
 <p>http://www.r-project.org/</p>
-> cat(markdownToHTML(text="http://www.r-project.org/",
-+                    extensions=c('autolink')))
+
+> cat(markdownToHTML(text = "http://www.r-project.org/", 
++     extensions = c("autolink")))
 <p><a href="http://www.r-project.org/">http://www.r-project.org/</a></p>
-> 
-> # strikethrough example
-> cat(markdownToHTML(text="~~awesome~~",extensions=c()))
+
+> cat(markdownToHTML(text = "~~awesome~~", extensions = c()))
 <p>~~awesome~~</p>
-> cat(markdownToHTML(text="~~awesome~~",extensions=c('strikethrough')))
+
+> cat(markdownToHTML(text = "~~awesome~~", extensions = c("strikethrough")))
 <p><del>awesome</del></p>
-> 
-> # lax_spacing
-> cat(markdownToHTML(text="
-+ Embedding html without surrounding with empty newline.
-+ <div>_markdown_</div>
-+ extra text.
-+ ",extensions=c('')))
+
+> cat(markdownToHTML(text = "\nEmbedding html without surrounding with empty newline.\n<div>_markdown_</div>\nextra text.\n", 
++     extensions = c("" .... [TRUNCATED] 
 <p>Embedding html without surrounding with empty newline.
 <div><em>markdown</em></div>
 extra text.</p>
-> cat(markdownToHTML(text="
-+ Embedding html without surrounding with empty newline.
-+ <div>_markdown_</div>
-+ extra text.
-+ ",extensions=c('lax_spacing')))
+
+> cat(markdownToHTML(text = "\nEmbedding html without surrounding with empty newline.\n<div>_markdown_</div>\nextra text.\n", 
++     extensions = c("l ..." ... [TRUNCATED] 
 <p>Embedding html without surrounding with empty newline.</p>
 
 <div>_markdown_</div>
 
 <p>extra text.</p>
-> 
-> # space_headers example
-> cat(markdownToHTML(text="
-+ #A Header
-+ even though there is no space between # and A.
-+ ",extensions=c('')))
+
+> cat(markdownToHTML(text = "#A Header\neven though there is no space between # and A", 
++     extensions = c("")))
 <h1>A Header</h1>
 
-<p>even though there is no space between # and A.</p>
-> cat(markdownToHTML(text="
-+ #Not A Header
-+ because there is no space between # and N.
-+ ",extensions=c('space_headers')))
+<p>even though there is no space between # and A</p>
+
+> cat(markdownToHTML(text = "#Not A Header\nbecause there is no space between # and N", 
++     extensions = c("space_headers")))
 <p>#Not A Header
-because there is no space between # and N.</p>
-> 
-> # superscript example
-> cat(markdownToHTML(text="2^10",extensions=c()))
+because there is no space between # and N</p>
+
+> cat(markdownToHTML(text = "2^10", extensions = c()))
 <p>2^10</p>
-> cat(markdownToHTML(text="2^10",extensions=c('superscript')))
+
+> cat(markdownToHTML(text = "2^10", extensions = c("superscript")))
 <p>2<sup>10</sup></p>
-> 
-> # HTML OPTIONS
-> 
-> tOpt <- 'fragment_only'
-> # skip_html example
-> mkd='<style></style><img src=""><a href="">Hello</a>'
-> cat(markdownToHTML(text=mkd,options=c(tOpt)))
+> source(system.file('examples', 'HTMLOptions.R', package = 'markdown'), echo = TRUE)
+
+> tOpt <- "fragment_only"
+
+> mkd = "<style></style><img src=\"\"><a href=\"\">Hello</a>"
+
+> cat(markdownToHTML(text = mkd, options = c(tOpt)))
 <p><style></style><img src=""><a href="">Hello</a></p>
-> cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_html')))
+
+> cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html")))
 <p>Hello</p>
-> 
-> # skip_style example
-> cat(markdownToHTML(text=mkd,options=c(tOpt)))
+
+> cat(markdownToHTML(text = mkd, options = c(tOpt)))
 <p><style></style><img src=""><a href="">Hello</a></p>
-> cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_style')))
+
+> cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_style")))
 <p><img src=""><a href="">Hello</a></p>
-> 
-> # skip_images example
-> cat(markdownToHTML(text=mkd,options=c(tOpt)))
+
+> cat(markdownToHTML(text = mkd, options = c(tOpt)))
 <p><style></style><img src=""><a href="">Hello</a></p>
-> cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_images')))
+
+> cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_images")))
 <p><style></style><a href="">Hello</a></p>
-> 
-> # skip_links example
-> cat(markdownToHTML(text=mkd,options=c(tOpt)))
+
+> cat(markdownToHTML(text = mkd, options = c(tOpt)))
 <p><style></style><img src=""><a href="">Hello</a></p>
-> cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_links')))
+
+> cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_links")))
 <p><style></style><img src="">Hello</p>
-> 
-> # safelink example
-> cat(markdownToHTML(text='[foo](foo://bar "baz")',options=c(tOpt)))
+
+> cat(markdownToHTML(text = "[foo](foo://bar \"baz\")", 
++     options = c(tOpt)))
 <p><a href="foo://bar" title="baz">foo</a></p>
-> cat(markdownToHTML(text='[foo](foo://bar "baz")',options=c(tOpt,'safelink')))
+
+> cat(markdownToHTML(text = "[foo](foo://bar \"baz\")", 
++     options = c(tOpt, "safelink")))
 <p>[foo](foo://bar &quot;baz&quot;)</p>
-> 
-> # toc example
-> mkd <- '
-+ # Header 1
-+ p1
-+ ## Header 2
-+ p2
-+ '
-> cat(markdownToHTML(text=mkd,options=c(tOpt)))
+
+> mkd <- paste(c("# Header 1", "p1", "## Header 2", 
++     "p2"), collapse = "\n")
+
+> cat(markdownToHTML(text = mkd, options = c(tOpt)))
 <h1>Header 1</h1>
 
 <p>p1</p>
@@ -188,7 +164,8 @@ because there is no space between # and N.</p>
 <h2>Header 2</h2>
 
 <p>p2</p>
-> cat(markdownToHTML(text=mkd,options=c(tOpt,'toc')))
+
+> cat(markdownToHTML(text = mkd, options = c(tOpt, "toc")))
 <div id="toc">
 <div id="toc_header">Table of Contents</div>
 <ul>
@@ -211,40 +188,44 @@ because there is no space between # and N.</p>
 <h2 id="toc_1">Header 2</h2>
 
 <p>p2</p>
-> 
-> # hard_wrap example
-> cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt)))
+
+> cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt)))
 <p>foo
 bar</p>
-> cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt,'hard_wrap')))
+
+> cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt, 
++     "hard_wrap")))
 <p>foo<br>
 bar</p>
-> 
-> # use_xhtml example
-> cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt,'hard_wrap')))
+
+> cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt, 
++     "hard_wrap")))
 <p>foo<br>
 bar</p>
-> cat(markdownToHTML(text='foo\nbar\n',options=c(tOpt,'hard_wrap','use_xhtml')))
+
+> cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt, 
++     "hard_wrap", "use_xhtml")))
 <p>foo<br/>
 bar</p>
-> 
-> # escape example
-> mkd='<style></style><img src=""><a href="">Hello</a>'
-> cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_html')))
+
+> mkd = "<style></style><img src=\"\"><a href=\"\">Hello</a>"
+
+> cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html")))
 <p>Hello</p>
-> # overrides all 'skip_*' options
-> cat(markdownToHTML(text=mkd,options=c(tOpt,'skip_html','escape')))
+
+> cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html", 
++     "escape")))
 <p>&lt;style&gt;&lt;/style&gt;&lt;img src=&quot;&quot;&gt;&lt;a href=&quot;&quot;&gt;Hello&lt;/a&gt;</p>
-> 
-> # smartypants example
-> cat(markdownToHTML(text='1/2 (c)',options=c(tOpt)))
+
+> cat(markdownToHTML(text = "1/2 (c)", options = c(tOpt)))
 <p>1/2 (c)</p>
-> cat(markdownToHTML(text='1/2 (c)',options=c(tOpt,'smartypants')))
+
+> cat(markdownToHTML(text = "1/2 (c)", options = c(tOpt, 
++     "smartypants")))
 <p>&frac12; &copy;</p>
-> 
-> cat(smartypants(text='1/2 (c)\n'))
+
+> cat(smartypants(text = "1/2 (c)\n"))
 &frac12; &copy;
-> 
 > 
 > rm(mkd)
 > rm(tOpt)
