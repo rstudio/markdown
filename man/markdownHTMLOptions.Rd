@@ -45,52 +45,55 @@ markdownHTMLOptions(defaults = FALSE)
 
   \describe{
 
-  \item{'skip_html'}{ suppress output of all HTML tags in
-  the document.}
+  \item{\code{'skip_html'}}{ suppress output of all HTML
+  tags in the document.}
 
-  \item{'skip_style'}{ suppress output of HTML style tags.}
-
-  \item{'skip_images'}{ suppress output of HTML image
+  \item{\code{'skip_style'}}{ suppress output of HTML style
   tags.}
 
-  \item{'skip_links'}{ suppress output of HTML anchor
-  tags.}
+  \item{\code{'skip_images'}}{ suppress output of HTML
+  image tags.}
 
-  \item{'safelink'}{ only create links for known url types,
-  e.g. http, ftp, http, etc.}
+  \item{\code{'skip_links'}}{ suppress output of HTML
+  anchor tags.}
 
-  \item{'toc'}{ assigns an HTML id to each header of the
-  form 'toc_%d' where '%d' is replaced with the position of
-  the header within the document (starting at 0). The user
-  must create the top level table of contents by hand.}
+  \item{\code{'safelink'}}{ only create links for known url
+  types, e.g. http, ftp, http, etc.}
 
-  \item{'hard_wrap'}{ adds an HTML br tag for every newline
-  (excluding trailing) found within a paragraph.}
+  \item{\code{'toc'}}{ assigns an HTML id to each header of
+  the form 'toc_%d' where '%d' is replaced with the
+  position of the header within the document (starting at
+  0). The user must create the top level table of contents
+  by hand.}
 
-  \item{'use_xhtml'}{ create XHMTL 1.0 compliant HTML
-  tags.}
+  \item{\code{'hard_wrap'}}{ adds an HTML br tag for every
+  newline (excluding trailing) found within a paragraph.}
 
-  \item{'escape'}{ escape all HTML found within the
+  \item{\code{'use_xhtml'}}{ create XHMTL 1.0 compliant
+  HTML tags.}
+
+  \item{\code{'escape'}}{ escape all HTML found within the
   \emph{markdown}. Overrides all of the \code{'skip_*'}
   options mentioned above.}
 
-  \item{'smartypants'}{ translates plain ASCII punctuation
-  characters into \emph{smart} typographic punctuation HTML
-  entities. }
+  \item{\code{'smartypants'}}{ translates plain ASCII
+  punctuation characters into \emph{smart} typographic
+  punctuation HTML entities. }
 
-  \item{'fragment_only'}{ eliminates the inclusion of any
-  HTML header or body tags, CSS, or Javascript components.
-  }
+  \item{\code{'fragment_only'}}{ eliminates the inclusion
+  of any HTML header or body tags, CSS, or Javascript
+  components. }
 
-  \item{'base64_images'}{ Any local images linked with the
-  \code{'<img>'} tag to the output HTML will automatically
-  be converted to base64 and included along with output. }
+  \item{\code{'base64_images'}}{ Any local images linked
+  with the \code{'<img>'} tag to the output HTML will
+  automatically be converted to base64 and included along
+  with output. }
 
-  \item{'mathjax'}{ includes appropriate Javascript
+  \item{\code{'mathjax'}}{ includes appropriate Javascript
   libraries to render math markup.}
 
-  \item{'highlight_code'}{ includes appropriate Javascript
-  libraries to highlight code chunks.}
+  \item{\code{'highlight_code'}}{ includes appropriate
+  Javascript libraries to highlight code chunks.}
 
   }
 
