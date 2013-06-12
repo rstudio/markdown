@@ -619,10 +619,10 @@ smartypants <- function(file,output,text)
 #' markdownExtensions()
 #'
 #' # To turn on all markdown extensions globally:
-#' options(markdown.extensions=markdownExtensions())
+#' options(markdown.extensions = markdownExtensions())
 #'
 #' # To turn off all markdown extensions globally:
-#' options(markdown.extensions=NULL)
+#' options(markdown.extensions = NULL)
 #'
 #' @example inst/examples/markdownExtensions.R
 markdownExtensions <- function()

@@ -90,8 +90,7 @@ cat(markdownToHTML(text = "
     ------------- | -------------
     Content Cell  | Content Cell
     Content Cell  | Content Cell
-", 
-    extensions = c()))
+", extensions = c()))
 
 # but not here
 cat(markdownToHTML(text = "
@@ -99,25 +98,22 @@ First Header  | Second Header
 ------------- | -------------
 Content Cell  | Content Cell
 Content Cell  | Content Cell
-", 
-    extensions = c("tables")))
+", extensions = c("tables")))
 
 # fenced_code example (need at least three leading ~ or `)
 fenced_block <- function(text, x = "`", n = 3) {
-    fence <- paste(rep(x, n), collapse = "")
-    paste(fence, text, fence, sep = "")
+  fence <- paste(rep(x, n), collapse = "")
+  paste(fence, text, fence, sep = "")
 }
 cat(markdownToHTML(text = fenced_block("
 preformatted text here without having to indent
 first line.
-"), 
-    extensions = c()))
+"), extensions = c()))
 
 cat(markdownToHTML(text = fenced_block("
 preformatted text here without having to indent
 first line.
-"), 
-    extensions = c("fenced_code")))
+"), extensions = c("fenced_code")))
 
 # autolink example
 cat(markdownToHTML(text = "http://www.r-project.org/", extensions = c()))
@@ -132,20 +128,18 @@ cat(markdownToHTML(text = "
 Embedding html without surrounding with empty newline.
 <div>_markdown_</div>
 extra text.
-", 
-    extensions = c("")))
+", extensions = c("")))
 cat(markdownToHTML(text = "
 Embedding html without surrounding with empty newline.
 <div>_markdown_</div>
 extra text.
-", 
-    extensions = c("lax_spacing")))
+", extensions = c("lax_spacing")))
 
 # space_headers example
-cat(markdownToHTML(text = "#A Header\\neven though there is no space between # and A", 
-    extensions = c("")))
-cat(markdownToHTML(text = "#Not A Header\\nbecause there is no space between # and N", 
-    extensions = c("space_headers")))
+cat(markdownToHTML(text = "#A Header\\neven though there is no space between # and A",
+                   extensions = c("")))
+cat(markdownToHTML(text = "#Not A Header\\nbecause there is no space between # and N",
+                   extensions = c("space_headers")))
 
 # superscript example
 cat(markdownToHTML(text = "2^10", extensions = c()))
