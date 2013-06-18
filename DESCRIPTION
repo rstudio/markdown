@@ -13,7 +13,7 @@ Depends:
 Suggests:
     knitr,
     RCurl
-License: GPL-3
+License: GPL
 BugReports: https://github.com/rstudio/markdown/issues
 VignetteBuilder: knitr
 Collate:
