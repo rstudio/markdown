@@ -1,7 +1,7 @@
 #
 # renderMarkdown.R
 #
-# Copyright (C) 2009-1012 by RStudio, Inc.
+# Copyright (C) 2009-2013 by RStudio, Inc.
 #
 # This program is licensed to you under the terms of version 2 of the
 # GNU General Public License. This program is distributed WITHOUT ANY
