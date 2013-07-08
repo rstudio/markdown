@@ -2,10 +2,14 @@
 \alias{markdownToHTML}
 \title{Render markdown to HTML}
 \usage{
-markdownToHTML(file, output, text, options = getOption("markdown.HTML.options"), 
-    extensions = getOption("markdown.extensions"), title = "", 
-    stylesheet = getOption("markdown.HTML.stylesheet"), 
-    header = getOption("markdown.HTML.header", ""), fragment.only = FALSE)
+  markdownToHTML(file, output, text,
+    options = getOption("markdown.HTML.options"),
+    extensions = getOption("markdown.extensions"),
+    title = "",
+    stylesheet = getOption("markdown.HTML.stylesheet"),
+    header = getOption("markdown.HTML.header", ""),
+    template = getOption("markdown.HTML.template", system.file("resources/markdown.html", package = "markdown")),
+    fragment.only = FALSE)
 }
 \arguments{
   \item{file}{a character string giving the pathname of the
@@ -35,6 +39,8 @@ markdownToHTML(file, output, text, options = getOption("markdown.HTML.options"),
 
   \item{header}{either valid HTML or a file containing HTML
   will be included in the header of the output.}
+
+  \item{template}{an HTML file used as template.}
 
   \item{fragment.only}{Whether or not to produce an HTML
   fragment without the HTML header and body tags, CSS, and
@@ -103,3 +109,4 @@ print(markdownToHTML(text = "Hello World!"))
   \code{\link{markdownHTMLOptions}},
   \code{\link{renderMarkdown}}.
 }
+
