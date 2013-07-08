@@ -377,6 +377,7 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
 #'   in the output.
 #' @param header either valid HTML or a file containing HTML will be included in
 #'   the header of the output.
+#' @param template an HTML file used as template.
 #' @param fragment.only Whether or not to produce an HTML fragment without the
 #'   HTML header and body tags, CSS, and Javascript components.
 #' @return \code{renderMarkdown} returns NULL invisibly when output is to a
@@ -392,6 +393,7 @@ markdownToHTML <- function(file, output, text,
                            title='',
                            stylesheet=getOption('markdown.HTML.stylesheet'),
                            header=getOption('markdown.HTML.header', ''),
+                           template=getOption('markdown.HTML.template', system.file('resources/markdown.html',package='markdown')),
                            fragment.only=FALSE)
 {
    if (fragment.only==TRUE)
@@ -421,8 +423,7 @@ markdownToHTML <- function(file, output, text,
 
    if (!'fragment_only' %in% options)
    {
-      html <- paste(readLines(
-              system.file('resources/markdown.html',package='markdown')),collapse='\n')
+      html <- paste(readLines(template),collapse='\n')
       html <- sub('#!html_output#',ret,html,fixed=TRUE)
 
       if (is.character(stylesheet)){
