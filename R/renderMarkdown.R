@@ -291,26 +291,14 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
 }
 
 
-.requiresMathJax <- function(html)
-{
-   regs <- c(
-              "\\\\\\(([\\s\\S]+?)\\\\\\)",
-              "\\\\\\[([\\s\\S]+?)\\\\\\]"
-            )
-   for(i in regs){
-      if (regexpr(i,html,perl=TRUE) > -1)
-         return(TRUE)
-   }
-   FALSE
+.requiresMathJax <- function(html) {
+  regs <- c("\\\\\\(([\\s\\S]+?)\\\\\\)", "\\\\\\[([\\s\\S]+?)\\\\\\]")
+  for (i in regs) if (any(grepl(i, html, perl = TRUE))) return(TRUE)
+  FALSE
 }
 
-.requiresHighlighting <- function(html)
-{
-   reg <- "<pre><code class=\"r\""
-   if (regexpr(reg,html,perl=TRUE) > -1)
-      TRUE
-   else
-      FALSE
+.requiresHighlighting <- function(html) {
+  any(grepl('<pre><code class="r"', html))
 }
 
 
