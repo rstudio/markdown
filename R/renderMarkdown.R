@@ -381,7 +381,7 @@ markdownToHTML <- function(file, output, text,
                            title='',
                            stylesheet=getOption('markdown.HTML.stylesheet'),
                            header=getOption('markdown.HTML.header', ''),
-                           template=getOption('markdown.HTML.template', system.file('resources/markdown.html',package='markdown')),
+                           template=getOption('markdown.HTML.template')),
                            fragment.only=FALSE)
 {
    if (fragment.only==TRUE)
@@ -411,6 +411,8 @@ markdownToHTML <- function(file, output, text,
 
    if (!'fragment_only' %in% options)
    {
+     if (is.null(template))
+       template <- system.file('resources', 'markdown.html', package = 'markdown')
       html <- paste(readLines(template),collapse='\n')
       html <- sub('#!html_output#',ret,html,fixed=TRUE)
 
