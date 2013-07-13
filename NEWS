@@ -2,6 +2,10 @@
 
 NEW FEATURES
 
+  o added a new argument 'template' to markdownToHTML() so that we can
+  customize the HTML template (by default, it uses the template
+  'resources/markdown.html' in this package); thanks, Nacho Caballero
+
   o the options markdown.HTML.stylesheet and markdown.HTML.header used in
   markdownToHTML() can be character vectors (they will be processed by
   paste(x, collapse = '\n')
