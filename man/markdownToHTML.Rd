@@ -7,8 +7,8 @@
     extensions = getOption("markdown.extensions"),
     title = "",
     stylesheet = getOption("markdown.HTML.stylesheet"),
-    header = getOption("markdown.HTML.header", ""),
-    template = getOption("markdown.HTML.template", system.file("resources/markdown.html", package = "markdown")),
+    header = getOption("markdown.HTML.header"),
+    template = getOption("markdown.HTML.template"),
     fragment.only = FALSE)
 }
 \arguments{
@@ -89,7 +89,8 @@
   header, title, and body tags. The default template used
   for this mode may be found here:
 
-  system.file('resources/markdown.html',package='markdown')
+  \code{system.file('resources', 'markdown.html', package =
+  'markdown')}
 
   Also, \code{markdownToHTML} will automatically determine
   whether or not mathjax and R code highlighting are needed
@@ -109,4 +110,3 @@ print(markdownToHTML(text = "Hello World!"))
   \code{\link{markdownHTMLOptions}},
   \code{\link{renderMarkdown}}.
 }
-

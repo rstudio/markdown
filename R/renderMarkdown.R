@@ -37,10 +37,7 @@ registeredRenderers <- function() .Call(rmd_registered_renderers)
 #' @return \code{TRUE} or \code{FALSE} for whether or not the renderer exists.
 #' @export rendererExists
 #' @examples rendererExists("HTML")
-rendererExists <- function(name)
-{
-   name[1] %in% registeredRenderers()
-}
+rendererExists <- function(name) name[1] %in% registeredRenderers()
 
 
 #' Fetch the Renderer Output Type
@@ -57,15 +54,13 @@ rendererExists <- function(name)
 #' @examples
 #' # List all available renderers
 #' rendererOutputType("HTML")
-rendererOutputType <- function(name)
-{
-   rnds <- registeredRenderers()
-   if (!name[1] %in% rnds)
-   {
-      warning("Renderer is not registered!")
-      return('')
-   }
-   names(which(rnds==name[1]))
+rendererOutputType <- function(name) {
+  rnds <- registeredRenderers()
+  if (!name[1] %in% rnds) {
+    warning("Renderer is not registered!")
+    return('')
+  }
+  names(which(rnds == name[1]))
 }
 
 
@@ -110,58 +105,45 @@ rendererOutputType <- function(name)
 #' @export renderMarkdown
 #' @examples
 #' renderMarkdown(text = "Hello World!")
-renderMarkdown <-
-function(file, output, text, renderer='HTML', renderer.options=NULL,
-         extensions=getOption('markdown.extensions'))
-{
+renderMarkdown <- function(
+  file, output, text, renderer = 'HTML', renderer.options = NULL,
+  extensions = getOption('markdown.extensions')
+) {
 
-   if (!rendererExists(renderer))
-   {
-      stop("Renderer '",renderer,"' is not registered!")
-   }
+  if (!rendererExists(renderer))
+    stop("Renderer '", renderer, "' is not registered!")
 
-   # Input from either a file or character vector
-   if (!missing(file) && is.character(file) && file.exists(file))
-   {
-      text <- NULL
-   }
-   else if (!missing(text) && !is.null(text) && is.character(text))
-   {
-      file <- NULL
-      if (length(text) > 1)
-         text <- paste(text,collapse='')
-   }
-   else
-   {
-      stop("Need input from either a file or a text string!")
-   }
+  # Input from either a file or character vector
+  if (!missing(file) && is.character(file) && file.exists(file)) {
+    text <- NULL
+  } else if (!missing(text) && !is.null(text) && is.character(text)) {
+    file <- NULL
+    if (length(text) > 1) text <- paste(text, collapse = '')
+  } else stop("Need input from either a file or a text string!")
 
-   # Output is either returned or written to a file
-   if (missing(output))
-      output <- NULL
-   else if (!is.null(output) && !is.character(output))
-      stop("output variable must be a file name!");
+  # Output is either returned or written to a file
+  if (missing(output)) output <- NULL else {
+    if (!is.null(output) && !is.character(output))
+      stop("output variable must be a file name!")
+  }
 
+  # Options
+  if (is.null(renderer.options))
+    renderer.options <- getOption(paste('markdown', renderer, 'options', sep = '.'))
 
-   # Options
-   if (is.null(renderer.options))
-      renderer.options <- getOption(paste('markdown',renderer,'options',
-                                          sep='.'))
+  # HTML options must be a character vector.
+  if (renderer == "HTML") {
+    if (!is.null(renderer.options) && !is.character(renderer.options))
+      stop("HTML options must be a character vector")
+  }
 
-   # HTML options must be a character vector.
-   if (renderer=="HTML")
-   {
-      if (!is.null(renderer.options) && !is.character(renderer.options))
-         stop("HTML options must be a character vector")
-   }
+  ret <- .Call(rmd_render_markdown,
+               file, output, text, renderer, renderer.options, extensions)
 
-   ret <- .Call(rmd_render_markdown,file,output,text,renderer,
-                   renderer.options, extensions)
+  if (is.raw(ret) && rendererOutputType(renderer) == 'character')
+    ret <- rawToChar(ret)
 
-   if (is.raw(ret) && rendererOutputType(renderer)=='character')
-      ret <- rawToChar(ret)
-
-   invisible(ret)
+  invisible(ret)
 }
 
 .MIMEMAP <- new.env()
@@ -243,51 +225,45 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
 .MIMEMAP$mpeg <- "video/mpeg"
 .MIMEMAP$flv <- "video/x-flv"
 
-.mimeType <- function(f){
-   f <- f[1]
-   fileExt <- function (x)
-   {
-      pos <- regexpr("\\.([[:alnum:]]+)$", x)
-      ifelse(pos > -1L, tolower(substring(x, pos + 1L)), "")
-   }
-   ext <- fileExt(f)
-   ifelse(nchar(ext) > 1L && exists(ext,.MIMEMAP),.MIMEMAP[[ext]], "")
+.mimeType <- function(f) {
+  f <- f[1]
+  fileExt <- function (x) {
+    pos <- regexpr("\\.([[:alnum:]]+)$", x)
+    ifelse(pos > -1L, tolower(substring(x, pos + 1L)), "")
+  }
+  ext <- fileExt(f)
+  ifelse(nchar(ext) > 1L && exists(ext, .MIMEMAP), .MIMEMAP[[ext]], "")
 }
 
-.b64EncodeFile <- function(inFile)
-{
-   fileSize <- file.info(inFile)$size
+.b64EncodeFile <- function(inFile) {
+  fileSize <- file.info(inFile)$size
 
-   if (fileSize > 0){
-      paste( "data:", .mimeType(inFile),";base64,",
-         .Call(rmd_b64encode_data,readBin(inFile,'raw',n=fileSize)),
-         sep='')
-   } else {
-      warning(inFile,'is empty!')
-      inFile
-   }
+  if (fileSize <= 0) {
+    warning(inFile, 'is empty!')
+    return(inFile)
+  }
+  paste( "data:", .mimeType(inFile), ";base64,",
+         .Call(rmd_b64encode_data, readBin(inFile, 'raw', n = fileSize)),
+         sep = '')
 }
 
 
-.b64EncodeImages <- function(html)
-{
-   reg <- "<\\s*[Ii][Mm][Gg]\\s+[Ss][Rr][Cc]\\s*=\\s*[\"']([^\"']+)[\"']"
-   m <- gregexpr(reg,html,perl=TRUE)
-   if (m[[1]][1] != -1)
-   {
-      .b64EncodeImgSrc <- function(imgSrc)
-      {
-         src <- sub(reg,"\\1",imgSrc)
-         inFile <- URLdecode(src)
-         if (length(inFile) && file.exists(inFile))
-            imgSrc <- sub(src,.b64EncodeFile(inFile),imgSrc,fixed=TRUE)
+.b64EncodeImages <- function(html) {
+  reg <- "<\\s*[Ii][Mm][Gg]\\s+[Ss][Rr][Cc]\\s*=\\s*[\"']([^\"']+)[\"']"
+  m <- gregexpr(reg, html, perl = TRUE)
+  if (m[[1]][1] != -1) {
+    .b64EncodeImgSrc <- function(imgSrc) {
+      src <- sub(reg, "\\1", imgSrc)
+      inFile <- URLdecode(src)
+      if (length(inFile) && file.exists(inFile))
+        imgSrc <- sub(src, .b64EncodeFile(inFile), imgSrc, fixed = TRUE)
 
-         imgSrc
-      }
-      regmatches(html,m) <- list(unlist(lapply(regmatches(html,m)[[1]],.b64EncodeImgSrc)))
-   }
+      imgSrc
+    }
+    regmatches(html, m) <- list(unlist(lapply(regmatches(html, m)[[1]], .b64EncodeImgSrc)))
+  }
 
-   html
+  html
 }
 
 
@@ -297,9 +273,7 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
   FALSE
 }
 
-.requiresHighlighting <- function(html) {
-  any(grepl('<pre><code class="r"', html))
-}
+.requiresHighlighting <- function(html) any(grepl('<pre><code class="r"', html))
 
 
 
@@ -338,7 +312,7 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
 #' pages complete with HTML header, title, and body tags. The default template
 #' used for this mode may be found here:
 #'
-#' system.file('resources/markdown.html',package='markdown')
+#' \code{system.file('resources', 'markdown.html', package = 'markdown')}
 #'
 #' Also, \code{markdownToHTML} will automatically determine whether or not
 #' mathjax and R code highlighting are needed and will include the appropriate
@@ -375,107 +349,100 @@ function(file, output, text, renderer='HTML', renderer.options=NULL,
 #' @export markdownToHTML
 #' @examples
 #' print(markdownToHTML(text = "Hello World!"))
-markdownToHTML <- function(file, output, text,
-                           options=getOption('markdown.HTML.options'),
-                           extensions=getOption('markdown.extensions'),
-                           title='',
-                           stylesheet=getOption('markdown.HTML.stylesheet'),
-                           header=getOption('markdown.HTML.header', ''),
-                           template=getOption('markdown.HTML.template')),
-                           fragment.only=FALSE)
-{
-   if (fragment.only==TRUE)
-      options <- c(options,'fragment_only')
+markdownToHTML <- function(
+  file, output, text, options = getOption('markdown.HTML.options'),
+  extensions = getOption('markdown.extensions'),
+  title = '',
+  stylesheet = getOption('markdown.HTML.stylesheet'),
+  header = getOption('markdown.HTML.header'),
+  template = getOption('markdown.HTML.template'),
+  fragment.only = FALSE
+) {
+  if (fragment.only) options <- c(options, 'fragment_only')
 
-   if (!missing(output))
-   {
-      outputFile <- output
-      output <- NULL
-   }
-   else
-      outputFile <- NULL
+  if (!missing(output)) {
+    outputFile <- output
+    output <- NULL
+  } else outputFile <- NULL
 
-   ret <- renderMarkdown(file,output,text,renderer="HTML",
-                  renderer.options=options,extensions=extensions)
+  ret <- renderMarkdown(file, output, text, renderer = "HTML",
+                        renderer.options = options, extensions = extensions)
 
-   if ('base64_images' %in% options){
-       filedir <- if (!missing(file) && is.character(file) && file.exists(file)) {
-           dirname(file)
-       } else '.'
-       ret <- local({
-           oldwd <- setwd(filedir)
-           on.exit(setwd(oldwd))
-           .b64EncodeImages(ret)
-       })
-   }
+  if ('base64_images' %in% options) {
+    filedir <- if (!missing(file) && is.character(file) && file.exists(file)) {
+      dirname(file)
+    } else '.'
+    ret <- local({
+      oldwd <- setwd(filedir)
+      on.exit(setwd(oldwd))
+      .b64EncodeImages(ret)
+    })
+  }
 
-   if (!'fragment_only' %in% options)
-   {
-     if (is.null(template))
-       template <- system.file('resources', 'markdown.html', package = 'markdown')
-      html <- paste(readLines(template),collapse='\n')
-      html <- sub('#!html_output#',ret,html,fixed=TRUE)
+  if (!'fragment_only' %in% options) {
+    if (is.null(template))
+      template <- system.file('resources', 'markdown.html', package = 'markdown')
+    html <- paste(readLines(template), collapse = '\n')
+    html <- sub('#!html_output#', ret, html, fixed = TRUE)
 
-      if (is.character(stylesheet)){
+    if (is.character(stylesheet)) {
 
-         # what to do if user misspelled file name?
-         if (file.exists(stylesheet))
-            stylesheet <- paste(readLines(stylesheet),collapse='\n')
+      # what to do if user misspelled file name?
+      if (file.exists(stylesheet))
+        stylesheet <- paste(readLines(stylesheet), collapse = '\n')
 
-         # presume the character vector contains CSS.
-         html <- sub('#!markdown_css#',stylesheet,html,fixed=TRUE)
+      # presume the character vector contains CSS.
+      html <- sub('#!markdown_css#', stylesheet, html, fixed = TRUE)
 
+    } else {
+      warning("stylesheet must either be valid CSS or a file containing CSS!")
+    }
+
+    if (is.character(header)) {
+      # what to do if user misspelled file name?
+      if (file.exists(header))
+        header <- paste(readLines(header), collapse = '\n')
+    } else header <- ''
+    html <- sub('#!header#', header, html, fixed = TRUE)
+
+    if (!is.character(title) || title == '') {
+      # Guess title
+      m <- regexpr("<[Hh][1-6].*?>(.*)</[Hh][1-6].*?>", html, perl = TRUE)
+      if (m > -1){
+        title <- regmatches(html, m)
+        title <- sub("<[Hh][1-6].*?>", "", title)
+        title <- sub("</[Hh][1-6].*?>", "", title)
       } else {
-        warning("stylesheet must either be valid CSS or a file containing CSS!")
+        title <- ''
       }
+    }
 
-      if (is.character(header)){
-         # what to do if user misspelled file name?
-         if (file.exists(header))
-            header <- paste(readLines(header),collapse='\n')
-      }
-      html <- sub('#!header#',header,html,fixed=TRUE)
+    # Need to scrub title more, e.g. strip html, etc.
+    html <- sub("#!title#", title, html, perl = TRUE)
 
-      if (!is.character(title) || title == '')
-      {
-         # Guess title
-         m <- regexpr("<[Hh][1-6].*?>(.*)</[Hh][1-6].*?>",html,perl=TRUE)
-         if (m > -1){
-            title <- regmatches(html,m)
-            title <- sub("<[Hh][1-6].*?>","",title)
-            title <- sub("</[Hh][1-6].*?>","",title)
-         } else {
-            title <- ''
-         }
-      }
+    if ('highlight_code' %in% options && .requiresHighlighting(html)) {
+      highlight <- paste(readLines(system.file(
+        'resources', 'r_highlight.html', package = 'markdown'
+      )), collapse = '\n')
+    } else highlight <- ''
+    html <- sub("#!r_highlight#", highlight, html, fixed = TRUE)
 
-      # Need to scrub title more, e.g. strip html, etc.
-      html <- sub("#!title#",title,html,perl=TRUE)
+    if ('mathjax' %in% options && .requiresMathJax(html)) {
+      mathjax <- paste(readLines(system.file(
+        'resources', 'mathjax.html', package = 'markdown'
+      )), collapse = '\n')
+    } else mathjax <- ''
+    html <- sub("#!mathjax#", mathjax, html, fixed = TRUE)
 
-      if ('highlight_code' %in% options && .requiresHighlighting(html)){
-         highlight <- paste(readLines(system.file('resources/r_highlight.html',package='markdown')),collapse='\n')
-      } else {
-         highlight <- ''
-      }
-      html <- sub("#!r_highlight#",highlight,html,fixed=TRUE)
+    ret <- html
+  }
 
-      if ('mathjax' %in% options && .requiresMathJax(html)){
-         mathjax <- paste(readLines(system.file('resources/mathjax.html',package='markdown')),collapse='\n')
-      } else {
-         mathjax <- ''
-      }
-      html <- sub("#!mathjax#",mathjax,html,fixed=TRUE)
+  if (is.character(outputFile)) {
+    cat(ret, file = outputFile)
+    ret <- NULL
+  }
 
-      ret <- html
-   }
-
-   if (is.character(outputFile))
-   {
-      cat(ret,file=outputFile)
-      ret <- NULL
-   }
-
-   invisible(ret)
+  invisible(ret)
 }
 
 
@@ -508,46 +475,34 @@ markdownToHTML <- function(file, output, text,
 #' @export smartypants
 #' @examples
 #' cat(smartypants(text = "1/2 (c)\n"))
-smartypants <- function(file,output,text)
-{
-   # Input from either a file or character vector
-   if (!missing(file) && is.character(file) && file.exists(file))
-   {
-      text <- NULL
-   }
-   else if (!missing(text) && !is.null(text) && is.character(text))
-   {
-      file <- NULL
-      if (length(text) > 1)
-         text <- paste(text,collapse='')
-   }
-   else
-   {
-      stop("Need input from either a file or a text string")
-   }
+smartypants <- function(file, output, text) {
+  # Input from either a file or character vector
+  if (!missing(file) && is.character(file) && file.exists(file)) {
+    text <- NULL
+  } else if (!missing(text) && !is.null(text) && is.character(text)) {
+    file <- NULL
+    if (length(text) > 1) text <- paste(text, collapse = '')
+  } else stop("Need input from either a file or a text string")
 
-   # Output is either returned or written to a file
-   if (missing(output))
-      output <- NULL
-   else if (!is.character(output))
-      stop("output variable must be a file name!");
+  # Output is either returned or written to a file
+  if (missing(output)) output <- NULL else if (!is.character(output))
+    stop("output variable must be a file name!");
 
-   ret <- .Call(rmd_render_smartypants,file,output,text)
-   if (is.raw(ret))
-      ret <- rawToChar(ret)
+  ret <- .Call(rmd_render_smartypants, file, output, text)
+  if (is.raw(ret)) ret <- rawToChar(ret)
 
-   invisible(ret)
+  invisible(ret)
 }
 
 # Markdown extensions.
 #
 # To turn on all extensions:
 #
-# options(markdown.extensions=markdownExtensions())
+# options(markdown.extensions = markdownExtensions())
 #
 # To turn off all extensions:
 #
-# options(markdown.extensions=c())
+# options(markdown.extensions = c())
 #
 
 
@@ -563,12 +518,12 @@ smartypants <- function(file,output,text)
 #' the \pkg{markdown} package, simply place some or all of them in a character
 #' vector and assign to the global option \code{markdown.extensions} like so:
 #'
-#' \code{options(markdown.extensions=markdownExtensions())}
+#' \code{options(markdown.extensions = markdownExtensions())}
 #'
 #' To override the global option, pass the \code{extensions} as an argument to
 #' one of the render functions, e.g.:
 #'
-#' \code{markdownToHTML(...,extensions=c('no_intra_emphasis'))}
+#' \code{markdownToHTML(..., extensions = c('no_intra_emphasis'))}
 #'
 #' Description of all extensions:
 #'
@@ -617,24 +572,22 @@ smartypants <- function(file,output,text)
 #'
 #' @example inst/examples/markdownExtensions.R
 markdownExtensions <- function()
-{
-   c('no_intra_emphasis','tables','fenced_code','autolink','strikethrough',
-     'lax_spacing','space_headers','superscript','latex_math')
-}
+  c('no_intra_emphasis', 'tables', 'fenced_code', 'autolink', 'strikethrough',
+    'lax_spacing', 'space_headers', 'superscript', 'latex_math')
 
 # HTML renderer options.
 #
 # To turn on all options:
 #
-# options(markdown.HTML.options=markdownHTMLOptions())
+# options(markdown.HTML.options = markdownHTMLOptions())
 #
 # To turn on default options:
 #
-# options(markdown.HTML.options=markdownHTMLOptions(defaults=TRUE))
+# options(markdown.HTML.options = markdownHTMLOptions(defaults = TRUE))
 #
 # To turn off all options:
 #
-# options(markdown.HTML.options=c())
+# options(markdown.HTML.options = c())
 #
 
 
@@ -652,15 +605,15 @@ markdownExtensions <- function()
 #' character vector and assign to the global option \code{markdown.HTML.options}
 #' like so:
 #'
-#' \code{options(markdown.HTML.options=markdownHTMLOptions())}
+#' \code{options(markdown.HTML.options = markdownHTMLOptions())}
 #'
 #' To reset the options to package default, use:
 #'
-#' \code{options(markdown.HTML.options=markdownHTMLOptions(default=TRUE))}
+#' \code{options(markdown.HTML.options = markdownHTMLOptions(default = TRUE))}
 #'
 #' To override the global option, pass the \code{options} as an argument:
 #'
-#' \code{markdownToHTML(...,options=c('skip_images'))}
+#' \code{markdownToHTML(..., options = c('skip_images'))}
 #'
 #' Description of all options:
 #'
@@ -729,29 +682,25 @@ markdownExtensions <- function()
 #' options(markdown.HTML.options = markdownHTMLOptions(default = TRUE))
 #'
 #' @example inst/examples/HTMLOptions.R
-markdownHTMLOptions <- function(defaults=FALSE)
-{
-   allOptions <- c('skip_html', 'skip_style', 'skip_images', 'skip_links',
-                   'safelink', 'toc', 'escape', 'fragment_only', 'hard_wrap',
-                   'use_xhtml', 'smartypants','base64_images', 'mathjax',
-                   'highlight_code')
-   if (!defaults)
-      allOptions
-   else
-      allOptions[seq(10,14)]
+markdownHTMLOptions <- function(defaults = FALSE) {
+  allOptions <- c(
+    'skip_html', 'skip_style', 'skip_images', 'skip_links', 'safelink', 'toc',
+    'escape', 'fragment_only', 'hard_wrap', 'use_xhtml', 'smartypants',
+    'base64_images', 'mathjax', 'highlight_code'
+  )
+  if (defaults) allOptions[10:14] else allOptions
 }
 
-.onLoad <- function(libname,pkgname)
-{
+.onLoad <- function(libname, pkgname) {
 
-   if (is.null(getOption('markdown.extensions')))
-      options(markdown.extensions=markdownExtensions())
+  if (is.null(getOption('markdown.extensions')))
+    options(markdown.extensions = markdownExtensions())
 
-   if (is.null(getOption('markdown.HTML.options')))
-      options(markdown.HTML.options=markdownHTMLOptions(defaults=TRUE))
+  if (is.null(getOption('markdown.HTML.options')))
+    options(markdown.HTML.options = markdownHTMLOptions(defaults = TRUE))
 
-   if (is.null(getOption('markdown.HTML.stylesheet'))){
-      sheet <- system.file('resources/markdown.css',package='markdown')
-      options(markdown.HTML.stylesheet=sheet)
-   }
+  if (is.null(getOption('markdown.HTML.stylesheet'))) {
+    sheet <- system.file('resources', 'markdown.css', package = 'markdown')
+    options(markdown.HTML.stylesheet = sheet)
+  }
 }

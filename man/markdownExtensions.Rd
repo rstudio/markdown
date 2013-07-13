@@ -23,12 +23,14 @@ markdownExtensions()
   in a character vector and assign to the global option
   \code{markdown.extensions} like so:
 
-  \code{options(markdown.extensions=markdownExtensions())}
+  \code{options(markdown.extensions =
+  markdownExtensions())}
 
   To override the global option, pass the \code{extensions}
   as an argument to one of the render functions, e.g.:
 
-  \code{markdownToHTML(...,extensions=c('no_intra_emphasis'))}
+  \code{markdownToHTML(..., extensions =
+  c('no_intra_emphasis'))}
 
   Description of all extensions:
 

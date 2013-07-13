@@ -30,16 +30,18 @@ markdownHTMLOptions(defaults = FALSE)
   vector and assign to the global option
   \code{markdown.HTML.options} like so:
 
-  \code{options(markdown.HTML.options=markdownHTMLOptions())}
+  \code{options(markdown.HTML.options =
+  markdownHTMLOptions())}
 
   To reset the options to package default, use:
 
-  \code{options(markdown.HTML.options=markdownHTMLOptions(default=TRUE))}
+  \code{options(markdown.HTML.options =
+  markdownHTMLOptions(default = TRUE))}
 
   To override the global option, pass the \code{options} as
   an argument:
 
-  \code{markdownToHTML(...,options=c('skip_images'))}
+  \code{markdownToHTML(..., options = c('skip_images'))}
 
   Description of all options:
 
