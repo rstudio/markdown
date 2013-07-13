@@ -386,24 +386,12 @@ markdownToHTML <- function(
     html <- sub('#!html_output#', ret, html, fixed = TRUE)
 
     if (is.character(stylesheet)) {
-
-      # what to do if user misspelled file name?
-      if (file.exists(stylesheet))
-        stylesheet <- paste(readLines(stylesheet), collapse = '\n')
-
-      # presume the character vector contains CSS.
-      html <- sub('#!markdown_css#', stylesheet, html, fixed = TRUE)
-
+      html <- sub('#!markdown_css#', option2char(stylesheet), html, fixed = TRUE)
     } else {
       warning("stylesheet must either be valid CSS or a file containing CSS!")
     }
 
-    if (is.character(header)) {
-      # what to do if user misspelled file name?
-      if (file.exists(header))
-        header <- paste(readLines(header), collapse = '\n')
-    } else header <- ''
-    html <- sub('#!header#', header, html, fixed = TRUE)
+    html <- sub('#!header#', option2char(header), html, fixed = TRUE)
 
     if (!is.character(title) || title == '') {
       # Guess title
@@ -445,6 +433,11 @@ markdownToHTML <- function(
   invisible(ret)
 }
 
+# from an option to an appropriate character string of CSS/header/...
+option2char <- function(x) {
+  if (!is.character(x)) return('')
+  paste(if (length(x) == 1 && file.exists(x)) readLines(x) else x, collapse = '\n')
+}
 
 #' smartypants: ASCII punctuation to HTML entities
 #'

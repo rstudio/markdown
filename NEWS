@@ -1,3 +1,11 @@
+			      CHANGES IN markdown VERSION 0.6.2
+
+NEW FEATURES
+
+  o the options markdown.HTML.stylesheet and markdown.HTML.header used in
+  markdownToHTML() can be character vectors (they will be processed by
+  paste(x, collapse = '\n')
+
 			      CHANGES IN markdown VERSION 0.6
 
 DOCUMENTATION
