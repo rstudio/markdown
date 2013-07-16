@@ -9,14 +9,14 @@ rendererOutputType(name)
 }
 \value{
   The character string with a value of either
-  \code{"character"} or \code{"raw"}.
+  \code{character} or \code{raw}.
 }
 \description{
   \pkg{markdown} allows up to seven renderers to be
   registered by users, and each must provide the type of
-  output returned, either \code{"character"} or
-  \code{"raw"} for binary output. HTML is provided by the
-  package and outputs \code{"character"}.
+  output returned, either \code{character} or \code{raw}
+  for binary output. HTML is provided by the package and
+  outputs \code{character}.
 }
 \examples{
 # List all available renderers

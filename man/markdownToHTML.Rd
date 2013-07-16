@@ -20,7 +20,7 @@
   \item{output}{a character string giving the pathname of
   the file to write to.  If it is omitted, then it is
   presumed that the use expects the results returned as a
-  \code{"raw"} vector.}
+  \code{raw} vector.}
 
   \item{text}{a character vector containing the
   \emph{markdown} text to transform.}
@@ -48,14 +48,14 @@
 }
 \value{
   \code{renderMarkdown} returns NULL invisibly when output
-  is to a file, and a \code{"character"} vector otherwise.
+  is to a file, and a \code{character} vector otherwise.
 }
 \description{
   \code{markdownToHTML} transforms the \emph{markdown} text
   provided by the user in either the \code{file} or
   \code{text} variable. The HTML transformation is either
   written to the \code{output} file or returned to the user
-  as a \code{"character"} vector.
+  as a \code{character} vector.
 }
 \details{
   Three notable HTML options have been added to support

@@ -10,7 +10,7 @@ markdownHTMLOptions(defaults = FALSE)
   returned.}
 }
 \value{
-  A \code{"character"} vector listing either all available
+  A \code{character} vector listing either all available
   options or just the default options.
 }
 \description{

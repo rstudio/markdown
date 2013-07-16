@@ -14,7 +14,7 @@ renderMarkdown(file, output, text, renderer = "HTML", renderer.options = NULL,
   \item{output}{a character string giving the pathname of
   the file to write to.  If it is omitted, then it is
   presumed that the user expects the results returned as a
-  \code{"raw"} vector.}
+  \code{raw} vector.}
 
   \item{text}{a character vector containing the
   \emph{markdown} text to transform.}
@@ -32,9 +32,8 @@ renderMarkdown(file, output, text, renderer = "HTML", renderer.options = NULL,
 }
 \value{
   \code{renderMarkdown} returns NULL invisibly when output
-  is to a file, and either \code{"character"} or
-  \code{"raw"} vector depending on the renderer output
-  type.
+  is to a file, and either \code{character} or \code{raw}
+  vector depending on the renderer output type.
 }
 \description{
   \code{renderMarkdown} transforms the \emph{markdown} text

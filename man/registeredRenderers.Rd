@@ -5,10 +5,10 @@
 registeredRenderers()
 }
 \value{
-  A named \code{"character"} vector listing all available
+  A named \code{character} vector listing all available
   renderers.  Vector value contain renderer names, and
   named values contain the renderer output type, either
-  \code{"character"} or \code{"raw"}.
+  \code{character} or \code{raw}.
 }
 \description{
   \code{registeredRenderers} returns a named character

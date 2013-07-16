@@ -5,7 +5,7 @@
 markdownExtensions()
 }
 \value{
-  A \code{"character"} vector listing all available
+  A \code{character} vector listing all available
   extensions.
 }
 \description{
