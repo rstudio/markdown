@@ -426,7 +426,7 @@ markdownToHTML <- function(
   }
 
   if (is.character(outputFile)) {
-    cat(ret, file = outputFile)
+    writeLines(ret, outputFile)
     ret <- NULL
   }
 
