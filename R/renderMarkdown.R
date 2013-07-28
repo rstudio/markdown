@@ -80,7 +80,7 @@ rendererOutputType <- function(name) {
 #'   If it is omitted, then it is presumed that the user expects the results
 #'   returned as a \code{raw} vector.
 #' @param text a character vector containing the \emph{markdown} text to
-#'   transform.
+#'   transform (each element of this vector is treated as a line in a file).
 #' @param renderer the name of the renderer that will be used to transform the
 #'   \code{file} or \code{text}.
 #' @param renderer.options options that are passed to the renderer.  For
@@ -118,7 +118,7 @@ renderMarkdown <- function(
     text <- NULL
   } else if (!missing(text) && !is.null(text) && is.character(text)) {
     file <- NULL
-    if (length(text) > 1) text <- paste(text, collapse = '')
+    if (length(text) > 1) text <- paste(text, collapse = '\n')
   } else stop('Need input from either a file or a text string!')
 
   # Output is either returned or written to a file

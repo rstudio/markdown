@@ -10,6 +10,13 @@ NEW FEATURES
   markdownToHTML() can be character vectors (they will be processed by
   paste(x, collapse = '\n')
 
+MAJOR CHANGES
+
+  o the 'text' argument in markdownToHTML() and renderMarkdown() is treated
+  as lines of input now, i.e. if 'text' is provided, it is passed to the
+  markdown renderer as paste(text, collapse = '\n'); in the previous
+  versions, it was processed by paste(text, collapse = '')
+
 			      CHANGES IN markdown VERSION 0.6
 
 DOCUMENTATION
