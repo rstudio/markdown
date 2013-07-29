@@ -232,7 +232,7 @@ renderMarkdown <- function(
     ifelse(pos > -1L, tolower(substring(x, pos + 1L)), '')
   }
   ext <- fileExt(f)
-  ifelse(nchar(ext) > 1L && exists(ext, .MIMEMAP), .MIMEMAP[[ext]], '')
+  ifelse(nchar(ext) > 1L && !is.null(.MIMEMAP[[ext]]), .MIMEMAP[[ext]], '')
 }
 
 .b64EncodeFile <- function(inFile) {
