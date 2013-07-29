@@ -73,20 +73,11 @@ rendererOutputType <- function(name) {
 #'
 #' \pkg{markdown} uses (and ships with) the popular Sundown library provided by
 #' GitHub. C stubs are available to implement new renderers.
-#' @param file a character string giving the pathname of the file to read from.
-#'   If it is omitted from the argument list, then it is presumed that the
-#'   \code{text} argument will be used instead.
-#' @param output a character string giving the pathname of the file to write to.
-#'   If it is omitted, then it is presumed that the user expects the results
-#'   returned as a \code{raw} vector.
-#' @param text a character vector containing the \emph{markdown} text to
-#'   transform (each element of this vector is treated as a line in a file).
+#' @inheritParams markdownToHTML
 #' @param renderer the name of the renderer that will be used to transform the
 #'   \code{file} or \code{text}.
 #' @param renderer.options options that are passed to the renderer.  For
 #'   \code{HTML} renderer options see \code{\link{markdownHTMLOptions}}.
-#' @param extensions options that are passed to the \pkg{markdown} engine. See
-#'   \code{\link{markdownExtensions}}.
 #' @return \code{renderMarkdown} returns NULL invisibly when output is to a
 #'   file, and either \code{character} or \code{raw} vector depending on the
 #'   renderer output type.
@@ -250,7 +241,7 @@ renderMarkdown <- function(
 #'   If it is omitted, then it is presumed that the user expects the results
 #'   returned as a \code{raw} vector.
 #' @param text a character vector containing the \emph{markdown} text to
-#'   transform.
+#'   transform (each element of this vector is treated as a line in a file).
 #' @param options options that are passed to the renderer.  see
 #'   \code{\link{markdownHTMLOptions}}.
 #' @param extensions options that are passed to the \emph{markdown} engine. See
