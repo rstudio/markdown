@@ -247,7 +247,7 @@ renderMarkdown <- function(
 #'   If it is omitted from the argument list, then it is presumed that the
 #'   \code{text} argument will be used instead.
 #' @param output a character string giving the pathname of the file to write to.
-#'   If it is omitted, then it is presumed that the use expects the results
+#'   If it is omitted, then it is presumed that the user expects the results
 #'   returned as a \code{raw} vector.
 #' @param text a character vector containing the \emph{markdown} text to
 #'   transform.
