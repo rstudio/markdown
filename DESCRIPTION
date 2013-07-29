@@ -21,3 +21,4 @@ Collate:
     'renderMarkdown.R'
     'rpubsUpload.R'
     'markdown-package.R'
+    'utils.R'

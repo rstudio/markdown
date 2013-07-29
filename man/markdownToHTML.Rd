@@ -19,11 +19,12 @@
 
   \item{output}{a character string giving the pathname of
   the file to write to.  If it is omitted, then it is
-  presumed that the use expects the results returned as a
+  presumed that the user expects the results returned as a
   \code{raw} vector.}
 
   \item{text}{a character vector containing the
-  \emph{markdown} text to transform.}
+  \emph{markdown} text to transform (each element of this
+  vector is treated as a line in a file).}
 
   \item{options}{options that are passed to the renderer.
   see \code{\link{markdownHTMLOptions}}.}

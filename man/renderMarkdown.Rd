@@ -6,6 +6,13 @@ renderMarkdown(file, output, text, renderer = "HTML", renderer.options = NULL,
     extensions = getOption("markdown.extensions"))
 }
 \arguments{
+  \item{renderer}{the name of the renderer that will be
+  used to transform the \code{file} or \code{text}.}
+
+  \item{renderer.options}{options that are passed to the
+  renderer.  For \code{HTML} renderer options see
+  \code{\link{markdownHTMLOptions}}.}
+
   \item{file}{a character string giving the pathname of the
   file to read from.  If it is omitted from the argument
   list, then it is presumed that the \code{text} argument
@@ -17,17 +24,11 @@ renderMarkdown(file, output, text, renderer = "HTML", renderer.options = NULL,
   \code{raw} vector.}
 
   \item{text}{a character vector containing the
-  \emph{markdown} text to transform.}
-
-  \item{renderer}{the name of the renderer that will be
-  used to transform the \code{file} or \code{text}.}
-
-  \item{renderer.options}{options that are passed to the
-  renderer.  For \code{HTML} renderer options see
-  \code{\link{markdownHTMLOptions}}.}
+  \emph{markdown} text to transform (each element of this
+  vector is treated as a line in a file).}
 
   \item{extensions}{options that are passed to the
-  \pkg{markdown} engine. See
+  \emph{markdown} engine. See
   \code{\link{markdownExtensions}}.}
 }
 \value{
