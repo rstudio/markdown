@@ -2,7 +2,7 @@
 #'
 #' \pkg{Markdown} is a plain-text formatting syntax that can be converted to
 #' XHTML or other formats. This package provides R bindings to the Sundown
-#' (\url{https://github.com/tanoku/sundown}) markdown rendering library.
+#' (\url{https://github.com/vmg/sundown}) markdown rendering library.
 #'
 #' The R function \code{\link{markdownToHTML}} renders a markdown file to HTML
 #' (respecting the specified \code{\link{markdownExtensions}} and

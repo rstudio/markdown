@@ -6,7 +6,7 @@ Overview
 
 *Markdown* is a plain-text formatting syntax that can be converted
 to XHTML or other formats. This package provides R bindings to the
-[Sundown](https://github.com/tanoku/sundown) markdown rendering library.
+[Sundown](https://github.com/vmg/sundown) markdown rendering library.
 
 The R function `markdownToHTML` renders a markdown file to HTML. Options
 controlling HTML output and supported markdown extensions can be optionally

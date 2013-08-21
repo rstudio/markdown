@@ -42,7 +42,7 @@ cat(smartypants(text = "1/2 (c)\\n"))
 
   The original Sundown library on github:
 
-  \url{https://github.com/tanoku/sundown}
+  \url{https://github.com/vmg/sundown}
 
   C stubs for writing new renders are in
   inst/include/markdown_rstubs.[ch].
