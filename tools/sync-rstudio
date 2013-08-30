@@ -25,7 +25,4 @@ cp $MODULES_DIR/SessionRPubs.R $R_SRC_DIR/rpubsUpload.R
 
 # roxygenize
 cd ../markdown
-R --slave --vanilla -e "library(roxygen2); roxygenize(\"markdown\", roclets = c(\"rd\"));"
-
-# return to tools dir
-cd markdown/tools
+make
