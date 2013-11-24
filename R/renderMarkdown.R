@@ -185,11 +185,11 @@ renderMarkdown <- function(
 .mathJax <- local({
   cache <- new.env(parent = emptyenv())
 
-  function(url='http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', inline=FALSE, force=FALSE) {
+  function(url='http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', embed=FALSE, force=FALSE) {
     html <- '<!-- MathJax scripts -->'
 
     # Insert or link to MathJax script?
-    if (inline) {
+    if (embed) {
       # Already in cache?
       js <- cache[[url]]
       if (force || is.null(js)) {
@@ -355,8 +355,8 @@ markdownToHTML <- function(
     html <- sub('#!r_highlight#', highlight, html, fixed = TRUE)
 
     if ('mathjax' %in% options && .requiresMathJax(html)) {
-      inline <- ('mathjax_inline' %in% options)
-      mathjax <- .mathJax(inline=inline)
+      embed <- ('mathjax_embed' %in% options)
+      mathjax <- .mathJax(embed=embed)
     } else mathjax <- ''
     html <- sub('#!mathjax#', mathjax, html, fixed = TRUE)
 
