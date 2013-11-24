@@ -179,6 +179,33 @@ renderMarkdown <- function(
 }
 
 
+# From http://www.mathjax.org/community/mathjax-badge/
+#  Regular: http://cdn.mathjax.org/mathjax/...
+#  Secure: https://c328740.ssl.cf1.rackcdn.com/mathjax/...
+.mathJax <- local({
+  cache <- new.env(parent = emptyenv())
+
+  function(url='http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', inline=FALSE, force=FALSE) {
+    html <- '<!-- MathJax scripts -->'
+
+    # Insert or link to MathJax script?
+    if (inline) {
+      # Already in cache?
+      js <- cache[[url]]
+      if (force || is.null(js)) {
+        js <- readLines(url, warn=FALSE)
+        cache[[url]] <- js
+      }
+      html <- c(html, '<script type="text/javascript">', js)
+    } else {
+      html <- c(html, sprintf('<script type="text/javascript" src="%s">', url))
+    }
+
+    html <- c(html, '</script>')
+    paste(html, collapse="\n")
+  }
+})
+
 .requiresMathJax <- function(html) {
   regs <- c('\\\\\\(([\\s\\S]+?)\\\\\\)', '\\\\\\[([\\s\\S]+?)\\\\\\]')
   for (i in regs) if (any(grepl(i, html, perl = TRUE))) return(TRUE)
@@ -328,9 +355,8 @@ markdownToHTML <- function(
     html <- sub('#!r_highlight#', highlight, html, fixed = TRUE)
 
     if ('mathjax' %in% options && .requiresMathJax(html)) {
-      mathjax <- paste(readLines(system.file(
-        'resources', 'mathjax.html', package = 'markdown'
-      )), collapse = '\n')
+      inline <- ('mathjax_inline' %in% options)
+      mathjax <- .mathJax(inline=inline)
     } else mathjax <- ''
     html <- sub('#!mathjax#', mathjax, html, fixed = TRUE)
 
