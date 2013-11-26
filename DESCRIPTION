@@ -17,6 +17,7 @@ License: GPL-2
 URL: https://github.com/rstudio/markdown
 BugReports: https://github.com/rstudio/markdown/issues
 VignetteBuilder: knitr
+Roxygen: list(wrap = FALSE)
 Collate:
     'renderMarkdown.R'
     'rpubsUpload.R'
