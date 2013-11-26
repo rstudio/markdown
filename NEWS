@@ -1,3 +1,12 @@
+			      CHANGES IN markdown VERSION 0.6.3.1
+
+NEW FEATURES
+
+  o added 'mathjax_embed' to html options for including the MathJax
+    javascript in the HTML document rather than linking to it online.
+    This required changing from an HTTPS to an HTTPS MathJax URL.
+    Contributed by Henrik Bengtsson
+
 			      CHANGES IN markdown VERSION 0.6.3
 
 NEW FEATURES
