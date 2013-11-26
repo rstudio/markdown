@@ -8,4 +8,4 @@ tests/tests.Rout.save: tests/tests.R inst/examples/markdownExtensions.R inst/exa
 	cd tests && R CMD BATCH --no-save --no-restore --no-timing tests.R tests.Rout.save
 
 check:
-	cd .. && R CMD check markdown_*.tar.gz --as-cran
+	cd .. && R CMD check markdown_*.tar.gz --as-cran --no-manual
