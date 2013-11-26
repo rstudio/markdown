@@ -1,7 +1,6 @@
 roxygen:
 	cd .. && rm -f markdown_*.tar.gz && R -e "library(Rd2roxygen)" \
-		-e "rab('markdown', build=FALSE)" && \
-		R CMD build markdown && R CMD INSTALL markdown_*.tar.gz
+		-e "rab('markdown', install=TRUE)"
 
 tests: tests/tests.Rout.save
 
