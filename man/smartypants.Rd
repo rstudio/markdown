@@ -19,24 +19,21 @@ smartypants(file, output, text)
   \emph{markdown} text to transform.}
 }
 \value{
-  \code{smartypants} returns NULL invisibly when output is
-  to a file, and a character string otherwise.
+\code{smartypants} returns NULL invisibly when output is to a file,
+  and a character string otherwise.
 }
 \description{
-  \code{smartypants} transforms plain ASCII punctuation
-  characters into \emph{smart} typographic punctuation HTML
-  entities.
+\code{smartypants} transforms plain ASCII punctuation characters into
+\emph{smart} typographic punctuation HTML entities.
 }
 \examples{
 cat(smartypants(text = "1/2 (c)\\n"))
 }
 \seealso{
-  \code{\link{markdownExtensions}},
-  \code{\link{markdownHTMLOptions}},
+\code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
   \code{\link{markdownToHTML}}.
 
-  For a description of the original \emph{markdown}
-  version:
+  For a description of the original \emph{markdown} version:
 
   \url{http://daringfireball.net/projects/markdown/}
 
@@ -44,6 +41,5 @@ cat(smartypants(text = "1/2 (c)\\n"))
 
   \url{https://github.com/vmg/sundown}
 
-  C stubs for writing new renders are in
-  inst/include/markdown_rstubs.[ch].
+  C stubs for writing new renders are in inst/include/markdown_rstubs.[ch].
 }

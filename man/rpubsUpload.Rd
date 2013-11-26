@@ -32,23 +32,19 @@ rpubsUpload(title, htmlFile, id = NULL, properties = list(),
   "auto").}
 }
 \value{
-  A named list. If the upload was successful then the list
-  contains a \code{id} element that can be used to
-  subsequently update the document as well as a
-  \code{continueUrl} element that provides a URL that a
-  browser should be opened to in order to complete
-  publishing of the document. If the upload fails then the
-  list contains an \code{error} element which contains an
-  explanation of the error that occurred.
+A named list. If the upload was successful then the list contains a
+  \code{id} element that can be used to subsequently update the document as
+  well as a \code{continueUrl} element that provides a URL that a browser
+  should be opened to in order to complete publishing of the document. If the
+  upload fails then the list contains an \code{error} element which contains
+  an explanation of the error that occurred.
 }
 \description{
-  This function uploads an HTML file to rpubs.com. If the
-  upload succeeds a list that includes an \code{id} and
-  \code{continueUrl} is returned. A browser should be
-  opened to the \code{continueUrl} to complete publishing
-  of the document. If an error occurs then a diagnostic
-  message is returned in the \code{error} element of the
-  list.
+This function uploads an HTML file to rpubs.com. If the upload succeeds a
+list that includes an \code{id} and \code{continueUrl} is returned. A browser
+should be opened to the \code{continueUrl} to complete publishing of the
+document. If an error occurs then a diagnostic message is returned in the
+\code{error} element of the list.
 }
 \examples{
 \dontrun{

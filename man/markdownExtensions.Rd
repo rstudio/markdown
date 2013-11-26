@@ -5,69 +5,59 @@
 markdownExtensions()
 }
 \value{
-  A \code{character} vector listing all available
-  extensions.
+A \code{character} vector listing all available extensions.
 }
 \description{
-  \code{markdownExtensions} returns a character vector
-  listing all the extensions that are available in the
-  \pkg{markdown} package.
+\code{markdownExtensions} returns a character vector listing all the
+extensions that are available in the \pkg{markdown} package.
 }
 \details{
-  They are all ON by default.
+They are all ON by default.
 
-  The \pkg{Sundown} library (upon which \pkg{markdown} is
-  built) has optional support for several extensions
-  described below. To turn these on globally in the
-  \pkg{markdown} package, simply place some or all of them
-  in a character vector and assign to the global option
-  \code{markdown.extensions} like so:
+The \pkg{Sundown} library (upon which \pkg{markdown} is built) has optional
+support for several extensions described below. To turn these on globally in
+the \pkg{markdown} package, simply place some or all of them in a character
+vector and assign to the global option \code{markdown.extensions} like so:
 
-  \code{options(markdown.extensions =
-  markdownExtensions())}
+\code{options(markdown.extensions = markdownExtensions())}
 
-  To override the global option, pass the \code{extensions}
-  as an argument to one of the render functions, e.g.:
+To override the global option, pass the \code{extensions} as an argument to
+one of the render functions, e.g.:
 
-  \code{markdownToHTML(..., extensions =
-  c('no_intra_emphasis'))}
+\code{markdownToHTML(..., extensions = c('no_intra_emphasis'))}
 
-  Description of all extensions:
+Description of all extensions:
 
-  \describe{
+\describe{
 
-  \item{\code{'no_intra_emphasis'}}{ skip markdown embedded
-  in words.  }
+\item{\code{'no_intra_emphasis'}}{ skip markdown embedded in words.  }
 
-  \item{\code{'tables'}}{ create HTML tables (see
-  Examples). }
+\item{\code{'tables'}}{ create HTML tables (see Examples). }
 
-  \item{\code{'fenced_code'}}{ treat text as verbatim when
-  surrounded with begin and ending lines with three ~ or
-  \emph{`} characters.  }
+\item{\code{'fenced_code'}}{ treat text as verbatim when surrounded with
+begin and ending lines with three ~ or \emph{`} characters.  }
 
-  \item{\code{'autolink'}}{ create HTML links from urls and
-  email addresses. }
+\item{\code{'autolink'}}{ create HTML links from urls and email addresses. }
 
-  \item{\code{'strikethrough'}}{ create strikethroughs by
-  surrounding text with ~~.  }
+\item{\code{'strikethrough'}}{ create strikethroughs by surrounding text with
+~~.  }
 
-  \item{\code{'lax_spacing'}}{ allow HTML tags inside
-  paragraphs without being surrounded by newlines.  }
+\item{\code{'lax_spacing'}}{ allow HTML tags inside paragraphs without being
+surrounded by newlines.  }
 
-  \item{\code{'space_headers'}}{ add a space between header
-  hashes and the header itself.  }
+\item{\code{'space_headers'}}{ add a space between header hashes and the
+header itself.  }
 
-  \item{\code{'superscript'}}{ translate ^ and subsequent
-  text into HTML superscript. }
+\item{\code{'superscript'}}{ translate ^ and subsequent text into HTML
+superscript. }
 
-  \item{\code{'latex_math'}}{ transforms all math equations
-  into syntactically correct MathJax equations.  }
+\item{\code{'latex_math'}}{ transforms all math equations into syntactically
+correct MathJax equations.  }
 
-  }
+}
 
-  See the EXAMPLES section to see the output of each
-  extension turned on or off.
+See the EXAMPLES section to see the output of each extension turned on or
+off.
 }
 \examples{
 # List all available extensions:
@@ -148,5 +138,5 @@ cat(markdownToHTML(text = "2^10", extensions = c()))
 cat(markdownToHTML(text = "2^10", extensions = c("superscript")))
 }
 \seealso{
-  \link{markdownHTMLOptions}
+\link{markdownHTMLOptions}
 }

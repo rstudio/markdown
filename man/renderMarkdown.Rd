@@ -32,32 +32,28 @@ renderMarkdown(file, output, text, renderer = "HTML", renderer.options = NULL,
   \code{\link{markdownExtensions}}.}
 }
 \value{
-  \code{renderMarkdown} returns NULL invisibly when output
-  is to a file, and either \code{character} or \code{raw}
-  vector depending on the renderer output type.
+\code{renderMarkdown} returns NULL invisibly when output is to a
+  file, and either \code{character} or \code{raw} vector depending on the
+  renderer output type.
 }
 \description{
-  \code{renderMarkdown} transforms the \emph{markdown} text
-  provided by the user in either the \code{file} or
-  \code{text} variable. The transformation is either
-  written to the \code{output} file or returned to the
-  user. The default rendering target is "HTML".
+\code{renderMarkdown} transforms the \emph{markdown} text provided by the
+user in either the \code{file} or \code{text} variable. The transformation is
+either written to the \code{output} file or returned to the user. The default
+rendering target is "HTML".
 }
 \details{
-  \pkg{markdown} uses (and ships with) the popular Sundown
-  library provided by GitHub. C stubs are available to
-  implement new renderers.
+\pkg{markdown} uses (and ships with) the popular Sundown library provided by
+GitHub. C stubs are available to implement new renderers.
 }
 \examples{
 renderMarkdown(text = "Hello World!")
 }
 \seealso{
-  \code{\link{markdownExtensions}},
-  \code{\link{markdownHTMLOptions}},
+\code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
   \code{\link{markdownToHTML}}.
 
-  For a description of the original \emph{markdown}
-  version:
+  For a description of the original \emph{markdown} version:
 
   \url{http://daringfireball.net/projects/markdown/}
 
@@ -65,6 +61,5 @@ renderMarkdown(text = "Hello World!")
 
   \url{https://github.com/vmg/sundown}
 
-  C stubs for writing new renders are in
-  inst/include/markdown_rstubs.[ch].
+  C stubs for writing new renders are in inst/include/markdown_rstubs.[ch].
 }
