@@ -21,5 +21,6 @@
 #'
 #'   Maintainer: Yihui Xie <xie@@yihui.name>
 #' @seealso \code{\link{markdownToHTML}} \code{\link{renderMarkdown}}
+#' @useDynLib markdown, .registration = TRUE
 #' @keywords package
 NULL
