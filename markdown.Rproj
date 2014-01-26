@@ -12,5 +12,9 @@ Encoding: UTF-8
 RnwWeave: knitr
 LaTeX: pdfLaTeX
 
+AutoAppendNewline: Yes
+StripTrailingWhitespace: Yes
+
 BuildType: Package
-PackageInstallArgs: --no-multiarch
+PackageInstallArgs: -v; Rscript -e "Rd2roxygen::rab('markdown', install=TRUE)" #
+PackageCheckArgs: --no-manual --as-cran
