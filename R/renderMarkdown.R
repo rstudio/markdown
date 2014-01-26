@@ -1,7 +1,7 @@
 #
 # renderMarkdown.R
 #
-# Copyright (C) 2009-2013 by RStudio, Inc.
+# Copyright (C) 2009-2014 by RStudio, Inc.
 #
 # This program is licensed to you under the terms of version 2 of the
 # GNU General Public License. This program is distributed WITHOUT ANY
@@ -183,25 +183,27 @@ renderMarkdown <- function(
 #  Regular: http://cdn.mathjax.org/mathjax/...
 #  Secure: https://c328740.ssl.cf1.rackcdn.com/mathjax/...
 .mathJax <- local({
-  cache <- new.env(parent = emptyenv())
+  js <- NULL
 
-  function(url='http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', embed=FALSE, force=FALSE) {
-    html <- '<!-- MathJax scripts -->'
+  function(embed=FALSE, force=FALSE) {
+    if (!embed)
+      return(paste(readLines(system.file(
+        'resources', 'mathjax.html', package = 'markdown'
+      )), collapse = '\n'))
+
+    url <- 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
 
     # Insert or link to MathJax script?
-    if (embed) {
+    html <- c('<!-- MathJax scripts -->', if (embed) {
       # Already in cache?
-      js <- cache[[url]]
       if (force || is.null(js)) {
-        js <- readLines(url, warn=FALSE)
-        cache[[url]] <- js
+        js <<- readLines(url, warn=FALSE)
       }
-      html <- c(html, '<script type="text/javascript">', js)
+      c('<script type="text/javascript">', js)
     } else {
-      html <- c(html, sprintf('<script type="text/javascript" src="%s">', url))
-    }
+      sprintf('<script type="text/javascript" src="%s">', url)
+    }, '</script>')
 
-    html <- c(html, '</script>')
     paste(html, collapse="\n")
   }
 })
@@ -355,8 +357,7 @@ markdownToHTML <- function(
     html <- sub('#!r_highlight#', highlight, html, fixed = TRUE)
 
     if ('mathjax' %in% options && .requiresMathJax(html)) {
-      embed <- ('mathjax_embed' %in% options)
-      mathjax <- .mathJax(embed=embed)
+      mathjax <- .mathJax(embed = 'mathjax_embed' %in% options)
     } else mathjax <- ''
     html <- sub('#!mathjax#', mathjax, html, fixed = TRUE)
 

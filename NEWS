@@ -2,10 +2,10 @@
 
 NEW FEATURES
 
-  o added 'mathjax_embed' to html options for including the MathJax
-    javascript in the HTML document rather than linking to it online.
-    This required changing from an HTTPS to an HTTPS MathJax URL.
-    Contributed by Henrik Bengtsson
+  o added 'mathjax_embed' to HTML options for embedding the MathJax
+  JavaScript in the HTML document rather than linking to it online. Note the
+  JavaScript code is read from the http instead of https MathJax URL.
+  Contributed by Henrik Bengtsson.
 
 			      CHANGES IN markdown VERSION 0.6.3
 
