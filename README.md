@@ -16,9 +16,7 @@ The package also exports the underlying Sundown C extension API which
 enables creating and calling custom renderers using the `renderMarkdown`
 function.
 
-To learn more about markdown syntax see:
-
-[http://en.wikipedia.org/wiki/Markdown](http://en.wikipedia.org/wiki/Markdown)
+To learn more about markdown syntax see: <http://en.wikipedia.org/wiki/Markdown>
 
 License
 -----------------------------------------------------------------------------
@@ -28,5 +26,3 @@ additional details:
 
 - inst/COPYING - Markdown package license (GPLv2)
 - inst/NOTICE  - Copyright notices for additional included software
-
-

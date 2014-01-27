@@ -1,5 +1,4 @@
 .gitignore
-^README.md$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.git$
@@ -7,3 +6,4 @@
 .lvimrc
 tests/.RData
 Makefile
+inst/RnwToMd.R
