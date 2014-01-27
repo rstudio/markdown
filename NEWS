@@ -10,6 +10,10 @@ NEW FEATURES
   o added another vignette to show the HTML output of the original vignette
   (see browseVignettes('markdown'))
 
+  o the default CSS style was tweaked (major changes include: page width is
+  at most 800px, more line height, slightly larger fonts, and a different
+  syntax highlighting theme)
+
 			      CHANGES IN markdown VERSION 0.6.3
 
 NEW FEATURES
