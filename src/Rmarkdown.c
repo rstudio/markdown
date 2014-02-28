@@ -404,7 +404,7 @@ void skip_pandoc_title_block(struct buf *ib){
  * We skip everything in between including the ending '---'.
  */
 void skip_jekyll_front_matter(struct buf *ib){
-	int i = 0; int front_matter_found = 0;
+   int front_matter_found = 0;
    size_t pos = 0;
 
    /* Jekyll 0.12.0 expects front matter to start on the first line */
