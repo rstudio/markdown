@@ -348,7 +348,7 @@ Rboolean rmd_buf_to_output(struct buf *ob, SEXP Soutput, SEXP *raw_vec)
       ret = fwrite(ob->data, 1, ob->size, out);
       fclose(out);
 
-      if (ret < 0)
+      if (ferror (out))
       {
          warning("Error occurred writing to %s!", filename);
          return FALSE;
