@@ -347,7 +347,7 @@ markdownToHTML <- function(
     }
 
     # Need to scrub title more, e.g. strip html, etc.
-    html <- sub('#!title#', title, html, perl = TRUE)
+    html <- sub('#!title#', title, html, fixed = TRUE)
 
     if ('highlight_code' %in% options && .requiresHighlighting(html)) {
       highlight <- paste(readLines(system.file(
