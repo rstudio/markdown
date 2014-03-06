@@ -283,6 +283,7 @@ renderMarkdown <- function(
 #' @param template an HTML file used as template.
 #' @param fragment.only Whether or not to produce an HTML fragment without the
 #'   HTML header and body tags, CSS, and Javascript components.
+#' @param encoding the encoding of the input file; see \code{\link{file}}
 #' @return \code{renderMarkdown} returns NULL invisibly when output is to a
 #'   file, and a \code{character} vector otherwise.
 #' @seealso \code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
