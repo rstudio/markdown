@@ -297,7 +297,8 @@ markdownToHTML <- function(
   stylesheet = getOption('markdown.HTML.stylesheet'),
   header = getOption('markdown.HTML.header'),
   template = getOption('markdown.HTML.template'),
-  fragment.only = FALSE
+  fragment.only = FALSE,
+  encoding = getOption('encoding')                           
 ) {
   if (fragment.only) options <- c(options, 'fragment_only')
 
@@ -306,6 +307,32 @@ markdownToHTML <- function(
     output <- NULL
   } else outputFile <- NULL
 
+  # @kohske
+  # If this function is called from `knit2html`, output of `knit()` (i.e., ".md")
+  # has an encoding specified in the call of `knit2html`.
+  # As `knit2html` doesn't pass the encoding to this function,
+  # here inspect the encoding when this functin is called from `knit2html`.
+  # Obviously this is a tentative fix.
+  # `knit2html` should call `markdownToHTML` with encoding.
+  # But at this moment I don't want to make a change in knitr.
+  # So fixed here.
+  if (identical(sys.function(-1), knitr:::knit2html)) {
+    encoding <- parent.frame()$encoding
+  }
+
+  # @kohske
+  # If input is file, it needs to be read with the appropriate encoding.
+  # Here, instead of tweaking rmd_render_markdown in Rmarkdown.c,
+  # read a file with the encoding and convert it into native encoding.
+  # So all process will go under native encoding as previous.
+  # Finally, output will be converted into UTF8.  
+  if (!missing(file)) {
+    con <- file(file, encoding = encoding)
+    text <- paste(readLines(con), collapse = "\n")
+    text <- enc2native(text)
+    close(con)
+    file <- NULL
+  }
   ret <- renderMarkdown(file, output, text, renderer = 'HTML',
                         renderer.options = options, extensions = extensions)
 
@@ -365,7 +392,14 @@ markdownToHTML <- function(
   }
 
   if (is.character(outputFile)) {
-    writeLines(ret, outputFile)
+    # @kohske
+    # Here the encoding is hard-coded.
+    # Output should be always UTF8 in accordance with HTML charset
+    # Note that ret is native encoding but `file()` will do the
+    # conversion from native to utf8 here.
+    con <- file(outputFile, "w", encoding = "UTF8")
+    writeLines(ret, con)
+    close(con)
     ret <- NULL
   }
 
