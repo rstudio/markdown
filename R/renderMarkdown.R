@@ -315,9 +315,7 @@ markdownToHTML <- function(
   # Finally, output will be converted into UTF8.  
   if (!missing(file)) {
     con <- file(file, encoding = encoding)
-    text <- paste(readLines(con), collapse = "\n")
-    text <- enc2native(text)
-    close(con)
+    text <- tryCatch(enc2native(readLines(con)), finally = close(con))
     file <- NULL
   }
   ret <- renderMarkdown(file, output, text, renderer = 'HTML',
@@ -385,8 +383,7 @@ markdownToHTML <- function(
     # Note that ret is native encoding but `file()` will do the
     # conversion from native to utf8 here.
     con <- file(outputFile, "w", encoding = "UTF8")
-    writeLines(ret, con)
-    close(con)
+    tryCatch(writeLines(ret, con), finally = close(con))
     ret <- NULL
   }
 
