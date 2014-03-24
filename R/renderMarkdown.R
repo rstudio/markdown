@@ -299,7 +299,7 @@ markdownToHTML <- function(
   header = getOption('markdown.HTML.header'),
   template = getOption('markdown.HTML.template'),
   fragment.only = FALSE,
-  encoding = getOption('encoding')                           
+  encoding = getOption('encoding')
 ) {
   if (fragment.only) options <- c(options, 'fragment_only')
 
@@ -312,7 +312,7 @@ markdownToHTML <- function(
   # Here, instead of tweaking rmd_render_markdown in Rmarkdown.c,
   # read a file with the encoding and convert it into native encoding.
   # So all process will go under native encoding as previous.
-  # Finally, output will be converted into UTF8.  
+  # Finally, output will be converted into UTF8.
   if (!missing(file)) {
     con <- file(file, encoding = encoding)
     text <- tryCatch(enc2native(readLines(con)), finally = close(con))
@@ -377,7 +377,6 @@ markdownToHTML <- function(
   }
 
   if (is.character(outputFile)) {
-    # @kohske
     # Here the encoding is hard-coded.
     # Output should be always UTF8 in accordance with HTML charset
     # Note that ret is native encoding but `file()` will do the
