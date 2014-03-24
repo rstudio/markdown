@@ -308,20 +308,6 @@ markdownToHTML <- function(
     output <- NULL
   } else outputFile <- NULL
 
-  # @kohske
-  # If this function is called from `knit2html`, output of `knit()` (i.e., ".md")
-  # has an encoding specified in the call of `knit2html`.
-  # As `knit2html` doesn't pass the encoding to this function,
-  # here inspect the encoding when this functin is called from `knit2html`.
-  # Obviously this is a tentative fix.
-  # `knit2html` should call `markdownToHTML` with encoding.
-  # But at this moment I don't want to make a change in knitr.
-  # So fixed here.
-  if (identical(sys.function(-1), knitr:::knit2html)) {
-    encoding <- parent.frame()$encoding
-  }
-
-  # @kohske
   # If input is file, it needs to be read with the appropriate encoding.
   # Here, instead of tweaking rmd_render_markdown in Rmarkdown.c,
   # read a file with the encoding and convert it into native encoding.
