@@ -7,43 +7,41 @@ markdownToHTML(file, output, text,
   extensions = getOption("markdown.extensions"), title = "",
   stylesheet = getOption("markdown.HTML.stylesheet"),
   header = getOption("markdown.HTML.header"),
-  template = getOption("markdown.HTML.template"), fragment.only = FALSE)
+  template = getOption("markdown.HTML.template"), fragment.only = FALSE,
+  encoding = getOption("encoding"))
 }
 \arguments{
-  \item{file}{a character string giving the pathname of the
-  file to read from.  If it is omitted from the argument
-  list, then it is presumed that the \code{text} argument
-  will be used instead.}
+\item{file}{a character string giving the pathname of the file to read from.
+If it is omitted from the argument list, then it is presumed that the
+\code{text} argument will be used instead.}
 
-  \item{output}{a character string giving the pathname of
-  the file to write to.  If it is omitted, then it is
-  presumed that the user expects the results returned as a
-  \code{raw} vector.}
+\item{output}{a character string giving the pathname of the file to write to.
+If it is omitted, then it is presumed that the user expects the results
+returned as a \code{raw} vector.}
 
-  \item{text}{a character vector containing the
-  \emph{markdown} text to transform (each element of this
-  vector is treated as a line in a file).}
+\item{text}{a character vector containing the \emph{markdown} text to
+transform (each element of this vector is treated as a line in a file).}
 
-  \item{options}{options that are passed to the renderer.
-  see \code{\link{markdownHTMLOptions}}.}
+\item{options}{options that are passed to the renderer.  see
+\code{\link{markdownHTMLOptions}}.}
 
-  \item{extensions}{options that are passed to the
-  \emph{markdown} engine. See
-  \code{\link{markdownExtensions}}.}
+\item{extensions}{options that are passed to the \emph{markdown} engine. See
+\code{\link{markdownExtensions}}.}
 
-  \item{title}{The HTML title.}
+\item{title}{The HTML title.}
 
-  \item{stylesheet}{either valid CSS or a file containing
-  CSS. will be included in the output.}
+\item{stylesheet}{either valid CSS or a file containing CSS. will be included
+in the output.}
 
-  \item{header}{either valid HTML or a file containing HTML
-  will be included in the header of the output.}
+\item{header}{either valid HTML or a file containing HTML will be included in
+the header of the output.}
 
-  \item{template}{an HTML file used as template.}
+\item{template}{an HTML file used as template.}
 
-  \item{fragment.only}{Whether or not to produce an HTML
-  fragment without the HTML header and body tags, CSS, and
-  Javascript components.}
+\item{fragment.only}{Whether or not to produce an HTML fragment without the
+HTML header and body tags, CSS, and Javascript components.}
+
+\item{encoding}{the encoding of the input file; see \code{\link{file}}}
 }
 \value{
 \code{renderMarkdown} returns NULL invisibly when output is to a

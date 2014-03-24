@@ -5,9 +5,8 @@
 markdownHTMLOptions(defaults = FALSE)
 }
 \arguments{
-  \item{defaults}{If \code{TRUE}, then only the default
-  options are returned.  Otherwise all options are
-  returned.}
+\item{defaults}{If \code{TRUE}, then only the default options are returned.
+Otherwise all options are returned.}
 }
 \value{
 A \code{character} vector listing either all available options or

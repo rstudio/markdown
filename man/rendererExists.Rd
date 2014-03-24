@@ -5,7 +5,7 @@
 rendererExists(name)
 }
 \arguments{
-  \item{name}{name of renderer.}
+\item{name}{name of renderer.}
 }
 \value{
 \code{TRUE} or \code{FALSE} for whether or not the renderer exists.

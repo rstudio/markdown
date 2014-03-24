@@ -6,30 +6,25 @@ renderMarkdown(file, output, text, renderer = "HTML", renderer.options = NULL,
     extensions = getOption("markdown.extensions"))
 }
 \arguments{
-  \item{renderer}{the name of the renderer that will be
-  used to transform the \code{file} or \code{text}.}
+\item{renderer}{the name of the renderer that will be used to transform the
+\code{file} or \code{text}.}
 
-  \item{renderer.options}{options that are passed to the
-  renderer.  For \code{HTML} renderer options see
-  \code{\link{markdownHTMLOptions}}.}
+\item{renderer.options}{options that are passed to the renderer.  For
+\code{HTML} renderer options see \code{\link{markdownHTMLOptions}}.}
 
-  \item{file}{a character string giving the pathname of the
-  file to read from.  If it is omitted from the argument
-  list, then it is presumed that the \code{text} argument
-  will be used instead.}
+\item{file}{a character string giving the pathname of the file to read from.
+If it is omitted from the argument list, then it is presumed that the
+\code{text} argument will be used instead.}
 
-  \item{output}{a character string giving the pathname of
-  the file to write to.  If it is omitted, then it is
-  presumed that the user expects the results returned as a
-  \code{raw} vector.}
+\item{output}{a character string giving the pathname of the file to write to.
+If it is omitted, then it is presumed that the user expects the results
+returned as a \code{raw} vector.}
 
-  \item{text}{a character vector containing the
-  \emph{markdown} text to transform (each element of this
-  vector is treated as a line in a file).}
+\item{text}{a character vector containing the \emph{markdown} text to
+transform (each element of this vector is treated as a line in a file).}
 
-  \item{extensions}{options that are passed to the
-  \emph{markdown} engine. See
-  \code{\link{markdownExtensions}}.}
+\item{extensions}{options that are passed to the \emph{markdown} engine. See
+\code{\link{markdownExtensions}}.}
 }
 \value{
 \code{renderMarkdown} returns NULL invisibly when output is to a

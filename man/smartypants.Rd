@@ -5,18 +5,16 @@
 smartypants(file, output, text)
 }
 \arguments{
-  \item{file}{a character string giving the pathname of the
-  file to read from.  If it is omitted from the argument
-  list, then it is presumed that the \code{text} argument
-  will be used instead.}
+\item{file}{a character string giving the pathname of the file to read from.
+If it is omitted from the argument list, then it is presumed that the
+\code{text} argument will be used instead.}
 
-  \item{output}{a character string giving the pathname of
-  the file to write to.  If it is omitted, then it is
-  presumed that the user expects the results returned as a
-  character string.}
+\item{output}{a character string giving the pathname of the file to write to.
+If it is omitted, then it is presumed that the user expects the results
+returned as a character string.}
 
-  \item{text}{a character vector containing the
-  \emph{markdown} text to transform.}
+\item{text}{a character vector containing the \emph{markdown} text to
+transform.}
 }
 \value{
 \code{smartypants} returns NULL invisibly when output is to a file,

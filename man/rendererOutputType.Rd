@@ -5,7 +5,7 @@
 rendererOutputType(name)
 }
 \arguments{
-  \item{name}{a character string naming the renderer.}
+\item{name}{a character string naming the renderer.}
 }
 \value{
 The character string with a value of either \code{character} or
