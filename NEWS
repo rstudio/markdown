@@ -1,3 +1,11 @@
+			      CHANGES IN markdown VERSION 0.6.5
+
+NEW FEATURES
+
+  o added an argument 'encoding' to markdownToHTML() to specify the
+  character encoding of the input markdown file, and the HTML output file is
+  always encoded in UTF-8 now (thanks, Kohske Takahashi, #50)
+
 			      CHANGES IN markdown VERSION 0.6.4
 
 NEW FEATURES
