@@ -908,9 +908,9 @@ char_codespan(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t of
 
 	/* real code span */
 	if (f_begin < f_end) {
-        struct buf work = {0, 0, 0, 0};
-        work.data = data + f_begin;
-        work.size = f_end - f_begin;
+		struct buf work = {0, 0, 0, 0};
+		work.data = data + f_begin;
+		work.size = f_end - f_begin;
 		if (!rndr->cb.codespan(ob, &work, rndr->opaque))
 			end = 0;
 	} else {
@@ -987,10 +987,10 @@ char_langle_tag(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t 
 {
 	enum mkd_autolink altype = MKDA_NOT_AUTOLINK;
 	size_t end = tag_length(data, size, &altype);
-    int ret = 0;
+	int ret = 0;
 	struct buf work = { 0, 0, 0, 0 };
-    work.data = data;
-    work.size = end;
+	work.data = data;
+	work.size = end;
 
 	if (end > 2) {
 		if (rndr->cb.autolink && altype != MKDA_NOT_AUTOLINK) {
@@ -1681,7 +1681,7 @@ parse_paragraph(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t 
 	size_t i = 0, end = 0;
 	int level = 0;
 	struct buf work = { 0, 0, 0, 0 };
-    work.data = data;
+	work.data = data;
 
 	while (i < size) {
 		for (end = i + 1; end < size && data[end - 1] != '\n'; end++) /* empty */;
@@ -2149,7 +2149,7 @@ parse_htmlblock(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t 
 	size_t i, j = 0, tag_end;
 	const char *curtag = NULL;
 	struct buf work = { 0, 0, 0, 0 };
-    work.data = data;
+	work.data = data;
 
 	/* identification of the opening tag */
 	if (size < 2 || data[0] != '<')
