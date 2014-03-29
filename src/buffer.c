@@ -15,7 +15,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#define BUFFER_MAX_ALLOC_SIZE (1024 * 1024 * 16) //16mb
+#define BUFFER_MAX_ALLOC_SIZE (1024 * 1024 * 16) /* 16mb */
 
 #include "buffer.h"
 
