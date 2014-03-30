@@ -243,10 +243,11 @@ SEXP rmd_registered_renderers(void)
    SEXP ans;
    SEXP names;
    char *name, *output_type; 
+   int i;
 
    PROTECT(ans = allocVector(STRSXP,NREND));
    PROTECT(names = allocVector(STRSXP,NREND));
-   int i;
+
    for (i=0;i<NREND;i++)
    {
       if (RENDERERS[i].name != NULL)
