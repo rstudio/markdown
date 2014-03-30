@@ -339,14 +339,13 @@ Rboolean rmd_buf_to_output(struct buf *ob, SEXP Soutput, SEXP *raw_vec)
    {
       const char *filename = CHAR(STRING_ELT(Soutput,0));
       FILE *out = fopen(filename,"w");
-      size_t ret;
       if (!out)
       {
          warning("Cannot save output to %s!", filename);
          return FALSE;
       }
 
-      ret = fwrite(ob->data, 1, ob->size, out);
+      fwrite(ob->data, 1, ob->size, out);
       fclose(out);
 
       if (ferror (out))
