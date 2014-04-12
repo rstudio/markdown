@@ -53,8 +53,7 @@ ftp, http, etc.}
 
 \item{\code{'toc'}}{ assigns an HTML id to each header of the form 'toc_%d'
 where '%d' is replaced with the position of the header within the document
-(starting at 0). The user must create the top level table of contents by
-hand.}
+(starting at 0), and creates the table of contents.}
 
 \item{\code{'hard_wrap'}}{ adds an HTML br tag for every newline (excluding
 trailing) found within a paragraph.}
