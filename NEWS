@@ -1,3 +1,12 @@
+			      CHANGES IN markdown VERSION 0.6.7
+
+BUG FIXES
+
+  o if both the 'file' and 'text' arguments are provided but file = NULL,
+  e.g. markdownToHTML(file = NULL, text = ?), markdownToHTML() can throw an
+  error indicating the file is invalid (thanks, Tyler Rinker,
+  hadley/staticdocs#66)
+
 			      CHANGES IN markdown VERSION 0.6.5
 
 NEW FEATURES

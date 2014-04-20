@@ -313,7 +313,7 @@ markdownToHTML <- function(
   # read a file with the encoding and convert it into native encoding.
   # So all process will go under native encoding as previous.
   # Finally, output will be converted into UTF8.
-  if (!missing(file)) {
+  if (!missing(file) && !is.null(file)) {
     con <- file(file, encoding = encoding)
     text <- tryCatch(enc2native(readLines(con)), finally = close(con))
     file <- NULL
