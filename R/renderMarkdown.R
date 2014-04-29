@@ -97,7 +97,7 @@ rendererOutputType <- function(name) {
 #' @examples
 #' renderMarkdown(text = "Hello World!")
 renderMarkdown <- function(
-  file, output, text, renderer = 'HTML', renderer.options = NULL,
+  file, output = NULL, text = NULL, renderer = 'HTML', renderer.options = NULL,
   extensions = getOption('markdown.extensions')
 ) {
 
@@ -105,17 +105,10 @@ renderMarkdown <- function(
     stop("Renderer '", renderer, "' is not registered!")
 
   # Input from either a file or character vector
-  if (!missing(file) && is.character(file) && file.exists(file)) {
-    text <- NULL
-  } else if (!missing(text) && !is.null(text) && is.character(text)) {
-    file <- NULL
+  if (is.character(text)) {
     if (length(text) > 1) text <- paste(text, collapse = '\n')
-  } else stop('Need input from either a file or a text string!')
-
-  # Output is either returned or written to a file
-  if (missing(output)) output <- NULL else {
-    if (!is.null(output) && !is.character(output))
-      stop('output variable must be a file name!')
+  } else {
+    if (missing(file)) stop('Need input from either a file or a text string!')
   }
 
   # Options
@@ -267,8 +260,8 @@ renderMarkdown <- function(
 #'   If it is omitted from the argument list, then it is presumed that the
 #'   \code{text} argument will be used instead.
 #' @param output a character string giving the pathname of the file to write to.
-#'   If it is omitted, then it is presumed that the user expects the results
-#'   returned as a \code{raw} vector.
+#'   If it is omitted (\code{NULL}), then it is presumed that the user expects
+#'   the results returned as a \code{character} vector.
 #' @param text a character vector containing the \emph{markdown} text to
 #'   transform (each element of this vector is treated as a line in a file).
 #' @param options options that are passed to the renderer.  see
@@ -292,7 +285,7 @@ renderMarkdown <- function(
 #' @examples
 #' print(markdownToHTML(text = "Hello World!"))
 markdownToHTML <- function(
-  file, output, text, options = getOption('markdown.HTML.options'),
+  file, output = NULL, text = NULL, options = getOption('markdown.HTML.options'),
   extensions = getOption('markdown.extensions'),
   title = '',
   stylesheet = getOption('markdown.HTML.stylesheet'),
@@ -313,12 +306,12 @@ markdownToHTML <- function(
   # read a file with the encoding and convert it into native encoding.
   # So all process will go under native encoding as previous.
   # Finally, output will be converted into UTF8.
-  if (!missing(file) && !is.null(file)) {
-    con <- file(file, encoding = encoding)
+  if (!is.character(text)) {
+    con <- base::file(file, encoding = encoding)
     text <- tryCatch(enc2native(readLines(con)), finally = close(con))
-    file <- NULL
   }
-  ret <- renderMarkdown(file, output, text, renderer = 'HTML',
+
+  ret <- renderMarkdown(file = NULL, output = NULL, text, renderer = 'HTML',
                         renderer.options = options, extensions = extensions)
 
   if ('base64_images' %in% options) {
