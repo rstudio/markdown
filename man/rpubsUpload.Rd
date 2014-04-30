@@ -3,7 +3,7 @@
 \title{Upload an HTML file to RPubs}
 \usage{
 rpubsUpload(title, htmlFile, id = NULL, properties = list(), 
-    method = getOption("rpubs.upload.method"))
+    method = getOption("rpubs.upload.method", "auto"))
 }
 \arguments{
 \item{title}{The title of the document.}

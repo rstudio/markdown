@@ -1,7 +1,4 @@
-#
-# SessionRPubs.R
-#
-# Copyright (C) 2009-2013 by RStudio, Inc.
+# Copyright (C) 2009-2014 by RStudio, Inc.
 #
 # This program is licensed to you under the terms of version 2 of the
 # GNU General Public License. This program is distributed WITHOUT ANY
@@ -39,7 +36,7 @@
 #'   should be opened to in order to complete publishing of the document. If the
 #'   upload fails then the list contains an \code{error} element which contains
 #'   an explanation of the error that occurred.
-#' @export rpubsUpload
+#' @export
 #' @examples
 #' \dontrun{
 #' # upload a document
@@ -54,13 +51,13 @@ rpubsUpload <- function(title,
                         htmlFile,
                         id = NULL,
                         properties = list(),
-                        method = getOption("rpubs.upload.method")) {
+                        method = getOption("rpubs.upload.method", "auto")) {
 
    # validate inputs
    if (!is.character(title))
       stop("title must be specified")
    if (nzchar(title) == FALSE)
-      stop("title pmust be a non-empty string")
+      stop("title must be a non-empty string")
    if (!is.character(htmlFile))
       stop("htmlFile parameter must be specified")
    if (!file.exists(htmlFile))
@@ -68,17 +65,10 @@ rpubsUpload <- function(title,
    if (!is.list(properties))
       stop("properties paramater must be a named list")
 
-   # resolve method to auto if necessary
-   if (is.null(method))
-     method <- "auto"
-
-
    parseHeader <- function(header) {
       split <- strsplit(header, ": ")[[1]]
       if (length(split) == 2)
-         return (list(name = split[1], value = split[2]))
-      else
-         return (NULL)
+         list(name = split[1], value = split[2])
    }
 
    jsonEscapeString <- function(value) {
@@ -90,8 +80,7 @@ rpubsUpload <- function(title,
             paste('\\u', toupper(format(as.hexmode(as.integer(charToRaw(x))),
                                         width=4)),
                   sep='')
-         else
-            x
+         else x
       }, character(1))
       paste(chars, sep="", collapse="")
    }
@@ -111,10 +100,7 @@ rpubsUpload <- function(title,
       if (length(matchLoc) > 1) {
          matchLen <-attributes(matchLoc)$match.length
          url <- substr(input, matchLoc[2], matchLoc[2] + matchLen[2]-1)
-         return (url)
-      }
-      else {
-         return (NULL)
+         url
       }
    }
 
@@ -128,18 +114,12 @@ rpubsUpload <- function(title,
 
    parseHttpStatusCode <- function(statusLine) {
       statusCode <- regexExtract("HTTP/[0-9]+\\.[0-9]+ ([0-9]+).*", statusLine)
-      if (is.null(statusCode))
-         return (-1)
-      else
-         return (as.integer(statusCode))
+      if (is.null(statusCode)) -1 else as.integer(statusCode)
    }
 
    pathFromId <- function(id) {
       split <- strsplit(id, "^https?://[^/]+")[[1]]
-      if (length(split) == 2)
-         return (split[2])
-      else
-         return (NULL)
+      if (length(split) == 2) split[2]
    }
 
    buildPackage <- function(title,
@@ -192,11 +172,10 @@ rpubsUpload <- function(title,
       repeat {
          resp <- readLines(conn, 1)
          if (nzchar(resp) == 0)
-            break()
+            break
 
          header <- parseHeader(resp)
-         if (!is.null(header))
-         {
+         if (!is.null(header)) {
             if (identical(header$name, "Content-Type"))
                contentType <- header$value
             if (identical(header$name, "Content-Length"))
@@ -232,16 +211,9 @@ rpubsUpload <- function(title,
       request <- c(request, "User-Agent: RStudio\r\n")
       request <- c(request, "Host: api.rpubs.com\r\n")
       request <- c(request, "Accept: */*\r\n")
-      request <- c(request, paste("Content-Type: ",
-                                  contentType,
-                                  "\r\n",
-                                  sep=""))
-      request <- c(request, paste("Content-Length: ",
-                                  fileLength,
-                                  "\r\n",
-                                  sep=""))
-      for (name in names(headers))
-      {
+      request <- c(request, paste("Content-Type: ", contentType, "\r\n", sep=""))
+      request <- c(request, paste("Content-Length: ", fileLength, "\r\n", sep=""))
+      for (name in names(headers)) {
          request <- c(request,
                       paste(name, ": ", headers[[name]], "\r\n", sep=""))
       }
@@ -268,7 +240,7 @@ rpubsUpload <- function(title,
                            headers,
                            packageFile) {
 
-      require(RCurl)
+      library(RCurl)
 
       # url to post to
       url <- paste("https://api.rpubs.com", path, sep="")
@@ -298,10 +270,7 @@ rpubsUpload <- function(title,
 
       # return list
       headers <- headerGatherer$value()
-      if ("Location" %in% names(headers))
-         location <- headers[["Location"]]
-      else
-         location <- NULL
+      location <- if ("Location" %in% names(headers)) headers[["Location"]]
       list(status = as.integer(headers[["status"]]),
            location = location,
            contentType <- headers[["Content-Type"]],
@@ -317,8 +286,7 @@ rpubsUpload <- function(title,
       fileLength <- file.info(packageFile)$size
 
       extraHeaders <- character()
-      for (header in names(headers))
-      {
+      for (header in names(headers)) {
          extraHeaders <- paste(extraHeaders, "--header")
          extraHeaders <- paste(extraHeaders,
                                paste(header,":",headers[[header]], sep=""))
@@ -352,25 +320,22 @@ rpubsUpload <- function(title,
       }
    }
 
-   uploadFunction <- NULL
-   if (is.function(method)) {
-      uploadFunction <- method
-   } else if (identical("auto", method)) {
-      if (nzchar(Sys.which("curl")))
-         uploadFunction <- curlUpload
-      else if (suppressWarnings(require("RCurl", quietly=TRUE)))
-         uploadFunction <- rcurlUpload
-      else
-         uploadFunction <- internalUpload
-   } else if (identical("internal", method)) {
-      uploadFunction <- internalUpload
-   } else if (identical("curl",  method)) {
-      uploadFunction <- curlUpload
-   } else if (identical("rcurl", method)) {
-      uploadFunction <- rcurlUpload
-   } else {
+   uploadFunction <- if (is.function(method)) {
+      method
+   } else switch(
+     method,
+     "auto" = {
+       if (nzchar(Sys.which("curl"))) curlUpload else {
+         if (suppressWarnings(require("RCurl", quietly=TRUE))) {
+           rcurlUpload
+         } else internalUpload
+       }
+     },
+     "internal" = internalUpload,
+     "curl"     = curlUpload,
+     "rcurl"    = rcurlUpload,
       stop(paste("Invalid upload method specified:",method))
-   }
+   )
 
    # build the package
    packageFile <- buildPackage(title, htmlFile, properties)
@@ -394,11 +359,7 @@ rpubsUpload <- function(title,
                             packageFile)
 
    # check for success
-   succeeded <- FALSE
-   if (isUpdate && (result$status == 200))
-      succeeded <- TRUE
-   else if (result$status == 201)
-      succeeded <- TRUE
+   succeeded <- (isUpdate && (result$status == 200)) || (result$status == 201)
 
    # mark content as UTF-8
    content <- result$content
@@ -406,10 +367,7 @@ rpubsUpload <- function(title,
 
    # return either id & continueUrl or error
    if (succeeded) {
-      return (list(id = ifelse(isUpdate, id, result$location),
-                   continueUrl = parseContinueUrl(content)))
-   }
-   else {
-      return (list(error = content))
-   }
+     list(id = ifelse(isUpdate, id, result$location),
+          continueUrl = parseContinueUrl(content))
+   } else list(error = content)
 }
