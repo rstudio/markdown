@@ -369,7 +369,7 @@ markdownToHTML <- function(
     # Output should be always UTF8 in accordance with HTML charset
     # Note that ret is native encoding but `file()` will do the
     # conversion from native to utf8 here.
-    con <- file(output, "w", encoding = "UTF-8")
+    con <- base::file(output, "w", encoding = "UTF-8")
     tryCatch(writeLines(ret, con), finally = close(con))
     ret <- NULL
   }

@@ -7,6 +7,8 @@ BUG FIXES
   error indicating the file is invalid (thanks, Tyler Rinker,
   hadley/staticdocs#66)
 
+  o markdownToHTML(text = ?, output = ?) was broken (#54)
+
 			      CHANGES IN markdown VERSION 0.6.5
 
 NEW FEATURES
