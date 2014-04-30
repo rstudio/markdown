@@ -2,8 +2,8 @@
 \alias{renderMarkdown}
 \title{Render markdown}
 \usage{
-renderMarkdown(file, output, text, renderer = "HTML", renderer.options = NULL, 
-    extensions = getOption("markdown.extensions"))
+renderMarkdown(file, output = NULL, text = NULL, renderer = "HTML", 
+    renderer.options = NULL, extensions = getOption("markdown.extensions"))
 }
 \arguments{
 \item{renderer}{the name of the renderer that will be used to transform the
@@ -17,8 +17,8 @@ If it is omitted from the argument list, then it is presumed that the
 \code{text} argument will be used instead.}
 
 \item{output}{a character string giving the pathname of the file to write to.
-If it is omitted, then it is presumed that the user expects the results
-returned as a \code{raw} vector.}
+If it is omitted (\code{NULL}), then it is presumed that the user expects
+the results returned as a \code{character} vector.}
 
 \item{text}{a character vector containing the \emph{markdown} text to
 transform (each element of this vector is treated as a line in a file).}

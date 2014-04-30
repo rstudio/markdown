@@ -2,7 +2,7 @@
 \alias{markdownToHTML}
 \title{Render markdown to HTML}
 \usage{
-markdownToHTML(file, output, text,
+markdownToHTML(file, output = NULL, text = NULL,
   options = getOption("markdown.HTML.options"),
   extensions = getOption("markdown.extensions"), title = "",
   stylesheet = getOption("markdown.HTML.stylesheet"),
@@ -16,8 +16,8 @@ If it is omitted from the argument list, then it is presumed that the
 \code{text} argument will be used instead.}
 
 \item{output}{a character string giving the pathname of the file to write to.
-If it is omitted, then it is presumed that the user expects the results
-returned as a \code{raw} vector.}
+If it is omitted (\code{NULL}), then it is presumed that the user expects
+the results returned as a \code{character} vector.}
 
 \item{text}{a character vector containing the \emph{markdown} text to
 transform (each element of this vector is treated as a line in a file).}
@@ -93,7 +93,10 @@ the \code{'mathjax'} or \code{'highlight_code'} options (see
 When \code{fragment.only} is TRUE, nothing extra is added.
 }
 \examples{
-print(markdownToHTML(text = "Hello World!"))
+(markdownToHTML(text = "Hello World!", fragment.only = TRUE))
+(markdownToHTML(file = NULL, text = "_text_ will override _file_", fragment.only = TRUE))
+# write HTML to an output file
+markdownToHTML(text = "_Hello_, **World**!", output = "test.html")
 }
 \seealso{
 \code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
