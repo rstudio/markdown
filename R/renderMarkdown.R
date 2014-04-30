@@ -107,6 +107,7 @@ renderMarkdown <- function(
   # Input from either a file or character vector
   if (is.character(text)) {
     if (length(text) > 1) text <- paste(text, collapse = '\n')
+    file <- NULL
   } else {
     if (missing(file)) stop('Need input from either a file or a text string!')
   }
