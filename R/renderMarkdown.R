@@ -131,16 +131,6 @@ renderMarkdown <- function(
   invisible(ret)
 }
 
-.mimeType <- function(f) {
-  f <- f[1]
-  fileExt <- function (x) {
-    pos <- regexpr('\\.([[:alnum:]]+)$', x)
-    ifelse(pos > -1L, tolower(substring(x, pos + 1L)), '')
-  }
-  ext <- fileExt(f)
-  ifelse(nchar(ext) > 1L && !is.null(.MIMEMAP[[ext]]), .MIMEMAP[[ext]], '')
-}
-
 .b64EncodeFile <- function(inFile) {
   fileSize <- file.info(inFile)$size
 
@@ -148,7 +138,7 @@ renderMarkdown <- function(
     warning(inFile, 'is empty!')
     return(inFile)
   }
-  paste( 'data:', .mimeType(inFile), ';base64,',
+  paste( 'data:', mime::guess_type(inFile), ';base64,',
          .Call(rmd_b64encode_data, readBin(inFile, 'raw', n = fileSize)),
          sep = '')
 }
