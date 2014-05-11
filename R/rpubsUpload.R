@@ -278,7 +278,8 @@ rpubsUpload <- function(title,
                                        contentType = contentType))
 
       # use custom header and text gatherers
-      options <- RCurl::curlOptions(url)
+      sslpath <- system.file("CurlSSL", "cacert.pem", package = "RCurl")
+      options <- RCurl::curlOptions(url, cainfo = sslpath)
       headerGatherer <- RCurl::basicHeaderGatherer()
       options$headerfunction <- headerGatherer$update
       textGatherer <- RCurl::basicTextGatherer()
