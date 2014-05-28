@@ -360,12 +360,12 @@ markdownToHTML <- function(
   }
 
   if (is.character(output)) {
-    # Here the encoding is hard-coded.
     # Output should be always UTF8 in accordance with HTML charset
-    # Note that ret is native encoding but `file()` will do the
-    # conversion from native to utf8 here.
-    con <- base::file(output, "w", encoding = "UTF-8")
-    tryCatch(writeLines(ret, con), finally = close(con))
+    ret2 <- iconv(ret, to = 'UTF-8')
+    if (any(is.na(ret2))) {
+      warning('failed to convert output to UTF-8; wrong input encoding or locale?')
+    } else ret <- ret2
+    writeLines(ret, output, useBytes = TRUE)
     ret <- NULL
   }
 
