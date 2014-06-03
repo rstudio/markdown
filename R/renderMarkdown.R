@@ -268,11 +268,11 @@ renderMarkdown <- function(
 #' @param fragment.only Whether or not to produce an HTML fragment without the
 #'   HTML header and body tags, CSS, and Javascript components.
 #' @param encoding the encoding of the input file; see \code{\link{file}}
-#' @return \code{renderMarkdown} returns NULL invisibly when output is to a
-#'   file, and a \code{character} vector otherwise.
+#' @return Invisible \code{NULL} when output is to a file, and a character
+#'   vector otherwise.
 #' @seealso \code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
 #'   \code{\link{renderMarkdown}}.
-#' @export markdownToHTML
+#' @export
 #' @examples
 #' (markdownToHTML(text = "Hello World!", fragment.only = TRUE))
 #' (markdownToHTML(file = NULL, text = "_text_ will override _file_",

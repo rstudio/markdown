@@ -44,8 +44,8 @@ HTML header and body tags, CSS, and Javascript components.}
 \item{encoding}{the encoding of the input file; see \code{\link{file}}}
 }
 \value{
-\code{renderMarkdown} returns NULL invisibly when output is to a
-  file, and a \code{character} vector otherwise.
+Invisible \code{NULL} when output is to a file, and a character
+  vector otherwise.
 }
 \description{
 \code{markdownToHTML} transforms the \emph{markdown} text provided by the
