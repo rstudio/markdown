@@ -344,17 +344,17 @@ markdownToHTML <- function(
     # Need to scrub title more, e.g. strip html, etc.
     html <- sub('#!title#', title, html, fixed = TRUE)
 
+    if ('mathjax' %in% options && .requiresMathJax(html)) {
+      mathjax <- .mathJax(embed = 'mathjax_embed' %in% options)
+    } else mathjax <- ''
+    html <- sub('#!mathjax#', mathjax, html, fixed = TRUE)
+
     if ('highlight_code' %in% options && .requiresHighlighting(html)) {
       highlight <- paste(readLines(system.file(
         'resources', 'r_highlight.html', package = 'markdown'
       )), collapse = '\n')
     } else highlight <- ''
     html <- sub('#!r_highlight#', highlight, html, fixed = TRUE)
-
-    if ('mathjax' %in% options && .requiresMathJax(html)) {
-      mathjax <- .mathJax(embed = 'mathjax_embed' %in% options)
-    } else mathjax <- ''
-    html <- sub('#!mathjax#', mathjax, html, fixed = TRUE)
 
     ret <- html
   }
