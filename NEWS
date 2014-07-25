@@ -1,3 +1,13 @@
+			      CHANGES IN markdown VERSION 0.7.2
+
+BUG FIXES
+
+  o fixed #60: MathJax may be included even if it is unnecessary when syntax
+  highlighting is enabled (thanks, @aoles)
+
+  o fixed a bug which may hang R when building R Markdown vignettes in a wrong
+  locale (thanks, Dan Tenenbaum, yihui/knitr#782)
+
 			      CHANGES IN markdown VERSION 0.7
 
 BUG FIXES
