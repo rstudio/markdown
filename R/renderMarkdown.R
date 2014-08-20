@@ -163,9 +163,6 @@ renderMarkdown <- function(
 }
 
 
-# From http://www.mathjax.org/community/mathjax-badge/
-#  Regular: http://cdn.mathjax.org/mathjax/...
-#  Secure: https://c328740.ssl.cf1.rackcdn.com/mathjax/...
 .mathJax <- local({
   js <- NULL
 
@@ -175,6 +172,7 @@ renderMarkdown <- function(
         'resources', 'mathjax.html', package = 'markdown'
       )), collapse = '\n'))
 
+    # http://docs.mathjax.org/en/latest/start.html
     url <- 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
 
     # Insert or link to MathJax script?
