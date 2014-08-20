@@ -150,6 +150,8 @@ renderMarkdown <- function(
   if (m[[1]][1] != -1) {
     .b64EncodeImgSrc <- function(imgSrc) {
       src <- sub(reg, '\\1', imgSrc)
+      # already base64 encoded?
+      if (grepl('^data:.+;base64,.+', src)) return(imgSrc)
       inFile <- URLdecode(src)
       if (length(inFile) && file.exists(inFile))
         imgSrc <- sub(src, .b64EncodeFile(inFile), imgSrc, fixed = TRUE)
