@@ -64,7 +64,7 @@ rendererOutputType <- function(name) {
 }
 
 
-#' Render markdown
+#' Render markdown to an HTML fragment
 #'
 #' \code{renderMarkdown} transforms the \emph{markdown} text provided by the
 #' user in either the \code{file} or \code{text} variable. The transformation is
@@ -528,9 +528,9 @@ markdownExtensions <- function()
 #' \code{markdownHTMLOptions} returns a character vector listing all the options
 #' that are available for the HTML renderer in the \pkg{markdown} package. As a
 #' convenience, the package default options were chosen to render well-formed
-#' stand-alone HTML pages. The default options are \code{'use_xhtml'},
-#' \code{'smartypants'}, \code{'base64_images'}, \code{'mathjax'}, and
-#' \code{'highlight_code'}.
+#' stand-alone HTML pages when using \code{\link{markdownToHTML}()}. The default
+#' options are \code{'use_xhtml'}, \code{'smartypants'}, \code{'base64_images'},
+#' \code{'mathjax'}, and \code{'highlight_code'}.
 #'
 #' The HTML renderer provides several options described below. To turn these on
 #' globally in the \pkg{markdown} package, simply place some or all of them in a

@@ -16,9 +16,9 @@ A \code{character} vector listing either all available options or
 \code{markdownHTMLOptions} returns a character vector listing all the options
 that are available for the HTML renderer in the \pkg{markdown} package. As a
 convenience, the package default options were chosen to render well-formed
-stand-alone HTML pages. The default options are \code{'use_xhtml'},
-\code{'smartypants'}, \code{'base64_images'}, \code{'mathjax'}, and
-\code{'highlight_code'}.
+stand-alone HTML pages when using \code{\link{markdownToHTML}()}. The default
+options are \code{'use_xhtml'}, \code{'smartypants'}, \code{'base64_images'},
+\code{'mathjax'}, and \code{'highlight_code'}.
 }
 \details{
 The HTML renderer provides several options described below. To turn these on

@@ -1,6 +1,6 @@
 \name{renderMarkdown}
 \alias{renderMarkdown}
-\title{Render markdown}
+\title{Render markdown to an HTML fragment}
 \usage{
 renderMarkdown(file, output = NULL, text = NULL, renderer = "HTML", 
     renderer.options = NULL, extensions = getOption("markdown.extensions"))
