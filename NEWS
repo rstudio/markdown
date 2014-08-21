@@ -1,9 +1,15 @@
-			      CHANGES IN markdown VERSION 0.7.3
+			      CHANGES IN markdown VERSION 0.7.4
 
 NEW FEATURES
 
   o when an image is the only element of its parent node in the HTML output
   document, it is automatically centered on the page
+
+MINOR CHANGES
+
+  o images that have already been base64 encoded will not be encoded again (#61)
+  
+  o the URL of the MathJax CDN was updated to cdn.mathjax.org
 
 			      CHANGES IN markdown VERSION 0.7.2
 
