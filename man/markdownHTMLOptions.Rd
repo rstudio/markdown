@@ -97,12 +97,11 @@ options(markdown.HTML.options = NULL)
 options(markdown.HTML.options = markdownHTMLOptions(default = TRUE))
 # HTML OPTIONS
 
-# The following examples are short, so we allways add the HTML option
-# 'fragment_only'
+# The following examples are short, so we allways add the HTML option 'fragment_only'
 tOpt <- "fragment_only"
 
 # skip_html example
-mkd = "<style></style><img src=\"\"><a href=\"\">Hello</a>"
+mkd = '<style></style><img src="http://cran.rstudio.com/Rlogo.jpg"><a href="#">Hello</a>'
 cat(markdownToHTML(text = mkd, options = c(tOpt)))
 cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html")))
 
@@ -119,8 +118,8 @@ cat(markdownToHTML(text = mkd, options = c(tOpt)))
 cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_links")))
 
 # safelink example
-cat(markdownToHTML(text = "[foo](foo://bar \"baz\")", options = c(tOpt)))
-cat(markdownToHTML(text = "[foo](foo://bar \"baz\")", options = c(tOpt, "safelink")))
+cat(markdownToHTML(text = '[foo](foo://bar "baz")', options = c(tOpt)))
+cat(markdownToHTML(text = '[foo](foo://bar "baz")', options = c(tOpt, "safelink")))
 
 # toc example
 mkd <- paste(c("# Header 1", "p1", "## Header 2", "p2"), collapse = "\\n")
@@ -137,7 +136,7 @@ cat(markdownToHTML(text = "foo\\nbar\\n", options = c(tOpt, "hard_wrap")))
 cat(markdownToHTML(text = "foo\\nbar\\n", options = c(tOpt, "hard_wrap", "use_xhtml")))
 
 # escape example
-mkd = "<style></style><img src=\"\"><a href=\"\">Hello</a>"
+mkd = '<style></style><img src="http://cran.rstudio.com/Rlogo.jpg"><a href="#">Hello</a>'
 cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html")))
 # overrides all 'skip_*' options
 cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html", "escape")))

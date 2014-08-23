@@ -4,7 +4,7 @@
 tOpt <- "fragment_only"
 
 # skip_html example
-mkd = '<style></style><img src=""><a href="">Hello</a>'
+mkd = '<style></style><img src="http://cran.rstudio.com/Rlogo.jpg"><a href="#">Hello</a>'
 cat(markdownToHTML(text = mkd, options = c(tOpt)))
 cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html")))
 
@@ -39,7 +39,7 @@ cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt, "hard_wrap")))
 cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt, "hard_wrap", "use_xhtml")))
 
 # escape example
-mkd = '<style></style><img src=""><a href="">Hello</a>'
+mkd = '<style></style><img src="http://cran.rstudio.com/Rlogo.jpg"><a href="#">Hello</a>'
 cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html")))
 # overrides all 'skip_*' options
 cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html", "escape")))

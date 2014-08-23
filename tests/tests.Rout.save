@@ -119,31 +119,31 @@ because there is no space between # and N</p>
 
 > tOpt <- "fragment_only"
 
-> mkd = "<style></style><img src=\"\"><a href=\"\">Hello</a>"
+> mkd = "<style></style><img src=\"http://cran.rstudio.com/Rlogo.jpg\"><a href=\"#\">Hello</a>"
 
 > cat(markdownToHTML(text = mkd, options = c(tOpt)))
-<p><style></style><img src=""><a href="">Hello</a></p>
+<p><style></style><img src="http://cran.rstudio.com/Rlogo.jpg"><a href="#">Hello</a></p>
 
 > cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html")))
 <p>Hello</p>
 
 > cat(markdownToHTML(text = mkd, options = c(tOpt)))
-<p><style></style><img src=""><a href="">Hello</a></p>
+<p><style></style><img src="http://cran.rstudio.com/Rlogo.jpg"><a href="#">Hello</a></p>
 
 > cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_style")))
-<p><img src=""><a href="">Hello</a></p>
+<p><img src="http://cran.rstudio.com/Rlogo.jpg"><a href="#">Hello</a></p>
 
 > cat(markdownToHTML(text = mkd, options = c(tOpt)))
-<p><style></style><img src=""><a href="">Hello</a></p>
+<p><style></style><img src="http://cran.rstudio.com/Rlogo.jpg"><a href="#">Hello</a></p>
 
 > cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_images")))
-<p><style></style><a href="">Hello</a></p>
+<p><style></style><a href="#">Hello</a></p>
 
 > cat(markdownToHTML(text = mkd, options = c(tOpt)))
-<p><style></style><img src=""><a href="">Hello</a></p>
+<p><style></style><img src="http://cran.rstudio.com/Rlogo.jpg"><a href="#">Hello</a></p>
 
 > cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_links")))
-<p><style></style><img src="">Hello</p>
+<p><style></style><img src="http://cran.rstudio.com/Rlogo.jpg">Hello</p>
 
 > cat(markdownToHTML(text = "[foo](foo://bar \"baz\")", 
 +     options = c(tOpt)))
@@ -208,14 +208,14 @@ bar</p>
 <p>foo<br/>
 bar</p>
 
-> mkd = "<style></style><img src=\"\"><a href=\"\">Hello</a>"
+> mkd = "<style></style><img src=\"http://cran.rstudio.com/Rlogo.jpg\"><a href=\"#\">Hello</a>"
 
 > cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html")))
 <p>Hello</p>
 
 > cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html", 
 +     "escape")))
-<p>&lt;style&gt;&lt;/style&gt;&lt;img src=&quot;&quot;&gt;&lt;a href=&quot;&quot;&gt;Hello&lt;/a&gt;</p>
+<p>&lt;style&gt;&lt;/style&gt;&lt;img src=&quot;http://cran.rstudio.com/Rlogo.jpg&quot;&gt;&lt;a href=&quot;#&quot;&gt;Hello&lt;/a&gt;</p>
 
 > cat(markdownToHTML(text = "1/2 (c)", options = c(tOpt)))
 <p>1/2 (c)</p>
