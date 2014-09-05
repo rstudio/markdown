@@ -117,6 +117,7 @@ renderMarkdown <- function(
     text <- tryCatch(readLines(con), finally = close(con))
   }
   text <- enc2utf8(text)
+  if (length(text) > 1) text <- paste(text, collapse = '\n')
   file <- NULL
 
   # Options
