@@ -1,3 +1,15 @@
+			      CHANGES IN markdown VERSION 0.7.5
+
+BUG FIXES
+
+  o added an `encoding` argument to renderMarkdown() since multi-byte characters
+  in renderMarkdown() did not work on Windows (thanks, Kohske Takahashi, #63)
+
+MAJOR CHANGES
+
+  o if renderMarkdown() returns a character vector, it will be marked with the
+  UTF-8 encoding if it contains multi-byte characters
+
 			      CHANGES IN markdown VERSION 0.7.4
 
 NEW FEATURES
