@@ -105,10 +105,7 @@ renderMarkdown <- function(
     stop("Renderer '", renderer, "' is not registered!")
 
   # Input from either a file or character vector
-  if (is.character(text)) {
-    if (length(text) > 1) text <- paste(text, collapse = '\n')
-  } else {
-    if (missing(file)) stop('Need input from either a file or a text string!')
+  if (!is.character(text)) {
     # If input is file, it needs to be read with the appropriate encoding. Here,
     # instead of tweaking rmd_render_markdown in Rmarkdown.c, read a file with
     # the encoding and convert it to UTF-8. Finally, output will be marked as
