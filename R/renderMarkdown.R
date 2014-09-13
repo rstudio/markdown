@@ -85,17 +85,15 @@ rendererOutputType <- function(name) {
 #'   \code{\link{markdownToHTML}}.
 #'
 #'   For a description of the original \emph{markdown} version:
-#'
 #'   \url{http://daringfireball.net/projects/markdown/}
 #'
 #'   The original Sundown library on github:
-#'
 #'   \url{https://github.com/vmg/sundown}
 #'
 #'   C stubs for writing new renders are in inst/include/markdown_rstubs.[ch].
 #' @export renderMarkdown
 #' @examples
-#' renderMarkdown(text = "Hello World!")
+#' (renderMarkdown(text = "Hello World!"))
 renderMarkdown <- function(
   file, output = NULL, text = NULL, renderer = 'HTML', renderer.options = NULL,
   extensions = getOption('markdown.extensions'), encoding = getOption('encoding')
@@ -206,7 +204,6 @@ renderMarkdown <- function(
 }
 
 .requiresHighlighting <- function(html) any(grepl('<pre><code class="r"', html))
-
 
 
 #' Render markdown to HTML

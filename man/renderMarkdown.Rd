@@ -45,18 +45,16 @@ rendering target is "HTML".
 GitHub. C stubs are available to implement new renderers.
 }
 \examples{
-renderMarkdown(text = "Hello World!")
+(renderMarkdown(text = "Hello World!"))
 }
 \seealso{
 \code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
   \code{\link{markdownToHTML}}.
 
   For a description of the original \emph{markdown} version:
-
   \url{http://daringfireball.net/projects/markdown/}
 
   The original Sundown library on github:
-
   \url{https://github.com/vmg/sundown}
 
   C stubs for writing new renders are in inst/include/markdown_rstubs.[ch].
