@@ -1,6 +1,8 @@
 Markdown rendering for R
 =============================================================================
 
+[![Build Status](https://travis-ci.org/rstudio/markdown.svg)](https://travis-ci.org/rstudio/markdown)
+
 Overview
 -----------------------------------------------------------------------------
 
