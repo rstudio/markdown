@@ -185,6 +185,9 @@ rpubsUpload <- function(title,
          }
       }
 
+      # Sometimes the server does not return the Content-Length header, pick arbitrary large number
+      if (is.null(contentLength)) contentLength = 100000
+
       # read the response content
       content <- rawToChar(readBin(conn, what = 'raw', n=contentLength))
 
