@@ -1,9 +1,12 @@
-			      CHANGES IN markdown VERSION 0.7.5
+			      CHANGES IN markdown VERSION 0.7.6
 
 BUG FIXES
 
   o added an `encoding` argument to renderMarkdown() since multi-byte characters
   in renderMarkdown() did not work on Windows (thanks, Kohske Takahashi, #63)
+
+  o fixed #64: invalid 'n' argument in rpubsUpload() (thanks, Wouter van
+  Atteveldt)
 
 MAJOR CHANGES
 
