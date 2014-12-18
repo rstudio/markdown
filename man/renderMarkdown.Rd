@@ -46,6 +46,9 @@ GitHub. C stubs are available to implement new renderers.
 }
 \examples{
 (renderMarkdown(text = "Hello World!"))
+# a few corner cases
+(renderMarkdown(text = character(0)))
+(renderMarkdown(text = ""))
 }
 \seealso{
 \code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},

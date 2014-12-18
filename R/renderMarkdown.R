@@ -94,6 +94,9 @@ rendererOutputType <- function(name) {
 #' @export renderMarkdown
 #' @examples
 #' (renderMarkdown(text = "Hello World!"))
+#' # a few corner cases
+#' (renderMarkdown(text = character(0)))
+#' (renderMarkdown(text = ''))
 renderMarkdown <- function(
   file, output = NULL, text = NULL, renderer = 'HTML', renderer.options = NULL,
   extensions = getOption('markdown.extensions'), encoding = getOption('encoding')
@@ -125,6 +128,11 @@ renderMarkdown <- function(
       stop('HTML options must be a character vector')
   }
 
+  if (length(text) == 0 || text == '') {
+     if (is.null(output)) return(invisible(character(length(text))))
+     file.create(output)
+     return()
+  }
   ret <- .Call(rmd_render_markdown,
                file, output, text, renderer, renderer.options, extensions)
 
