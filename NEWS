@@ -1,6 +1,8 @@
-			      CHANGES IN markdown VERSION 0.7.6
+			      CHANGES IN markdown VERSION 0.7.7
 
 BUG FIXES
+
+  o renderMarkdown() works now even if text = character(0) or ""
 
   o added an `encoding` argument to renderMarkdown() since multi-byte characters
   in renderMarkdown() did not work on Windows (thanks, Kohske Takahashi, #63)
@@ -23,7 +25,7 @@ NEW FEATURES
 MINOR CHANGES
 
   o images that have already been base64 encoded will not be encoded again (#61)
-  
+
   o the URL of the MathJax CDN was updated to cdn.mathjax.org
 
 			      CHANGES IN markdown VERSION 0.7.2
