@@ -1,3 +1,4 @@
+% Please edit documentation in R/renderMarkdown.R
 \name{rendererExists}
 \alias{rendererExists}
 \title{Testing for existence of a markdown renderer}

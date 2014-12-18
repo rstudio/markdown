@@ -1,3 +1,4 @@
+% Please edit documentation in R/renderMarkdown.R
 \name{rendererOutputType}
 \alias{rendererOutputType}
 \title{Fetch the Renderer Output Type}

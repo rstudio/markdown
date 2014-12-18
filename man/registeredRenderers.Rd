@@ -1,3 +1,4 @@
+% Please edit documentation in R/renderMarkdown.R
 \name{registeredRenderers}
 \alias{registeredRenderers}
 \title{List of Registered Markdown Renderers}

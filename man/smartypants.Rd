@@ -1,3 +1,4 @@
+% Please edit documentation in R/renderMarkdown.R
 \name{smartypants}
 \alias{smartypants}
 \title{smartypants: ASCII punctuation to HTML entities}

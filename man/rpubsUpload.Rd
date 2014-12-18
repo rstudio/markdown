@@ -1,3 +1,4 @@
+% Please edit documentation in R/rpubsUpload.R
 \name{rpubsUpload}
 \alias{rpubsUpload}
 \title{Upload an HTML file to RPubs}

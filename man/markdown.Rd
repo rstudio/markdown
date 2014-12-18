@@ -1,3 +1,4 @@
+% Please edit documentation in R/markdown-package.R
 \docType{package}
 \name{markdown}
 \alias{markdown}

@@ -1,3 +1,4 @@
+% Please edit documentation in R/renderMarkdown.R
 \name{markdownHTMLOptions}
 \alias{markdownHTMLOptions}
 \title{Markdown HTML rendering options}

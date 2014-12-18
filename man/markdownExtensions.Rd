@@ -1,3 +1,4 @@
+% Please edit documentation in R/renderMarkdown.R
 \name{markdownExtensions}
 \alias{markdownExtensions}
 \title{Markdown extensions}

@@ -1,3 +1,4 @@
+% Please edit documentation in R/renderMarkdown.R
 \name{markdownToHTML}
 \alias{markdownToHTML}
 \title{Render markdown to HTML}
