@@ -275,10 +275,8 @@ rpubsUpload <- function(title,
                            headers,
                            packageFile) {
 
-      library(RCurl)
-
       # url to post to
-      url <- paste("https://api.rpubs.com", path, sep="")
+      url <- paste("https://api.rpubs.com", path, sep = "")
 
       # upload package file
       params <- list(file = RCurl::fileUpload(filename = packageFile,
@@ -361,7 +359,7 @@ rpubsUpload <- function(title,
      method,
      "auto" = {
        if (nzchar(Sys.which("curl"))) curlUpload else {
-         if (suppressWarnings(require("RCurl", quietly=TRUE))) {
+         if (suppressWarnings(requireNamespace("RCurl", quietly = TRUE))) {
            rcurlUpload
          } else internalUpload
        }
