@@ -21,8 +21,8 @@ cat(markdownToHTML(text = mkd, options = c(tOpt)))
 cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_links")))
 
 # safelink example
-cat(markdownToHTML(text = '[foo](foo://bar "baz")', options = c(tOpt)))
-cat(markdownToHTML(text = '[foo](foo://bar "baz")', options = c(tOpt, "safelink")))
+cat(markdownToHTML(text = '[foo](http://google.com "baz")', options = c(tOpt)))
+cat(markdownToHTML(text = '[foo](http://google.com "baz")', options = c(tOpt, "safelink")))
 
 # toc example
 mkd <- paste(c("# Header 1", "p1", "## Header 2", "p2"), collapse = "\n")
