@@ -1,6 +1,6 @@
 Package: markdown
 Type: Package
-Title: Markdown rendering for R
+Title: Markdown Rendering for R
 Version: 0.7.7
 Date: 2014-08-24
 Author: JJ Allaire, Jeffrey Horner, Vicent Marti, and Natacha Porte
