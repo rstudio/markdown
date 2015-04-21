@@ -11,7 +11,7 @@ Description: Markdown is a plain-text formatting syntax that can be
 Depends:
     R (>= 2.11.1)
 Imports:
-    mime (>= 0.1.1)
+    mime (>= 0.3)
 Suggests:
     knitr,
     RCurl
