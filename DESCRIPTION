@@ -2,7 +2,7 @@ Package: markdown
 Type: Package
 Title: 'Markdown' Rendering for R
 Version: 0.7.7
-Date: 2014-08-24
+Date: 2015-04-23
 Author: JJ Allaire, Jeffrey Horner, Vicent Marti, and Natacha Porte
 Maintainer: Yihui Xie <xie@yihui.name>
 Description:  Provides R bindings to the 'Sundown' 'Markdown' rendering library
