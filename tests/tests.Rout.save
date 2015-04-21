@@ -1,6 +1,6 @@
 
-R version 3.1.1 (2014-07-10) -- "Sock it to Me"
-Copyright (C) 2014 The R Foundation for Statistical Computing
+R version 3.2.0 (2015-04-16) -- "Full of Ingredients"
+Copyright (C) 2015 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -145,13 +145,13 @@ because there is no space between # and N</p>
 > cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_links")))
 <p><style></style><img src="http://cran.rstudio.com/Rlogo.jpg">Hello</p>
 
-> cat(markdownToHTML(text = "[foo](foo://bar \"baz\")", 
+> cat(markdownToHTML(text = "[foo](http://google.com \"baz\")", 
 +     options = c(tOpt)))
-<p><a href="foo://bar" title="baz">foo</a></p>
+<p><a href="http://google.com" title="baz">foo</a></p>
 
-> cat(markdownToHTML(text = "[foo](foo://bar \"baz\")", 
+> cat(markdownToHTML(text = "[foo](http://google.com \"baz\")", 
 +     options = c(tOpt, "safelink")))
-<p>[foo](foo://bar &quot;baz&quot;)</p>
+<p><a href="http://google.com" title="baz">foo</a></p>
 
 > mkd <- paste(c("# Header 1", "p1", "## Header 2", 
 +     "p2"), collapse = "\n")
