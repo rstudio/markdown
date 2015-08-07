@@ -325,7 +325,7 @@ markdownToHTML <- function(
     if (is.null(template))
       template <- system.file('resources', 'markdown.html', package = 'markdown')
     html <- paste(readLines(template), collapse = '\n')
-    html <- sub('#!html_output#', ret, html, fixed = TRUE)
+    html <- sub('#!html_output#', if (length(ret)) ret else '', html, fixed = TRUE)
 
     if (is.character(stylesheet)) {
       html <- sub('#!markdown_css#', option2char(stylesheet), html, fixed = TRUE)
