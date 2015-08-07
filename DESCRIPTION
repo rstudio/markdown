@@ -12,7 +12,8 @@ Description:  Provides R bindings to the 'Sundown' 'Markdown' rendering library
 Depends:
     R (>= 2.11.1)
 Imports:
-    mime (>= 0.3)
+   utils,
+   mime (>= 0.3)
 Suggests:
     knitr,
     RCurl

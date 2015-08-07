@@ -156,7 +156,7 @@ renderMarkdown <- function(
          sep = '')
 }
 
-
+#' @importFrom utils URLdecode
 .b64EncodeImages <- function(html) {
   if (length(html) == 0) return(html)
   reg <- "<\\s*[Ii][Mm][Gg]\\s+[Ss][Rr][Cc]\\s*=\\s*[\"']([^\"']+)[\"']"
