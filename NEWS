@@ -1,3 +1,10 @@
+			      CHANGES IN markdown VERSION 0.7.8
+
+BUG FIXES
+
+   o fixed https://github.com/rstudio/htmltools/issues/30: markdownToHTML() did
+   not work with empty files (thanks, @VermillionAzure)
+
 			      CHANGES IN markdown VERSION 0.7.7
 
 BUG FIXES

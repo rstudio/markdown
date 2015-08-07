@@ -158,6 +158,7 @@ renderMarkdown <- function(
 
 
 .b64EncodeImages <- function(html) {
+  if (length(html) == 0) return(html)
   reg <- "<\\s*[Ii][Mm][Gg]\\s+[Ss][Rr][Cc]\\s*=\\s*[\"']([^\"']+)[\"']"
   m <- gregexpr(reg, html, perl = TRUE)
   if (m[[1]][1] != -1) {
