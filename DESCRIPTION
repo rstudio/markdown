@@ -16,8 +16,8 @@ Authors@R: c(
    person("Thomas", "Leeper", role = "ctb"),
    person("Joe", "Cheng", role = "ctb"),
    person("Andrzej", "Oles", role = "ctb"),
-   person("Vicent", "Marti", role = "ctb", comment = "The Sundown library"),
-   person("Natacha", "Porte", role = "ctb", comment = "The Sundown library"),
+   person("Vicent", "Marti", role = c("aut", "cph"), comment = "The Sundown library"),
+   person("Natacha", "Porte", role = c("aut", "cph"), comment = "The Sundown library"),
    person(family = "RStudio", role = "cph"),
    person("Yihui", "Xie", role = c("cre", "ctb"), email = "xie@yihui.name")
    )
