@@ -62,6 +62,7 @@ SEXP rmd_b64encode_data( SEXP Sdata)
    str = bufcstr(databuf);
    if (!str)
    {
+      bufrelease(databuf);
       RMD_WARNING_NOMEM;
       return R_NilValue;
    }
