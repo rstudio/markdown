@@ -30,8 +30,11 @@ SEXP rmd_b64encode_data( SEXP Sdata)
    Rbyte *data = RAW(Sdata);
    SEXP ans;
    struct buf *databuf;
+   const char* str;
 
-   databuf = bufnew(READ_UNIT);
+   /* We don't know the size of the encoded output, but
+      we know that it is at least as long as the input */
+   databuf = bufnew(data_len);
    if (!databuf)
    {
       RMD_WARNING_NOMEM;
@@ -56,8 +59,15 @@ SEXP rmd_b64encode_data( SEXP Sdata)
       }
    }
 
+   str = bufcstr(databuf);
+   if (!str)
+   {
+      RMD_WARNING_NOMEM;
+      return R_NilValue;
+   }
+     
    PROTECT(ans = allocVector(STRSXP,1));
-   SET_STRING_ELT(ans,0,mkChar(bufcstr(databuf)));
+   SET_STRING_ELT(ans,0,mkChar(str));
    bufrelease(databuf);
    UNPROTECT(1);
 
