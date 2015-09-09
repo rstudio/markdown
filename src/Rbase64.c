@@ -32,9 +32,9 @@ SEXP rmd_b64encode_data( SEXP Sdata)
    struct buf *databuf;
    const char* str;
 
-   /* We don't know the size of the encoded output, but
-      we know that it is at least as long as the input */
-   databuf = bufnew(data_len);
+   /* Create a buffer that grows READ_UNIT bytes at
+      the time as a larger buffer is needed */
+   databuf = bufnew(READ_UNIT);
    if (!databuf)
    {
       RMD_WARNING_NOMEM;
@@ -53,9 +53,7 @@ SEXP rmd_b64encode_data( SEXP Sdata)
       }
       if( len ) {
          encodeblock( in, out, len );
-         for( i = 0; i < 4; i++ ) {
-            bufputc(databuf,out[i]);
-         }
+         bufput(databuf,out,4);
       }
    }
 
