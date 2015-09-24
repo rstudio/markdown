@@ -1,8 +1,8 @@
 /*
  * Rinit.c
- * 
+ *
  * Copyright (C) 2009-2013 by RStudio, Inc.
- * 
+ *
  * This program is licensed to you under the terms of version 2 of the
  * GNU General Public License. This program is distributed WITHOUT ANY
  * EXPRESS OR IMPLIED WARRANTY, INCLUDING THOSE OF NON-INFRINGEMENT,
@@ -10,7 +10,7 @@
  * GPL (http://www.gnu.org/licenses/gpl-2.0.txt) for more details.
  *
  */
-            
+
 #include <R_ext/Rdynload.h>
 #include "markdown.h"
 #include "Rmarkdown.h"
@@ -33,7 +33,6 @@ void R_init_markdown(DllInfo *dll)
 
    /* Callable functions from other packages' C code */
 #define RREGDEF(name) R_RegisterCCallable("markdown", #name, (DL_FUNC) name)
-   RREGDEF(bufput);
    RREGDEF(bufgrow);
    RREGDEF(bufnew);
    RREGDEF(bufcstr);
