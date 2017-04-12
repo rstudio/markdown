@@ -188,8 +188,7 @@ renderMarkdown <- function(
         'resources', 'mathjax.html', package = 'markdown'
       )), collapse = '\n'))
 
-    # http://docs.mathjax.org/en/latest/start.html
-    url <- 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+    url <- 'https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML'
 
     # Insert or link to MathJax script?
     html <- c('<!-- MathJax scripts -->', if (embed) {
