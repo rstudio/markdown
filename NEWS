@@ -1,4 +1,8 @@
-			      CHANGES IN markdown VERSION 0.7.8
+			      CHANGES IN markdown VERSION 0.8
+
+MINOR CHANGES
+
+   o the MathJax CDN URL was replaced by http://www.bootcdn.cn/mathjax/
 
 BUG FIXES
 

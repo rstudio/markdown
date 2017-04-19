@@ -1,8 +1,8 @@
 Package: markdown
 Type: Package
 Title: 'Markdown' Rendering for R
-Version: 0.7.11
-Date: 2015-04-23
+Version: 0.8
+Date: 2017-04-20
 Authors@R: c(
    person("JJ", "Allaire", role = "aut"),
    person("Jeffrey", "Horner", role = "aut"),
