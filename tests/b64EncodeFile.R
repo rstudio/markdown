@@ -1,7 +1,7 @@
 library(markdown)
 
 ## Download
-url = "http://www.r-project.org/Rlogo.png"
+url = "https://www.r-project.org/Rlogo.png"
 path = tempdir()
 pathname = file.path(tempdir(), basename(url))
 if (!file_test("-f", pathname)) download.file(url, pathname)

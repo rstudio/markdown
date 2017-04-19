@@ -38,8 +38,8 @@ first line.
 "), extensions = c("fenced_code")))
 
 # autolink example
-cat(markdownToHTML(text = "http://www.r-project.org/", extensions = c()))
-cat(markdownToHTML(text = "http://www.r-project.org/", extensions = c("autolink")))
+cat(markdownToHTML(text = "https://www.r-project.org/", extensions = c()))
+cat(markdownToHTML(text = "https://www.r-project.org/", extensions = c("autolink")))
 
 # strikethrough example
 cat(markdownToHTML(text = "~~awesome~~", extensions = c()))

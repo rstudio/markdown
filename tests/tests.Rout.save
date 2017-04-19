@@ -1,7 +1,7 @@
 
-R version 3.2.0 (2015-04-16) -- "Full of Ingredients"
-Copyright (C) 2015 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 3.3.3 (2017-03-06) -- "Another Canoe"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin13.4.0 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -71,13 +71,13 @@ first line.
 first line.
 </code></pre>
 
-> cat(markdownToHTML(text = "http://www.r-project.org/", 
+> cat(markdownToHTML(text = "https://www.r-project.org/", 
 +     extensions = c()))
-<p>http://www.r-project.org/</p>
+<p>https://www.r-project.org/</p>
 
-> cat(markdownToHTML(text = "http://www.r-project.org/", 
+> cat(markdownToHTML(text = "https://www.r-project.org/", 
 +     extensions = c("autolink")))
-<p><a href="http://www.r-project.org/">http://www.r-project.org/</a></p>
+<p><a href="https://www.r-project.org/">https://www.r-project.org/</a></p>
 
 > cat(markdownToHTML(text = "~~awesome~~", extensions = c()))
 <p>~~awesome~~</p>
@@ -230,3 +230,6 @@ bar</p>
 > rm(mkd)
 > rm(tOpt)
 > 
+> proc.time()
+   user  system elapsed 
+  0.187   0.045   0.233 
