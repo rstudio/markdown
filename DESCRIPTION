@@ -2,10 +2,10 @@ Package: markdown
 Type: Package
 Title: 'Markdown' Rendering for R
 Version: 0.8.1
-Date: 2017-04-20
 Authors@R: c(
    person("JJ", "Allaire", role = "aut"),
    person("Jeffrey", "Horner", role = "aut"),
+   person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name", comment = c(ORCID = "0000-0003-0645-5666")),
    person("Henrik", "Bengtsson", role = "ctb"),
    person("Jim", "Hester", role = "ctb"),
    person("Yixuan", "Qiu", role = "ctb"),
@@ -18,8 +18,7 @@ Authors@R: c(
    person("Andrzej", "Oles", role = "ctb"),
    person("Vicent", "Marti", role = c("aut", "cph"), comment = "The Sundown library"),
    person("Natacha", "Porte", role = c("aut", "cph"), comment = "The Sundown library"),
-   person(family = "RStudio", role = "cph"),
-   person("Yihui", "Xie", role = c("cre", "ctb"), email = "xie@yihui.name")
+   person(family = "RStudio", role = "cph")
    )
 Description: Provides R bindings to the 'Sundown' 'Markdown' rendering library
     (https://github.com/vmg/sundown). 'Markdown' is a plain-text formatting
