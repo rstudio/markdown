@@ -236,7 +236,7 @@ sd_autolink__url(size_t *rewind_p, struct buf *link, uint8_t *data, size_t offse
 	if (size < 4 || data[1] != '/' || data[2] != '/')
 		return 0;
 
-	while (rewind < offset && isalpha(data[-rewind - 1]))
+	while (rewind < offset && isalpha(data[-(ptrdiff_t)(rewind) - 1]))
 		rewind++;
 
 	if (!sd_autolink_issafe(data - rewind, size + rewind))
