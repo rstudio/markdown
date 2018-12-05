@@ -98,9 +98,6 @@ bufcstr(struct buf *buf)
 {
 	assert(buf && buf->unit);
 
-	if (buf->size < buf->asize && buf->data[buf->size] == 0)
-		return (char *)buf->data;
-
 	if (buf->size + 1 <= buf->asize || bufgrow(buf, buf->size + 1) == 0) {
 		buf->data[buf->size] = 0;
 		return (char *)buf->data;
