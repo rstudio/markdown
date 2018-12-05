@@ -21,7 +21,7 @@ function.
 
 To learn more about markdown syntax see: <http://en.wikipedia.org/wiki/Markdown>
 
-This package is referred to as _R Markdown v1_ when combined with **knitr**. The primary output format is HTML. We do not plan to add new features to this package. In 2014, we introduced [_R Markdown v2_](http://blog.rstudio.org/2014/06/18/r-markdown-v2/), which is based on Pandoc and **knitr**, and supports much more types of output formats. Please see https://rmarkdown.rstudio.com for details.
+This package is referred to as _R Markdown v1_ when combined with **knitr**. The primary output format is HTML. We do not plan to add new features to this package in the future, and please consider this package to be in the maintenance mode only. In 2014, we introduced [_R Markdown v2_](http://blog.rstudio.org/2014/06/18/r-markdown-v2/), which is based on Pandoc and **knitr**, and supports much more types of output formats. Please see https://rmarkdown.rstudio.com for details.
 
 License
 -----------------------------------------------------------------------------
