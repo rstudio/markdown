@@ -2,6 +2,11 @@ language: r
 sudo: false
 cache: packages
 
+matrix:
+  include:
+    - r: release
+    - r: devel
+
 env:
   global:
     - R_PKG="$(basename $TRAVIS_REPO_SLUG)"
