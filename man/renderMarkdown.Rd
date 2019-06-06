@@ -6,7 +6,7 @@
 \usage{
 renderMarkdown(file, output = NULL, text = NULL, renderer = "HTML", 
     renderer.options = NULL, extensions = getOption("markdown.extensions"), 
-    encoding = getOption("encoding"))
+    encoding = "UTF-8")
 }
 \arguments{
 \item{file}{a character string giving the pathname of the file to read from.
@@ -29,7 +29,7 @@ transform (each element of this vector is treated as a line in a file).}
 \item{extensions}{options that are passed to the \emph{markdown} engine. See
 \code{\link{markdownExtensions}}.}
 
-\item{encoding}{the encoding of the input file; see \code{\link{file}}}
+\item{encoding}{ignored (always assumes the file is encoded in UTF-8).}
 }
 \value{
 \code{renderMarkdown} returns NULL invisibly when output is to a
