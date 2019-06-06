@@ -99,7 +99,7 @@ rendererOutputType <- function(name) {
 #' (renderMarkdown(text = ''))
 renderMarkdown <- function(
   file, output = NULL, text = NULL, renderer = 'HTML', renderer.options = NULL,
-  extensions = getOption('markdown.extensions'), encoding = getOption('encoding')
+  extensions = getOption('markdown.extensions'), encoding = 'UTF-8'
 ) {
 
   if (!rendererExists(renderer))
@@ -107,12 +107,9 @@ renderMarkdown <- function(
 
   # Input from either a file or character vector
   if (!is.character(text)) {
-    # If input is file, it needs to be read with the appropriate encoding. Here,
-    # instead of tweaking rmd_render_markdown in Rmarkdown.c, read a file with
-    # the encoding and convert it to UTF-8. Finally, output will be marked as
-    # UTF-8 as well.
-    con <- base::file(file, encoding = encoding)
-    text <- tryCatch(readLines(con), finally = close(con))
+    # If input is file, assume the encoding is UTF-8.
+    if (encoding != 'UTF-8') warning("The 'encoding' argument must be 'UTF-8'.")
+    text <- readLines(file, encoding = 'UTF-8')
   }
   text <- enc2utf8(text)
   if (length(text) > 1) text <- paste(text, collapse = '\n')
@@ -279,7 +276,7 @@ renderMarkdown <- function(
 #' @param template an HTML file used as template.
 #' @param fragment.only Whether or not to produce an HTML fragment without the
 #'   HTML header and body tags, CSS, and Javascript components.
-#' @param encoding the encoding of the input file; see \code{\link{file}}
+#' @param encoding ignored (always assumes the file is encoded in UTF-8).
 #' @return Invisible \code{NULL} when output is to a file, and a character
 #'   vector otherwise.
 #' @seealso \code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
@@ -299,7 +296,7 @@ markdownToHTML <- function(
   header = getOption('markdown.HTML.header'),
   template = getOption('markdown.HTML.template'),
   fragment.only = FALSE,
-  encoding = getOption('encoding')
+  encoding = 'UTF-8'
 ) {
   if (fragment.only) options <- c(options, 'fragment_only')
 
