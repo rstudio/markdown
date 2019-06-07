@@ -304,7 +304,6 @@ markdownToHTML <- function(
     file, output = NULL, text, renderer = 'HTML',
     renderer.options = options, extensions = extensions, encoding = encoding
   )
-  ret <- enc2native(ret)
 
   if ('base64_images' %in% options) {
     filedir <- if (!missing(file) && is.character(file) && file.exists(file)) {
@@ -361,12 +360,9 @@ markdownToHTML <- function(
     ret <- html
   }
 
+  ret <- enc2utf8(ret)
   if (is.character(output)) {
     # Output should be always UTF8 in accordance with HTML charset
-    ret2 <- iconv(ret, to = 'UTF-8')
-    if (any(is.na(ret2))) {
-      warning('failed to convert output to UTF-8; wrong input encoding or locale?')
-    } else ret <- ret2
     writeLines(ret, output, useBytes = TRUE)
     ret <- NULL
   }
