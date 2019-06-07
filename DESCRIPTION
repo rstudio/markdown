@@ -1,7 +1,7 @@
 Package: markdown
 Type: Package
 Title: Render Markdown with the C Library 'Sundown'
-Version: 0.9.2
+Version: 1.0
 Authors@R: c(
    person("JJ", "Allaire", role = "aut"),
    person("Jeffrey", "Horner", role = "aut"),
