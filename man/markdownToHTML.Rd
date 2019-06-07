@@ -98,7 +98,7 @@ When \code{fragment.only} is TRUE, nothing extra is added.
 (markdownToHTML(text = "Hello World!", fragment.only = TRUE))
 (markdownToHTML(file = NULL, text = "_text_ will override _file_", fragment.only = TRUE))
 # write HTML to an output file
-markdownToHTML(text = "_Hello_, **World**!", output = "test.html")
+markdownToHTML(text = "_Hello_, **World**!", output = tempfile())
 }
 \seealso{
 \code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},

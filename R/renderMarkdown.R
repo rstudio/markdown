@@ -287,7 +287,7 @@ renderMarkdown <- function(
 #' (markdownToHTML(file = NULL, text = "_text_ will override _file_",
 #'   fragment.only = TRUE))
 #' # write HTML to an output file
-#' markdownToHTML(text = "_Hello_, **World**!", output = "test.html")
+#' markdownToHTML(text = "_Hello_, **World**!", output = tempfile())
 markdownToHTML <- function(
   file, output = NULL, text = NULL, options = getOption('markdown.HTML.options'),
   extensions = getOption('markdown.extensions'),
