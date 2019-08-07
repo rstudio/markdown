@@ -108,8 +108,7 @@ renderMarkdown <- function(
   # Input from either a file or character vector
   if (!is.character(text)) {
     # If input is file, assume the encoding is UTF-8.
-    if (encoding != 'UTF-8') stop("The 'encoding' argument must be 'UTF-8'.")
-    text <- readLines(file, encoding = 'UTF-8')
+    text <- xfun::read_utf8(file, error = TRUE)
   }
   text <- enc2utf8(text)
   if (length(text) > 1) text <- paste(text, collapse = '\n')

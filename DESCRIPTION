@@ -28,6 +28,7 @@ Depends:
     R (>= 2.11.1)
 Imports:
     utils,
+    xfun,
     mime (>= 0.3)
 Suggests:
     knitr,
