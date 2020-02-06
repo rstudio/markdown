@@ -1,8 +1,8 @@
 /*
  * Rmarkdown.h
- * 
- * Copyright (C) 2009-2013 by RStudio, Inc.
- * 
+ *
+ * Copyright (C) 2009-2020 by RStudio, PBC
+ *
  * This program is licensed to you under the terms of version 2 of the
  * GNU General Public License. This program is distributed WITHOUT ANY
  * EXPRESS OR IMPLIED WARRANTY, INCLUDING THOSE OF NON-INFRINGEMENT,
@@ -20,7 +20,7 @@
 #define OUTPUT_UNIT 64
 #define RMD_WARNING_NOMEM warning("Out of memory!")
 
-/* 
+/*
  * output_type should be either "raw" or "character"
  */
 struct rmd_renderer {

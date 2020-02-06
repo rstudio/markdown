@@ -1,8 +1,8 @@
 /*
  * Rmarkdown.c
- * 
- * Copyright (C) 2009-2013 by RStudio, Inc.
- * 
+ *
+ * Copyright (C) 2009-2020 by RStudio, PBC
+ *
  * This program is licensed to you under the terms of version 2 of the
  * GNU General Public License. This program is distributed WITHOUT ANY
  * EXPRESS OR IMPLIED WARRANTY, INCLUDING THOSE OF NON-INFRINGEMENT,
@@ -131,7 +131,7 @@ static Rboolean render_to_html(struct buf *ib, struct buf *ob,
          RMD_WARNING_NOMEM;
          return FALSE;
       }
-      
+
       sd_markdown_render(tocbuf, ib->data, ib->size, markdown);
       sd_markdown_free(markdown);
 
@@ -242,7 +242,7 @@ SEXP rmd_registered_renderers(void)
 {
    SEXP ans;
    SEXP names;
-   char *name, *output_type; 
+   char *name, *output_type;
    int i;
 
    PROTECT(ans = allocVector(STRSXP,NREND));
@@ -301,7 +301,7 @@ Rboolean rmd_input_to_buf(SEXP Sfile, SEXP Stext, struct buf *ib)
          warning("Input text is zero length!");
          return FALSE;
       }
-   } 
+   }
    else
    {
       FILE *in;
@@ -359,7 +359,7 @@ Rboolean rmd_buf_to_output(struct buf *ob, SEXP Soutput, SEXP *raw_vec)
 }
 
 /* Pandoc title blocks are prepended with percents '%'. They start on the
- * first line of the document and contain 3 elements: 'title','author', 
+ * first line of the document and contain 3 elements: 'title','author',
  * and date. Both 'title' and 'author' can extend to multiple lines so
  * long as that line starts with a space, but 'date' cannot.
  */
@@ -381,7 +381,7 @@ void skip_pandoc_title_block(struct buf *ib){
 
       do {
          /* Only title and author can contain continuation lines,
-          * e.g. i < 2 
+          * e.g. i < 2
           */
          if (ib->data[pos] == ' ' && i < 2){
             while (pos < ib->size && ib->data[pos] != '\n') pos++;
@@ -408,7 +408,7 @@ void skip_jekyll_front_matter(struct buf *ib){
    size_t pos = 0;
 
    /* Jekyll 0.12.0 expects front matter to start on the first line */
-   if (ib->size < 3 || !(ib->data[0] == '-' && ib->data[1] == '-' && 
+   if (ib->size < 3 || !(ib->data[0] == '-' && ib->data[1] == '-' &&
       ib->data[2] == '-') ) return;
 
    pos = 3;

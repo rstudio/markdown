@@ -1,8 +1,8 @@
 /*
  * markdown_rstubs.c
- * 
- * Copyright (C) 2009-2013 by RStudio, Inc.
- * 
+ *
+ * Copyright (C) 2009-2020 by RStudio, PBC
+ *
  * This program is licensed to you under the terms of version 2 of the
  * GNU General Public License. This program is distributed WITHOUT ANY
  * EXPRESS OR IMPLIED WARRANTY, INCLUDING THOSE OF NON-INFRINGEMENT,
@@ -78,7 +78,7 @@ void rstub_bufrelease(struct buf *buf)
       fun = (void (*)(struct buf *t))R_GetCCallable("markdown","bufrelease");
    return fun(buf);
 }
-   
+
 void rstub_bufreset(struct buf *buf)
 {
    static void (*fun)(struct buf *) = NULL;
@@ -172,7 +172,7 @@ rstub_sd_markdown_new(unsigned int extensions, size_t max_nesting,
 }
 
 void
-rstub_sd_markdown_render(struct buf *ob, const uint8_t *document, 
+rstub_sd_markdown_render(struct buf *ob, const uint8_t *document,
                        size_t doc_size, struct sd_markdown *md)
 {
    static void (*fun)(struct buf *, const uint8_t *, size_t,
@@ -222,7 +222,7 @@ Rboolean rstub_rmd_renderer_exists(const char *name)
    return fun(name);
 }
 
-Rboolean rstub_rmd_buf_to_output(struct buf *ob, SEXP Soutput, 
+Rboolean rstub_rmd_buf_to_output(struct buf *ob, SEXP Soutput,
                                         SEXP *raw_vec)
 {
    static Rboolean (*fun)(struct buf *, SEXP, SEXP *) = NULL;

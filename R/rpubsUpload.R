@@ -1,4 +1,4 @@
-# Copyright (C) 2009-2014 by RStudio, Inc.
+# Copyright (C) 2009-2020 by RStudio, PBC
 #
 # This program is licensed to you under the terms of version 2 of the
 # GNU General Public License. This program is distributed WITHOUT ANY
