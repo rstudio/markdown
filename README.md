@@ -1,8 +1,9 @@
 Markdown rendering for R
 =============================================================================
 
-[![Build Status](https://travis-ci.org/rstudio/markdown.svg)](https://travis-ci.org/rstudio/markdown)
-[![Downloads from the RStudio CRAN mirror](https://cranlogs.r-pkg.org/badges/markdown)](https://cran.r-project.org/package=markdown)
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/rstudio/markdown/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rstudio/markdown/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
 
 Overview
 -----------------------------------------------------------------------------
