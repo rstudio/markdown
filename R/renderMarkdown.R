@@ -1,7 +1,7 @@
 #
 # renderMarkdown.R
 #
-# Copyright (C) 2009-2020 by RStudio, PBC
+# Copyright (C) 2009-2022 by RStudio, PBC
 #
 # This program is licensed to you under the terms of version 2 of the
 # GNU General Public License. This program is distributed WITHOUT ANY
@@ -70,9 +70,6 @@ rendererOutputType <- function(name) {
 #' user in either the \code{file} or \code{text} variable. The transformation is
 #' either written to the \code{output} file or returned to the user. The default
 #' rendering target is "HTML".
-#'
-#' \pkg{markdown} uses (and ships with) the popular Sundown library provided by
-#' GitHub. C stubs are available to implement new renderers.
 #' @inheritParams markdownToHTML
 #' @param renderer the name of the renderer that will be used to transform the
 #'   \code{file} or \code{text}.
@@ -86,11 +83,6 @@ rendererOutputType <- function(name) {
 #'
 #'   For a description of the original \emph{markdown} version:
 #'   \url{https://daringfireball.net/projects/markdown/}
-#'
-#'   The original Sundown library on github:
-#'   \url{https://github.com/vmg/sundown}
-#'
-#'   C stubs for writing new renders are in inst/include/markdown_rstubs.[ch].
 #' @export renderMarkdown
 #' @examples
 #' (renderMarkdown(text = "Hello World!"))
@@ -395,12 +387,6 @@ option2char <- function(x) {
 #'   For a description of the original \emph{markdown} version:
 #'
 #'   \url{https://daringfireball.net/projects/markdown/}
-#'
-#'   The original Sundown library on github:
-#'
-#'   \url{https://github.com/vmg/sundown}
-#'
-#'   C stubs for writing new renders are in inst/include/markdown_rstubs.[ch].
 #' @export smartypants
 #' @examples
 #' cat(smartypants(text = "1/2 (c)\n"))
