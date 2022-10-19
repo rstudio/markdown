@@ -3,7 +3,6 @@
 \docType{package}
 \name{markdown}
 \alias{markdown}
-\alias{markdown-package}
 \title{Markdown rendering for R}
 \description{
 \pkg{Markdown} is a plain-text formatting syntax that can be converted to

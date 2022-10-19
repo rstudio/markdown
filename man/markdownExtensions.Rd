@@ -85,7 +85,7 @@ cat(markdownToHTML(text = "
     ------------- | -------------
     Content Cell  | Content Cell
     Content Cell  | Content Cell
-", 
+",
     extensions = c()))
 
 # but not here
@@ -94,7 +94,7 @@ First Header  | Second Header
 ------------- | -------------
 Content Cell  | Content Cell
 Content Cell  | Content Cell
-", 
+",
     extensions = c("tables")))
 
 # fenced_code example (need at least three leading ~ or `)
@@ -105,13 +105,13 @@ fenced_block <- function(text, x = "`", n = 3) {
 cat(markdownToHTML(text = fenced_block("
 preformatted text here without having to indent
 first line.
-"), 
+"),
     extensions = c()))
 
 cat(markdownToHTML(text = fenced_block("
 preformatted text here without having to indent
 first line.
-"), 
+"),
     extensions = c("fenced_code")))
 
 # autolink example
@@ -127,19 +127,19 @@ cat(markdownToHTML(text = "
 Embedding html without surrounding with empty newline.
 <div>_markdown_</div>
 extra text.
-", 
+",
     extensions = c("")))
 cat(markdownToHTML(text = "
 Embedding html without surrounding with empty newline.
 <div>_markdown_</div>
 extra text.
-", 
+",
     extensions = c("lax_spacing")))
 
 # space_headers example
-cat(markdownToHTML(text = "#A Header\\neven though there is no space between # and A", 
+cat(markdownToHTML(text = "#A Header\neven though there is no space between # and A",
     extensions = c("")))
-cat(markdownToHTML(text = "#Not A Header\\nbecause there is no space between # and N", 
+cat(markdownToHTML(text = "#Not A Header\nbecause there is no space between # and N",
     extensions = c("space_headers")))
 
 # superscript example

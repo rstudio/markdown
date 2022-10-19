@@ -4,13 +4,19 @@
 \alias{markdownToHTML}
 \title{Render markdown to HTML}
 \usage{
-markdownToHTML(file, output = NULL, text = NULL,
+markdownToHTML(
+  file,
+  output = NULL,
+  text = NULL,
   options = getOption("markdown.HTML.options"),
-  extensions = getOption("markdown.extensions"), title = "",
+  extensions = getOption("markdown.extensions"),
+  title = "",
   stylesheet = getOption("markdown.HTML.stylesheet"),
   header = getOption("markdown.HTML.header"),
   template = getOption("markdown.HTML.template"),
-  fragment.only = FALSE, encoding = "UTF-8")
+  fragment.only = FALSE,
+  encoding = "UTF-8"
+)
 }
 \arguments{
 \item{file}{a character string giving the pathname of the file to read from.

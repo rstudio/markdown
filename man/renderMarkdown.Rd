@@ -4,9 +4,15 @@
 \alias{renderMarkdown}
 \title{Render markdown to an HTML fragment}
 \usage{
-renderMarkdown(file, output = NULL, text = NULL, renderer = "HTML", 
-    renderer.options = NULL, extensions = getOption("markdown.extensions"), 
-    encoding = "UTF-8")
+renderMarkdown(
+  file,
+  output = NULL,
+  text = NULL,
+  renderer = "HTML",
+  renderer.options = NULL,
+  extensions = getOption("markdown.extensions"),
+  encoding = "UTF-8"
+)
 }
 \arguments{
 \item{file}{a character string giving the pathname of the file to read from.

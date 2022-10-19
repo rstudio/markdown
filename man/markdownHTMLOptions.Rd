@@ -125,18 +125,18 @@ cat(markdownToHTML(text = '[foo](http://google.com "baz")', options = c(tOpt)))
 cat(markdownToHTML(text = '[foo](http://google.com "baz")', options = c(tOpt, "safelink")))
 
 # toc example
-mkd <- paste(c("# Header 1", "p1", "## Header 2", "p2"), collapse = "\\n")
+mkd <- paste(c("# Header 1", "p1", "## Header 2", "p2"), collapse = "\n")
 
 cat(markdownToHTML(text = mkd, options = c(tOpt)))
 cat(markdownToHTML(text = mkd, options = c(tOpt, "toc")))
 
 # hard_wrap example
-cat(markdownToHTML(text = "foo\\nbar\\n", options = c(tOpt)))
-cat(markdownToHTML(text = "foo\\nbar\\n", options = c(tOpt, "hard_wrap")))
+cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt)))
+cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt, "hard_wrap")))
 
 # use_xhtml example
-cat(markdownToHTML(text = "foo\\nbar\\n", options = c(tOpt, "hard_wrap")))
-cat(markdownToHTML(text = "foo\\nbar\\n", options = c(tOpt, "hard_wrap", "use_xhtml")))
+cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt, "hard_wrap")))
+cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt, "hard_wrap", "use_xhtml")))
 
 # escape example
 mkd = '<style></style><img src="http://cran.rstudio.com/Rlogo.jpg"><a href="#">Hello</a>'
@@ -148,7 +148,7 @@ cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html", "escape")))
 cat(markdownToHTML(text = "1/2 (c)", options = c(tOpt)))
 cat(markdownToHTML(text = "1/2 (c)", options = c(tOpt, "smartypants")))
 
-cat(smartypants(text = "1/2 (c)\\n"))
+cat(smartypants(text = "1/2 (c)\n"))
 }
 \seealso{
 \link{markdownToHTML}

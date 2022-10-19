@@ -27,7 +27,7 @@ transform.}
 \emph{smart} typographic punctuation HTML entities.
 }
 \examples{
-cat(smartypants(text = "1/2 (c)\\n"))
+cat(smartypants(text = "1/2 (c)\n"))
 }
 \seealso{
 \code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
