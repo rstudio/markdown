@@ -29,7 +29,7 @@ struct rmd_renderer {
    char *output_type;
 };
 
-extern void rmd_init_renderer_list();
+extern void rmd_init_renderer_list(void);
 
 extern Rboolean rmd_buf_to_output(struct buf *, SEXP, SEXP *);
 
