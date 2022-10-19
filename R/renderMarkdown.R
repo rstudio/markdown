@@ -93,7 +93,7 @@ renderMarkdown <- function(
 ) {
 
   if (!rendererExists(renderer))
-    stop("Renderer '", renderer, "' is not registered!")
+    stop("Renderer '", renderer, "' is not available.!")
 
   # Input from either a file or character vector
   if (!is.character(text)) {
@@ -287,14 +287,15 @@ markdownToHTML <- function(
   fragment.only = FALSE,
   encoding = 'UTF-8'
 ) {
-  if (fragment.only) options <- c(options, 'fragment_only')
+  options <- normalizeOptions(options)
+  if (fragment.only) options[['fragment_only']] <- TRUE
 
   ret <- renderMarkdown(
     file, output = NULL, text, renderer = 'HTML',
-    renderer.options = options, extensions = extensions, encoding = encoding
+    renderer.options = options, extensions = extensions
   )
 
-  if ('base64_images' %in% options) {
+  if (isTRUE(options[['base64_images']])) {
     filedir <- if (!missing(file) && is.character(file) && file.exists(file)) {
       dirname(file)
     } else '.'
@@ -305,7 +306,7 @@ markdownToHTML <- function(
     })
   }
 
-  if (!'fragment_only' %in% options) {
+  if (!isTRUE(options[['fragment_only']])) {
     if (is.null(template))
       template <- system.file('resources', 'markdown.html', package = 'markdown')
     html <- paste(readLines(template), collapse = '\n')
@@ -334,27 +335,20 @@ markdownToHTML <- function(
     # Need to scrub title more, e.g. strip html, etc.
     html <- sub('#!title#', title, html, fixed = TRUE)
 
-    if ('mathjax' %in% options && .requiresMathJax(html)) {
-      mathjax <- .mathJax(embed = 'mathjax_embed' %in% options)
-    } else mathjax <- ''
+    mathjax <- if (isTRUE(options[['mathjax']]) && .requiresMathJax(html)) {
+      .mathJax(embed = isTRUE(options[['mathjax_embed']]))
+    } else ''
     html <- sub('#!mathjax#', mathjax, html, fixed = TRUE)
 
-    if ('highlight_code' %in% options && .requiresHighlighting(html)) {
-      highlight <- paste(readLines(system.file(
-        'resources', 'r_highlight.html', package = 'markdown'
-      )), collapse = '\n')
-    } else highlight <- ''
+    highlight <- if (isTRUE(options[['highlight_code']]) && .requiresHighlighting(html)) {
+      xfun::file_string(system.file('resources', 'r_highlight.html', package = 'markdown'))
+    } else ''
     html <- sub('#!r_highlight#', highlight, html, fixed = TRUE)
 
     ret <- html
   }
 
-  ret <- enc2utf8(ret)
-  if (is.character(output)) {
-    # Output should be always UTF8 in accordance with HTML charset
-    writeLines(ret, output, useBytes = TRUE)
-    ret <- NULL
-  }
+  ret <- if (is.character(output)) xfun::write_utf8(ret, output) else enc2utf8(ret)
 
   invisible(ret)
 }
@@ -511,38 +505,16 @@ markdownExtensions <- function()
 #' that are available for the HTML renderer in the \pkg{markdown} package. As a
 #' convenience, the package default options were chosen to render well-formed
 #' stand-alone HTML pages when using \code{\link{markdownToHTML}()}. The default
-#' options are \code{'use_xhtml'}, \code{'smartypants'}, \code{'base64_images'},
+#' options are \code{'smartypants'}, \code{'base64_images'},
 #' \code{'mathjax'}, and \code{'highlight_code'}.
 #'
 #' The HTML renderer provides several options described below. To turn these on
 #' globally in the \pkg{markdown} package, simply place some or all of them in a
-#' character vector and assign to the global option \code{markdown.HTML.options}
-#' like so:
-#'
-#' \code{options(markdown.HTML.options = markdownHTMLOptions())}
-#'
-#' To reset the options to package default, use:
-#'
-#' \code{options(markdown.HTML.options = markdownHTMLOptions(default = TRUE))}
-#'
-#' To override the global option, pass the \code{options} as an argument:
-#'
-#' \code{markdownToHTML(..., options = c('skip_images'))}
+#' character vector and assign to the global option \code{markdown.HTML.options}.
 #'
 #' Description of all options:
 #'
 #' \describe{
-#'
-#' \item{\code{'skip_html'}}{ suppress output of all HTML tags in the document.}
-#'
-#' \item{\code{'skip_style'}}{ suppress output of HTML style tags.}
-#'
-#' \item{\code{'skip_images'}}{ suppress output of HTML image tags.}
-#'
-#' \item{\code{'skip_links'}}{ suppress output of HTML anchor tags.}
-#'
-#' \item{\code{'safelink'}}{ only create links for known url types, e.g. http,
-#' ftp, http, etc.}
 #'
 #' \item{\code{'toc'}}{ assigns an HTML id to each header of the form 'toc_%d'
 #' where '%d' is replaced with the position of the header within the document
@@ -550,11 +522,6 @@ markdownExtensions <- function()
 #'
 #' \item{\code{'hard_wrap'}}{ adds an HTML br tag for every newline (excluding
 #' trailing) found within a paragraph.}
-#'
-#' \item{\code{'use_xhtml'}}{ create XHMTL 1.0 compliant HTML tags.}
-#'
-#' \item{\code{'escape'}}{ escape all HTML found within the \emph{Markdown}.
-#' Overrides all of the \code{'skip_*'} options mentioned above.}
 #'
 #' \item{\code{'smartypants'}}{ translates plain ASCII punctuation characters
 #' into \emph{smart} typographic punctuation HTML entities. }
@@ -591,17 +558,24 @@ markdownExtensions <- function()
 #' # To turn off all HTML options globally:
 #' options(markdown.HTML.options = NULL)
 #'
+#' # To turn on one option globally:
+#' options(markdown.HTML.options = 'smartypants')
+#'
 #' # To turn on package default HTML options globally:
-#' options(markdown.HTML.options = markdownHTMLOptions(default = TRUE))
+#' options(markdown.HTML.options = markdownHTMLOptions(defaults = TRUE))
 #'
 #' @example inst/examples/HTMLOptions.R
 markdownHTMLOptions <- function(defaults = FALSE) {
-  allOptions <- c(
-    'skip_html', 'skip_style', 'skip_images', 'skip_links', 'safelink', 'toc',
-    'escape', 'fragment_only', 'hard_wrap', 'use_xhtml', 'smartypants',
-    'base64_images', 'mathjax', 'highlight_code'
-  )
-  if (defaults) allOptions[10:14] else allOptions
+  sort(c(
+    c('smart', 'smartypants', 'base64_images', 'mathjax', 'highlight_code'),
+    if (!defaults) c('toc', 'fragment_only', 'hard_wrap')
+  ))
+}
+
+#' @import stats
+normalizeOptions <- function(x) {
+  if (is.character(x)) x <- as.list(setNames(rep(TRUE, length(x)), x))
+  x
 }
 
 .onLoad <- function(libname, pkgname) {
