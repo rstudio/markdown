@@ -4,11 +4,11 @@
 #' XHTML or other formats. This package provides wrapper functions based on the
 #' \pkg{commonmark} package.
 #'
-#' The R function \code{\link{markdownToHTML}} renders a markdown file to HTML
+#' The R function \code{\link{markdownToHTML}} renders a Markdown file to HTML
 #' (respecting the specified \code{\link{markdownExtensions}} and
 #' \code{\link{markdownHTMLOptions}}).
 #'
-#' To learn more about markdown syntax see:
+#' To learn more about Markdown syntax see:
 #' \url{https://en.wikipedia.org/wiki/Markdown}
 #' @name markdown
 #' @docType package

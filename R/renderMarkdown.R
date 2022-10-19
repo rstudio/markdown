@@ -1,4 +1,3 @@
-#
 # renderMarkdown.R
 #
 # Copyright (C) 2009-2022 by RStudio, PBC
@@ -8,34 +7,32 @@
 # EXPRESS OR IMPLIED WARRANTY, INCLUDING THOSE OF NON-INFRINGEMENT,
 # MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. Please refer to the
 # GPL (https://www.gnu.org/licenses/gpl-2.0.txt) for more details.
-#
-#
 
 
 #' List of Registered Markdown Renderers
 #'
 #' \code{registeredRenderers} returns a named character vector listing all the
-#' registered renderers known to the \pkg{markdown} package. \pkg{markdown}
-#' allows up to seven renderers to be registered by users; HTML is provided by
-#' the package.
+#' registered renderers known to the \pkg{markdown} package.
 #' @return A named \code{character} vector listing all available renderers.
 #'   Vector value contain renderer names, and named values contain the renderer
 #'   output type, either \code{character} or \code{raw}.
 #' @seealso \link{markdownToHTML}, \link{rendererOutputType}
-#' @export registeredRenderers
+#' @export
+#' @keywords internal
 #' @examples
 #' # List all available renderers
 #' registeredRenderers()
-registeredRenderers <- function() .Call(rmd_registered_renderers)
+registeredRenderers <- function() c(character = 'HTML')
 
 
-#' Testing for existence of a markdown renderer
+#' Testing for existence of a Markdown renderer
 #'
 #' \code{rendererExists} determines whether or not a certain renderer exists in
-#' the markdown library.
+#' the Markdown library.
 #' @param name name of renderer.
 #' @return \code{TRUE} or \code{FALSE} for whether or not the renderer exists.
-#' @export rendererExists
+#' @export
+#' @keywords internal
 #' @examples rendererExists("HTML")
 rendererExists <- function(name) name[1] %in% registeredRenderers()
 
@@ -51,6 +48,7 @@ rendererExists <- function(name) name[1] %in% registeredRenderers()
 #'   \code{raw}.
 #' @seealso \link{markdownToHTML}, \link{registeredRenderers}
 #' @export rendererOutputType
+#' @keywords internal
 #' @examples
 #' # List all available renderers
 #' rendererOutputType("HTML")
@@ -64,9 +62,9 @@ rendererOutputType <- function(name) {
 }
 
 
-#' Render markdown to an HTML fragment
+#' Render Markdown to an HTML fragment
 #'
-#' \code{renderMarkdown} transforms the \emph{markdown} text provided by the
+#' \code{renderMarkdown} transforms the \emph{Markdown} text provided by the
 #' user in either the \code{file} or \code{text} variable. The transformation is
 #' either written to the \code{output} file or returned to the user. The default
 #' rendering target is "HTML".
@@ -81,9 +79,9 @@ rendererOutputType <- function(name) {
 #' @seealso \code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
 #'   \code{\link{markdownToHTML}}.
 #'
-#'   For a description of the original \emph{markdown} version:
+#'   For a description of the original \emph{Markdown} version:
 #'   \url{https://daringfireball.net/projects/markdown/}
-#' @export renderMarkdown
+#' @export
 #' @examples
 #' (renderMarkdown(text = "Hello World!"))
 #' # a few corner cases
@@ -202,9 +200,9 @@ renderMarkdown <- function(
 .requiresHighlighting <- function(html) any(grepl('<pre><code class="r"', html))
 
 
-#' Render markdown to HTML
+#' Render Markdown to HTML
 #'
-#' \code{markdownToHTML} transforms the \emph{markdown} text provided by the
+#' \code{markdownToHTML} transforms the \emph{Markdown} text provided by the
 #' user in either the \code{file} or \code{text} variable. The HTML
 #' transformation is either written to the \code{output} file or returned to the
 #' user as a \code{character} vector.
@@ -253,11 +251,11 @@ renderMarkdown <- function(
 #' @param output a character string giving the pathname of the file to write to.
 #'   If it is omitted (\code{NULL}), then it is presumed that the user expects
 #'   the results returned as a \code{character} vector.
-#' @param text a character vector containing the \emph{markdown} text to
+#' @param text a character vector containing the \emph{Markdown} text to
 #'   transform (each element of this vector is treated as a line in a file).
 #' @param options options that are passed to the renderer.  see
 #'   \code{\link{markdownHTMLOptions}}.
-#' @param extensions options that are passed to the \emph{markdown} engine. See
+#' @param extensions options that are passed to the \emph{Markdown} engine. See
 #'   \code{\link{markdownExtensions}}.
 #' @param title The HTML title.
 #' @param stylesheet either valid CSS or a file containing CSS. will be included
@@ -377,17 +375,18 @@ option2char <- function(x) {
 #' @param output a character string giving the pathname of the file to write to.
 #'   If it is omitted, then it is presumed that the user expects the results
 #'   returned as a character string.
-#' @param text a character vector containing the \emph{markdown} text to
+#' @param text a character vector containing the \emph{Markdown} text to
 #'   transform.
 #' @return \code{smartypants} returns NULL invisibly when output is to a file,
 #'   and a character string otherwise.
 #' @seealso \code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
 #'   \code{\link{markdownToHTML}}.
 #'
-#'   For a description of the original \emph{markdown} version:
+#'   For a description of the original Markdown version:
 #'
 #'   \url{https://daringfireball.net/projects/markdown/}
-#' @export smartypants
+#' @export
+#' @keywords internal
 #' @examples
 #' cat(smartypants(text = "1/2 (c)\n"))
 smartypants <- function(file, output, text) {
@@ -479,10 +478,10 @@ smartypants <- function(file, output, text) {
 #' # List all available extensions:
 #' markdownExtensions()
 #'
-#' # To turn on all markdown extensions globally:
+#' # To turn on all Markdown extensions globally:
 #' options(markdown.extensions = markdownExtensions())
 #'
-#' # To turn off all markdown extensions globally:
+#' # To turn off all Markdown extensions globally:
 #' options(markdown.extensions = NULL)
 #'
 #' @example inst/examples/markdownExtensions.R
@@ -554,7 +553,7 @@ markdownExtensions <- function()
 #'
 #' \item{\code{'use_xhtml'}}{ create XHMTL 1.0 compliant HTML tags.}
 #'
-#' \item{\code{'escape'}}{ escape all HTML found within the \emph{markdown}.
+#' \item{\code{'escape'}}{ escape all HTML found within the \emph{Markdown}.
 #' Overrides all of the \code{'skip_*'} options mentioned above.}
 #'
 #' \item{\code{'smartypants'}}{ translates plain ASCII punctuation characters
