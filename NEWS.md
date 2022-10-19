@@ -1,5 +1,7 @@
 # CHANGES IN markdown VERSION 1.2
 
+- Fixed the warnings "a function declaration without a prototype is deprecated in all versions of C" (#94).
+
 # CHANGES IN markdown VERSION 1.1
 
 ## MAJOR CHANGES
