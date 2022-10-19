@@ -63,7 +63,7 @@ GitHub. C stubs are available to implement new renderers.
   \code{\link{markdownToHTML}}.
 
   For a description of the original \emph{markdown} version:
-  \url{http://daringfireball.net/projects/markdown/}
+  \url{https://daringfireball.net/projects/markdown/}
 
   The original Sundown library on github:
   \url{https://github.com/vmg/sundown}

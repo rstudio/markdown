@@ -20,7 +20,7 @@ function.
 
 To learn more about markdown syntax see:
 
-\url{http://en.wikipedia.org/wiki/Markdown}
+\url{https://en.wikipedia.org/wiki/Markdown}
 }
 \seealso{
 \code{\link{markdownToHTML}} \code{\link{renderMarkdown}}
