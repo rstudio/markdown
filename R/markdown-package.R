@@ -14,7 +14,7 @@
 #'
 #' To learn more about markdown syntax see:
 #'
-#' \url{http://en.wikipedia.org/wiki/Markdown}
+#' \url{https://en.wikipedia.org/wiki/Markdown}
 #' @name markdown
 #' @docType package
 #' @author JJ Allaire, Jeffrey Horner, Vicent Marti, and Natacha Porte

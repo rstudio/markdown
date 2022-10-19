@@ -24,7 +24,7 @@
 
 ## MINOR CHANGES
 
-- the MathJax CDN URL was replaced by http://www.bootcdn.cn/mathjax/
+- the MathJax CDN URL was replaced by https://www.bootcdn.cn/mathjax/
 
 ## BUG FIXES
 
