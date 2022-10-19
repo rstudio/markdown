@@ -37,31 +37,6 @@ registeredRenderers <- function() c(character = 'HTML')
 rendererExists <- function(name) name[1] %in% registeredRenderers()
 
 
-#' Fetch the Renderer Output Type
-#'
-#' \pkg{markdown} allows up to seven renderers to be registered by users, and
-#' each must provide the type of output returned, either \code{character} or
-#' \code{raw} for binary output. HTML is provided by the package and outputs
-#' \code{character}.
-#' @param name a character string naming the renderer.
-#' @return The character string with a value of either \code{character} or
-#'   \code{raw}.
-#' @seealso \link{markdownToHTML}, \link{registeredRenderers}
-#' @export rendererOutputType
-#' @keywords internal
-#' @examples
-#' # List all available renderers
-#' rendererOutputType("HTML")
-rendererOutputType <- function(name) {
-  rnds <- registeredRenderers()
-  if (!name[1] %in% rnds) {
-    warning('Renderer is not registered!')
-    return('')
-  }
-  names(which(rnds == name[1]))
-}
-
-
 #' Render Markdown to an HTML fragment
 #'
 #' \code{renderMarkdown} transforms the \emph{Markdown} text provided by the
@@ -121,11 +96,6 @@ renderMarkdown <- function(
   }
   ret <- .Call(rmd_render_markdown,
                file, output, text, renderer, renderer.options, extensions)
-
-  if (is.raw(ret) && rendererOutputType(renderer) == 'character') {
-    ret <- rawToChar(ret)
-    Encoding(ret) <- 'UTF-8'
-  }
 
   invisible(ret)
 }
