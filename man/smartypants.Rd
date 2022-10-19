@@ -36,10 +36,4 @@ cat(smartypants(text = "1/2 (c)\n"))
   For a description of the original \emph{markdown} version:
 
   \url{https://daringfireball.net/projects/markdown/}
-
-  The original Sundown library on github:
-
-  \url{https://github.com/vmg/sundown}
-
-  C stubs for writing new renders are in inst/include/markdown_rstubs.[ch].
 }

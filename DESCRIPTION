@@ -1,6 +1,6 @@
 Package: markdown
 Type: Package
-Title: Render Markdown with the C Library 'Sundown'
+Title: Render Markdown with 'commonmark'
 Version: 1.2.1
 Authors@R: c(
    person("JJ", "Allaire", role = "aut"),
@@ -16,12 +16,10 @@ Authors@R: c(
    person("Thomas", "Leeper", role = "ctb"),
    person("Joe", "Cheng", role = "ctb"),
    person("Andrzej", "Oles", role = "ctb"),
-   person("Vicent", "Marti", role = c("aut", "cph"), comment = "The Sundown library"),
-   person("Natacha", "Porte", role = c("aut", "cph"), comment = "The Sundown library"),
    person(family = "RStudio", role = "cph")
    )
-Description: Provides R bindings to the 'Sundown' Markdown rendering library
-    (<https://github.com/vmg/sundown>). Markdown is a plain-text formatting
+Description: Render Markdown to full HTML documents with the 'commonmark'
+    package. Markdown is a plain-text formatting
     syntax that can be converted to 'XHTML' or other formats. See
     <https://en.wikipedia.org/wiki/Markdown> for more information about Markdown.
 Depends:

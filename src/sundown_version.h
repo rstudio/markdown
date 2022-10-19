@@ -1,1 +1,0 @@
-#define RSTUDIO_SUNDOWN_VERSION 07d0d98cec0df93e07debbcf562cac9eaca998f8
