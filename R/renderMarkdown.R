@@ -359,48 +359,59 @@ option2char <- function(x) {
   paste(if (length(x) == 1 && file.exists(x)) readLines(x) else x, collapse = '\n')
 }
 
-#' smartypants: ASCII punctuation to HTML entities
+#' Convert some ASCII strings to HTML entities
 #'
-#' \code{smartypants} transforms plain ASCII punctuation characters into
-#' \emph{smart} typographic punctuation HTML entities.
-#' @param file a character string giving the pathname of the file to read from.
-#'   If it is omitted from the argument list, then it is presumed that the
+#' Transform ASCII strings \verb{(c)} (copyright), \verb{(r)} (registered
+#' trademark), \verb{(tm)} (trademark), and fractions \verb{n/m} into
+#' \emph{smart} typographic HTML entities.
+#' @param file Path to an input file. If not provided, it is presumed that the
 #'   \code{text} argument will be used instead.
-#' @param output a character string giving the pathname of the file to write to.
-#'   If it is omitted, then it is presumed that the user expects the results
-#'   returned as a character string.
-#' @param text a character vector containing the \emph{Markdown} text to
+#' @param output Output file path. If not character, the results will be
+#'   returned as a character vector.
+#' @param text A character vector containing the \emph{Markdown} text to
 #'   transform.
-#' @return \code{smartypants} returns NULL invisibly when output is to a file,
-#'   and a character string otherwise.
+#' @return Invisible \code{NULL} when output is to a file, and a character
+#'   vector otherwise.
 #' @seealso \code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
 #'   \code{\link{markdownToHTML}}.
-#'
-#'   For a description of the original Markdown version:
-#'
-#'   \url{https://daringfireball.net/projects/markdown/}
 #' @export
-#' @keywords internal
 #' @examples
 #' cat(smartypants(text = "1/2 (c)\n"))
-smartypants <- function(file, output, text) {
-  # Input from either a file or character vector
-  if (!missing(file) && is.character(file) && file.exists(file)) {
-    text <- NULL
-  } else if (!missing(text) && !is.null(text) && is.character(text)) {
-    file <- NULL
-    if (length(text) > 1) text <- paste(text, collapse = '')
-  } else stop('Need input from either a file or a text string')
-
-  # Output is either returned or written to a file
-  if (missing(output)) output <- NULL else if (!is.character(output))
-    stop('output variable must be a file name!');
-
-  ret <- .Call(rmd_render_smartypants, file, output, text)
-  if (is.raw(ret)) ret <- rawToChar(ret)
-
-  invisible(ret)
+smartypants <- function(file, output = NULL, text = xfun::read_utf8(file)) {
+  text <- xfun::split_lines(text)
+  i <- xfun::prose_index(text)
+  x <- text[i]
+  r <- '(?<!`)\\((c|r|tm)\\)|(\\d+/\\d+)(?!`)'
+  m <- gregexpr(r, x, perl = TRUE)
+  regmatches(x, m) <- lapply(regmatches(x, m), function(z) {
+    y <- pants[z]
+    i <- is.na(y)
+    y[i] <- z[i]
+    y
+  })
+  text[i] <- x
+  if (is.character(output)) xfun::write_utf8(text, output) else text
 }
+
+# Represent some fractions with HTML entities
+fracs <- local({
+  k <- c(2, 3, 5)
+  z <- list()
+  for (i in 2:10) {
+    for (j in 1:i) {
+      if (j > 1 && (i %% j == 0 || any(i == c(7, 9, 10)))) next
+      if (any((i %% k == 0) & (j %% k == 0))) next
+      x <- paste0(j, '/', i)
+      y <- if (j > 1 || i < 9) sprintf('&frac%d%d;', j, i) else {
+        if (i == 9) '&#8529;' else if (i == 10) '&#8530;'
+      }
+      z[[x]] <- y
+    }
+  }
+  z
+})
+
+pants <- c(unlist(fracs), c('(c)' = '&copy;', '(r)' = '&reg;', '(tm)' = '&trade;'))
 
 # Markdown extensions.
 #
