@@ -93,9 +93,7 @@ get_option = function(name) {
 
   function(embed=FALSE, force=FALSE) {
     if (!embed)
-      return(paste(readLines(system.file(
-        'resources', 'mathjax.html', package = 'markdown'
-      )), collapse = '\n'))
+      return(xfun::file_string(pkg_file('resources', 'mathjax.html')))
 
     url = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML'
 
@@ -216,8 +214,8 @@ markdownToHTML = function(
 
   if (!isTRUE(options[['fragment_only']])) {
     if (is.null(template))
-      template = system.file('resources', 'markdown.html', package = 'markdown')
-    html = paste(readLines(template), collapse = '\n')
+      template = pkg_file('resources', 'markdown.html')
+    html = xfun::file_string(template)
     html = sub('#!html_output#', if (length(ret)) ret else '', html, fixed = TRUE)
 
     if (is.character(stylesheet)) {
@@ -249,7 +247,7 @@ markdownToHTML = function(
     html = sub('#!mathjax#', mathjax, html, fixed = TRUE)
 
     highlight = if (isTRUE(options[['highlight_code']]) && .requiresHighlighting(html)) {
-      xfun::file_string(system.file('resources', 'r_highlight.html', package = 'markdown'))
+      xfun::file_string(pkg_file('resources', 'r_highlight.html'))
     } else ''
     html = sub('#!r_highlight#', highlight, html, fixed = TRUE)
 
@@ -473,16 +471,14 @@ normalizeOptions = function(x) {
   as.list(x)
 }
 
+pkg_file = function(...) system.file(..., package = 'markdown', mustWork = TRUE)
+
 .onLoad = function(libname, pkgname) {
-
-  if (is.null(getOption('markdown.extensions')))
-    options(markdown.extensions = markdownExtensions())
-
   if (is.null(getOption('markdown.HTML.options')))
-    options(markdown.HTML.options = markdownHTMLOptions(default = TRUE))
+    options(markdown.HTML.options = markdownOptions(default = TRUE))
 
   if (is.null(getOption('markdown.HTML.stylesheet'))) {
-    sheet = system.file('resources', 'markdown.css', package = 'markdown')
+    sheet = pkg_file('resources', 'markdown.css')
     options(markdown.HTML.stylesheet = sheet)
   }
 }
