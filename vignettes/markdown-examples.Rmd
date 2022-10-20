@@ -3,32 +3,11 @@
 %\VignetteIndexEntry{Some Markdown Examples}
 -->
 
-This vignette shows some examples for different Markdown extensions and HTML options.
+This vignette shows some examples for different Markdown rendering options.
 
-```{r read-code, include=FALSE}
-library(knitr)
-opts_chunk$set(tidy = FALSE)  # otherwise \n will cause problems
-read_chunk(system.file('examples', 'markdownExtensions.R', package = 'markdown'),
-           labels = 'md-extensions')
-read_chunk(system.file('examples', 'render-options.R', package = 'markdown'),
-           labels = 'html-options')
+```{r render-options, tidy=FALSE, file=system.file('examples', 'render-options.R', package = 'markdown')}
 ```
-
-```{r}
-library(markdown)
-```
-
-# Markdown Extensions
-
-```{r md-extensions}
-```
-
-# HTML Options
-
-```{r html-options}
-```
-
 
 ```{r include=FALSE}
-options(markdown.HTML.options=markdownHTMLOptions(default=TRUE))
+options(markdown.HTML.options=markdownOptions(default = TRUE))
 ```
