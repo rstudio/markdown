@@ -205,11 +205,7 @@ markdownToHTML = function(
     filedir = if (!missing(file) && is.character(file) && file.exists(file)) {
       dirname(file)
     } else '.'
-    ret = local({
-      oldwd = setwd(filedir)
-      on.exit(setwd(oldwd))
-      .b64EncodeImages(ret)
-    })
+    ret = xfun::in_dir(filedir, .b64EncodeImages(ret))
   }
 
   if (!isTRUE(options[['fragment_only']])) {
