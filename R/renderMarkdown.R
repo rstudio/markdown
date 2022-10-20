@@ -501,7 +501,7 @@ markdownExtensions <- function()
 #' where '%d' is replaced with the position of the header within the document
 #' (starting at 0), and creates the table of contents.}
 #'
-#' \item{\code{'hard_wrap'}}{ adds an HTML br tag for every newline (excluding
+#' \item{\code{'hardbreaks'}}{ adds an HTML br tag for every newline (excluding
 #' trailing) found within a paragraph.}
 #'
 #' \item{\code{'smartypants'}}{ translates plain ASCII punctuation characters
@@ -549,14 +549,17 @@ markdownExtensions <- function()
 markdownHTMLOptions <- function(defaults = FALSE) {
   sort(c(
     c('smart', 'smartypants', 'base64_images', 'mathjax', 'highlight_code'),
-    if (!defaults) c('toc', 'fragment_only', 'hard_wrap')
+    if (!defaults) c('toc', 'fragment_only', 'hardbreaks')
   ))
 }
 
 #' @import stats
 normalizeOptions <- function(x) {
   if (is.character(x)) x <- as.list(setNames(rep(TRUE, length(x)), x))
-  x
+  n = names(x)
+  n[n == 'hard_wrap'] = 'hardbreaks'
+  names(x) = n
+  as.list(x)
 }
 
 .onLoad <- function(libname, pkgname) {
