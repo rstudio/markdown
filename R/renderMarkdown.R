@@ -100,37 +100,22 @@ renderMarkdown <- function(
   invisible(ret)
 }
 
-.b64EncodeFile <- function(inFile) {
-  fileSize <- file.info(inFile)$size
-
-  if (fileSize <= 0) {
-    warning(inFile, 'is empty!')
-    return(inFile)
-  }
-  paste( 'data:', mime::guess_type(inFile), ';base64,',
-         .Call(rmd_b64encode_data, readBin(inFile, 'raw', n = fileSize)),
-         sep = '')
-}
 
 #' @importFrom utils URLdecode
-.b64EncodeImages <- function(html) {
+.b64EncodeImages = function(html) {
   if (length(html) == 0) return(html)
-  reg <- "<\\s*[Ii][Mm][Gg]\\s+[Ss][Rr][Cc]\\s*=\\s*[\"']([^\"']+)[\"']"
-  m <- gregexpr(reg, html, perl = TRUE)
-  if (m[[1]][1] != -1) {
-    .b64EncodeImgSrc <- function(imgSrc) {
-      src <- sub(reg, '\\1', imgSrc)
-      # already base64 encoded?
-      if (grepl('^data:.+;base64,.+', src)) return(imgSrc)
-      inFile <- URLdecode(src)
-      if (length(inFile) && file.exists(inFile))
-        imgSrc <- sub(src, .b64EncodeFile(inFile), imgSrc, fixed = TRUE)
-
-      imgSrc
+  reg = '<img\\s+src\\s*=\\s*"([^"]+)"'
+  m = gregexpr(reg, html, ignore.case = TRUE)
+  regmatches(html, m) = lapply(regmatches(html, m), function(x) {
+    src = sub(reg, '\\1', x)
+    # skip images already base64 encoded
+    for (i in grep('^data:.+;base64,.+', src, invert = TRUE)) {
+      if (file.exists(f <- URLdecode(src[i]))) x[i] = sub(
+        src[i], xfun::base64_uri(f, mime::guess_type(f)), x[i], fixed = TRUE
+      )
     }
-    regmatches(html, m) <- list(unlist(lapply(regmatches(html, m)[[1]], .b64EncodeImgSrc)))
-  }
-
+    x
+  })
   html
 }
 
