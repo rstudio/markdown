@@ -2,7 +2,7 @@
 % Please edit documentation in R/renderMarkdown.R
 \name{markdownToHTML}
 \alias{markdownToHTML}
-\title{Render markdown to HTML}
+\title{Render Markdown to HTML}
 \usage{
 markdownToHTML(
   file,
@@ -19,22 +19,20 @@ markdownToHTML(
 )
 }
 \arguments{
-\item{file}{a character string giving the pathname of the file to read from.
-If it is omitted from the argument list, then it is presumed that the
+\item{file}{Path to an input file. If not provided, it is presumed that the
 \code{text} argument will be used instead.}
 
-\item{output}{a character string giving the pathname of the file to write to.
-If it is omitted (\code{NULL}), then it is presumed that the user expects
-the results returned as a \code{character} vector.}
+\item{output}{Output file path. If not character, the results will be
+returned as a character vector.}
 
-\item{text}{a character vector containing the \emph{markdown} text to
-transform (each element of this vector is treated as a line in a file).}
+\item{text}{A character vector of the Markdown text. By default, it is read
+from \code{file}.}
 
-\item{options}{options that are passed to the renderer.  see
-\code{\link{markdownHTMLOptions}}.}
+\item{options}{A list of options to be passed to the renderer. See
+\code{\link{markdownOptions}()} for all possible options.}
 
-\item{extensions}{options that are passed to the \emph{markdown} engine. See
-\code{\link{markdownExtensions}}.}
+\item{extensions}{A character vector of Markdown extensions See
+\code{\link{markdownExtensions}()}.}
 
 \item{title}{The HTML title.}
 
@@ -56,7 +54,7 @@ Invisible \code{NULL} when output is to a file, and a character
   vector otherwise.
 }
 \description{
-\code{markdownToHTML} transforms the \emph{markdown} text provided by the
+\code{markdownToHTML} transforms the Markdown text provided by the
 user in either the \code{file} or \code{text} variable. The HTML
 transformation is either written to the \code{output} file or returned to the
 user as a \code{character} vector.

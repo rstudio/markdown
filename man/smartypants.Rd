@@ -2,29 +2,28 @@
 % Please edit documentation in R/renderMarkdown.R
 \name{smartypants}
 \alias{smartypants}
-\title{smartypants: ASCII punctuation to HTML entities}
+\title{Convert some ASCII strings to HTML entities}
 \usage{
-smartypants(file, output, text)
+smartypants(file, output = NULL, text = xfun::read_utf8(file))
 }
 \arguments{
-\item{file}{a character string giving the pathname of the file to read from.
-If it is omitted from the argument list, then it is presumed that the
+\item{file}{Path to an input file. If not provided, it is presumed that the
 \code{text} argument will be used instead.}
 
-\item{output}{a character string giving the pathname of the file to write to.
-If it is omitted, then it is presumed that the user expects the results
-returned as a character string.}
+\item{output}{Output file path. If not character, the results will be
+returned as a character vector.}
 
-\item{text}{a character vector containing the \emph{markdown} text to
-transform.}
+\item{text}{A character vector of the Markdown text. By default, it is read
+from \code{file}.}
 }
 \value{
-\code{smartypants} returns NULL invisibly when output is to a file,
-  and a character string otherwise.
+Invisible \code{NULL} when output is to a file, and a character
+  vector otherwise.
 }
 \description{
-\code{smartypants} transforms plain ASCII punctuation characters into
-\emph{smart} typographic punctuation HTML entities.
+Transform ASCII strings \verb{(c)} (copyright), \verb{(r)} (registered
+trademark), \verb{(tm)} (trademark), and fractions \verb{n/m} into
+\emph{smart} typographic HTML entities.
 }
 \examples{
 cat(smartypants(text = "1/2 (c)\n"))
@@ -32,8 +31,4 @@ cat(smartypants(text = "1/2 (c)\n"))
 \seealso{
 \code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
   \code{\link{markdownToHTML}}.
-
-  For a description of the original \emph{markdown} version:
-
-  \url{https://daringfireball.net/projects/markdown/}
 }

@@ -2,62 +2,52 @@
 % Please edit documentation in R/renderMarkdown.R
 \name{renderMarkdown}
 \alias{renderMarkdown}
-\title{Render markdown to an HTML fragment}
+\title{Render Markdown to an output format}
 \usage{
 renderMarkdown(
   file,
   output = NULL,
   text = NULL,
-  renderer = "HTML",
-  renderer.options = NULL,
-  extensions = getOption("markdown.extensions"),
-  encoding = "UTF-8"
+  renderer = c("html", "latex"),
+  options = NULL,
+  extensions = markdownExtensions()
 )
 }
 \arguments{
-\item{file}{a character string giving the pathname of the file to read from.
-If it is omitted from the argument list, then it is presumed that the
+\item{file}{Path to an input file. If not provided, it is presumed that the
 \code{text} argument will be used instead.}
 
-\item{output}{a character string giving the pathname of the file to write to.
-If it is omitted (\code{NULL}), then it is presumed that the user expects
-the results returned as a \code{character} vector.}
+\item{output}{Output file path. If not character, the results will be
+returned as a character vector.}
 
-\item{text}{a character vector containing the \emph{markdown} text to
-transform (each element of this vector is treated as a line in a file).}
+\item{text}{A character vector of the Markdown text. By default, it is read
+from \code{file}.}
 
-\item{renderer}{the name of the renderer that will be used to transform the
-\code{file} or \code{text}.}
+\item{renderer}{An output format supported by \pkg{commonmark}, e.g.,
+\code{'html'}, \code{'man'}, and \code{'text'}, etc. See the
+\code{\link[commonmark:commonmark]{markdown_*}} functions in
+\pkg{commonmark}.}
 
-\item{renderer.options}{options that are passed to the renderer.  For
-\code{HTML} renderer options see \code{\link{markdownHTMLOptions}}.}
+\item{options}{A list of options to be passed to the renderer. See
+\code{\link{markdownOptions}()} for all possible options.}
 
-\item{extensions}{options that are passed to the \emph{markdown} engine. See
-\code{\link{markdownExtensions}}.}
-
-\item{encoding}{ignored (always assumes the file is encoded in UTF-8).}
+\item{extensions}{A character vector of Markdown extensions See
+\code{\link{markdownExtensions}()}.}
 }
 \value{
-\code{renderMarkdown} returns NULL invisibly when output is to a
-  file, and either \code{character} (with the UTF-8 encoding) or \code{raw}
-  vector depending on the renderer output type.
+Invisible \code{NULL} when output is to a file, otherwise a character
+  vector.
 }
 \description{
-\code{renderMarkdown} transforms the \emph{markdown} text provided by the
-user in either the \code{file} or \code{text} variable. The transformation is
-either written to the \code{output} file or returned to the user. The default
-rendering target is "HTML".
+Render Markdown to an output format via the \pkg{commonmark} package.
 }
 \examples{
-(renderMarkdown(text = "Hello World!"))
+renderMarkdown(text = "Hello World!")
 # a few corner cases
-(renderMarkdown(text = character(0)))
-(renderMarkdown(text = ""))
+renderMarkdown(text = character(0))
+renderMarkdown(text = "")
 }
 \seealso{
-\code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
-  \code{\link{markdownToHTML}}.
-
-  For a description of the original \emph{markdown} version:
-  \url{https://daringfireball.net/projects/markdown/}
+The spec of GitHub Flavored Markdown:
+  \url{https://github.github.com/gfm/}
 }

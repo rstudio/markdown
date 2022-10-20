@@ -2,11 +2,9 @@
 
 export(markdownExtensions)
 export(markdownHTMLOptions)
+export(markdownOptions)
 export(markdownToHTML)
-export(registeredRenderers)
 export(renderMarkdown)
-export(rendererExists)
-export(rendererOutputType)
 export(rpubsUpload)
 export(smartypants)
 import(stats)

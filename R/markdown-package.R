@@ -1,20 +1,10 @@
 #' Markdown rendering for R
 #'
 #' \pkg{Markdown} is a plain-text formatting syntax that can be converted to
-#' XHTML or other formats. This package provides wrapper functions based on the
-#' \pkg{commonmark} package.
-#'
-#' The R function \code{\link{markdownToHTML}} renders a Markdown file to HTML
-#' (respecting the specified \code{\link{markdownExtensions}} and
-#' \code{\link{markdownHTMLOptions}}).
-#'
-#' To learn more about Markdown syntax see:
-#' \url{https://en.wikipedia.org/wiki/Markdown}
+#' XHTML or other formats. This package provides wrapper functions (mainly
+#' \code{\link{renderMarkdown}()}) based on the \pkg{commonmark} package.
 #' @name markdown
 #' @docType package
-#' @author JJ Allaire, Jeffrey Horner, Vicent Marti, and Natacha Porte
-#'
-#'   Maintainer: Yihui Xie <xie@@yihui.name>
-#' @seealso \code{\link{markdownToHTML}} \code{\link{renderMarkdown}}
+#' @seealso \code{\link{renderMarkdown}()}, \code{\link{markdownToHTML}()}
 #' @keywords package
 NULL

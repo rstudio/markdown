@@ -26,6 +26,7 @@ Depends:
     R (>= 2.11.1)
 Imports:
     utils,
+    commonmark,
     xfun,
     mime (>= 0.3)
 Suggests:
