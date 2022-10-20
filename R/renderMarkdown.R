@@ -452,7 +452,7 @@ markdownExtensions = function(default = TRUE) {
 #' # To turn on package default HTML options globally:
 #' options(markdown.HTML.options = markdownHTMLOptions(default = TRUE))
 #'
-#' @example inst/examples/HTMLOptions.R
+#' @example inst/examples/render-options.R
 markdownOptions = function(default = FALSE) {
   sort(c(
     'smart', 'smartypants', 'base64_images', 'mathjax', 'highlight_code',
