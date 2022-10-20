@@ -1,5 +1,3 @@
-# renderMarkdown.R
-#
 # Copyright (C) 2009-2022 by RStudio, PBC
 #
 # This program is licensed to you under the terms of version 2 of the
@@ -9,97 +7,71 @@
 # GPL (https://www.gnu.org/licenses/gpl-2.0.txt) for more details.
 
 
-#' List of Registered Markdown Renderers
+#' Render Markdown to an output format
 #'
-#' \code{registeredRenderers} returns a named character vector listing all the
-#' registered renderers known to the \pkg{markdown} package.
-#' @return A named \code{character} vector listing all available renderers.
-#'   Vector value contain renderer names, and named values contain the renderer
-#'   output type, either \code{character} or \code{raw}.
-#' @seealso \link{markdownToHTML}, \link{rendererOutputType}
-#' @export
-#' @keywords internal
-#' @examples
-#' # List all available renderers
-#' registeredRenderers()
-registeredRenderers <- function() c(character = 'HTML')
-
-
-#' Testing for existence of a Markdown renderer
-#'
-#' \code{rendererExists} determines whether or not a certain renderer exists in
-#' the Markdown library.
-#' @param name name of renderer.
-#' @return \code{TRUE} or \code{FALSE} for whether or not the renderer exists.
-#' @export
-#' @keywords internal
-#' @examples rendererExists("HTML")
-rendererExists <- function(name) name[1] %in% registeredRenderers()
-
-
-#' Render Markdown to an HTML fragment
-#'
-#' \code{renderMarkdown} transforms the \emph{Markdown} text provided by the
-#' user in either the \code{file} or \code{text} variable. The transformation is
-#' either written to the \code{output} file or returned to the user. The default
-#' rendering target is "HTML".
-#' @inheritParams markdownToHTML
-#' @param renderer the name of the renderer that will be used to transform the
-#'   \code{file} or \code{text}.
-#' @param renderer.options options that are passed to the renderer.  For
-#'   \code{HTML} renderer options see \code{\link{markdownHTMLOptions}}.
-#' @return \code{renderMarkdown} returns NULL invisibly when output is to a
-#'   file, and either \code{character} (with the UTF-8 encoding) or \code{raw}
-#'   vector depending on the renderer output type.
-#' @seealso \code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
-#'   \code{\link{markdownToHTML}}.
-#'
-#'   For a description of the original \emph{Markdown} version:
-#'   \url{https://daringfireball.net/projects/markdown/}
+#' Render Markdown to an output format via the \pkg{commonmark} package.
+#' @param file Path to an input file. If not provided, it is presumed that the
+#'   \code{text} argument will be used instead.
+#' @param output Output file path. If not character, the results will be
+#'   returned as a character vector.
+#' @param text A character vector of the Markdown text. By default, it is read
+#'   from \code{file}.
+#' @param renderer An output format supported by \pkg{commonmark}, e.g.,
+#'   \code{'html'}, \code{'man'}, and \code{'text'}, etc. See the
+#'   \code{\link[commonmark:commonmark]{markdown_*}} functions in
+#'   \pkg{commonmark}.
+#' @param options A list of options to be passed to the renderer. See
+#'   \code{\link{markdownOptions}()} for all possible options.
+#' @param extensions A character vector of Markdown extensions See
+#'   \code{\link{markdownExtensions}()}.
+#' @return Invisible \code{NULL} when output is to a file, otherwise a character
+#'   vector.
+#' @seealso The spec of GitHub Flavored Markdown:
+#'   \url{https://github.github.com/gfm/}
 #' @export
 #' @examples
-#' (renderMarkdown(text = "Hello World!"))
+#' renderMarkdown(text = "Hello World!")
 #' # a few corner cases
-#' (renderMarkdown(text = character(0)))
-#' (renderMarkdown(text = ''))
-renderMarkdown <- function(
-  file, output = NULL, text = NULL, renderer = 'HTML', renderer.options = NULL,
-  extensions = getOption('markdown.extensions'), encoding = 'UTF-8'
+#' renderMarkdown(text = character(0))
+#' renderMarkdown(text = '')
+renderMarkdown = function(
+  file, output = NULL, text = NULL, renderer = c('html', 'latex'),
+  options = NULL, extensions = markdownExtensions()
 ) {
+  if (is.null(text)) text = xfun::read_utf8(file)
+  if (length(text) == 0 || text == '') return(if (is.null(output)) {
+    character(length(text))
+  } else {
+    file.create(output); invisible(NULL)
+  })
 
-  if (!rendererExists(renderer))
-    stop("Renderer '", renderer, "' is not available.!")
+  renderer = renderer[1]
 
-  # Input from either a file or character vector
-  if (!is.character(text)) {
-    # If input is file, assume the encoding is UTF-8.
-    text <- xfun::read_utf8(file, error = TRUE)
-  }
-  text <- enc2utf8(text)
-  if (length(text) > 1) text <- paste(text, collapse = '\n')
-  file <- NULL
+  render = tryCatch(
+    getFromNamespace(paste0('markdown_', tolower(renderer)), 'commonmark'),
+    error = function(e) {
+      stop("Renderer '", renderer, "' is not available in commonmark.")
+    }
+  )
 
-  # Options
-  if (is.null(renderer.options))
-    renderer.options <- getOption(paste('markdown', renderer, 'options', sep = '.'))
+  if (is.null(options))
+    options = get_option(sprintf('markdown.%s.options', renderer))
+  options = normalizeOptions(options)
+  options$extensions = intersect(extensions, commonmark::list_extensions())
 
-  # HTML options must be a character vector.
-  if (renderer == 'HTML') {
-    if (!is.null(renderer.options) && !is.character(renderer.options))
-      stop('HTML options must be a character vector')
-  }
-
-  if (length(text) == 0 || text == '') {
-     if (is.null(output)) return(invisible(character(length(text))))
-     file.create(output)
-     return()
-  }
-  ret <- .Call(rmd_render_markdown,
-               file, output, text, renderer, renderer.options, extensions)
-
-  invisible(ret)
+  ret = do.call(render, c(
+    list(text = text),
+    options[intersect(names(formals(render)), names(options))]
+  ))
+  if (is.character(output)) xfun::write_utf8(ret, output) else ret
 }
 
+# Get an option using a case-insensitive name
+get_option = function(name) {
+  x = options()
+  i = match(tolower(name), tolower(names(x)))
+  x[[i]]
+}
 
 #' @importFrom utils URLdecode
 .b64EncodeImages = function(html) {
@@ -120,8 +92,8 @@ renderMarkdown <- function(
 }
 
 
-.mathJax <- local({
-  js <- NULL
+.mathJax = local({
+  js = NULL
 
   function(embed=FALSE, force=FALSE) {
     if (!embed)
@@ -129,10 +101,10 @@ renderMarkdown <- function(
         'resources', 'mathjax.html', package = 'markdown'
       )), collapse = '\n'))
 
-    url <- 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML'
+    url = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML'
 
     # Insert or link to MathJax script?
-    html <- c('<!-- MathJax scripts -->', if (embed) {
+    html = c('<!-- MathJax scripts -->', if (embed) {
       # Already in cache?
       if (force || is.null(js)) {
         js <<- readLines(url, warn=FALSE)
@@ -146,18 +118,18 @@ renderMarkdown <- function(
   }
 })
 
-.requiresMathJax <- function(html) {
-  regs <- c('\\\\\\(([\\s\\S]+?)\\\\\\)', '\\\\\\[([\\s\\S]+?)\\\\\\]')
+.requiresMathJax = function(html) {
+  regs = c('\\\\\\(([\\s\\S]+?)\\\\\\)', '\\\\\\[([\\s\\S]+?)\\\\\\]')
   for (i in regs) if (any(grepl(i, html, perl = TRUE))) return(TRUE)
   FALSE
 }
 
-.requiresHighlighting <- function(html) any(grepl('<pre><code class="r"', html))
+.requiresHighlighting = function(html) any(grepl('<pre><code class="r"', html))
 
 
 #' Render Markdown to HTML
 #'
-#' \code{markdownToHTML} transforms the \emph{Markdown} text provided by the
+#' \code{markdownToHTML} transforms the Markdown text provided by the
 #' user in either the \code{file} or \code{text} variable. The HTML
 #' transformation is either written to the \code{output} file or returned to the
 #' user as a \code{character} vector.
@@ -199,19 +171,7 @@ renderMarkdown <- function(
 #' \code{\link{markdownHTMLOptions}} for more details).
 #'
 #' When \code{fragment.only} is TRUE, nothing extra is added.
-#'
-#' @param file a character string giving the pathname of the file to read from.
-#'   If it is omitted from the argument list, then it is presumed that the
-#'   \code{text} argument will be used instead.
-#' @param output a character string giving the pathname of the file to write to.
-#'   If it is omitted (\code{NULL}), then it is presumed that the user expects
-#'   the results returned as a \code{character} vector.
-#' @param text a character vector containing the \emph{Markdown} text to
-#'   transform (each element of this vector is treated as a line in a file).
-#' @param options options that are passed to the renderer.  see
-#'   \code{\link{markdownHTMLOptions}}.
-#' @param extensions options that are passed to the \emph{Markdown} engine. See
-#'   \code{\link{markdownExtensions}}.
+#' @inheritParams renderMarkdown
 #' @param title The HTML title.
 #' @param stylesheet either valid CSS or a file containing CSS. will be included
 #'   in the output.
@@ -232,7 +192,7 @@ renderMarkdown <- function(
 #'   fragment.only = TRUE))
 #' # write HTML to an output file
 #' markdownToHTML(text = "_Hello_, **World**!", output = tempfile())
-markdownToHTML <- function(
+markdownToHTML = function(
   file, output = NULL, text = NULL, options = getOption('markdown.HTML.options'),
   extensions = getOption('markdown.extensions'),
   title = '',
@@ -242,20 +202,17 @@ markdownToHTML <- function(
   fragment.only = FALSE,
   encoding = 'UTF-8'
 ) {
-  options <- normalizeOptions(options)
-  if (fragment.only) options[['fragment_only']] <- TRUE
+  options = normalizeOptions(options)
+  if (fragment.only) options[['fragment_only']] = TRUE
 
-  ret <- renderMarkdown(
-    file, output = NULL, text, renderer = 'HTML',
-    renderer.options = options, extensions = extensions
-  )
+  ret = renderMarkdown(file, NULL, text, options, extensions, renderer = 'html')
 
   if (isTRUE(options[['base64_images']])) {
-    filedir <- if (!missing(file) && is.character(file) && file.exists(file)) {
+    filedir = if (!missing(file) && is.character(file) && file.exists(file)) {
       dirname(file)
     } else '.'
-    ret <- local({
-      oldwd <- setwd(filedir)
+    ret = local({
+      oldwd = setwd(filedir)
       on.exit(setwd(oldwd))
       .b64EncodeImages(ret)
     })
@@ -263,53 +220,53 @@ markdownToHTML <- function(
 
   if (!isTRUE(options[['fragment_only']])) {
     if (is.null(template))
-      template <- system.file('resources', 'markdown.html', package = 'markdown')
-    html <- paste(readLines(template), collapse = '\n')
-    html <- sub('#!html_output#', if (length(ret)) ret else '', html, fixed = TRUE)
+      template = system.file('resources', 'markdown.html', package = 'markdown')
+    html = paste(readLines(template), collapse = '\n')
+    html = sub('#!html_output#', if (length(ret)) ret else '', html, fixed = TRUE)
 
     if (is.character(stylesheet)) {
-      html <- sub('#!markdown_css#', option2char(stylesheet), html, fixed = TRUE)
+      html = sub('#!markdown_css#', option2char(stylesheet), html, fixed = TRUE)
     } else {
       warning('stylesheet must either be valid CSS or a file containing CSS!')
     }
 
-    html <- sub('#!header#', option2char(header), html, fixed = TRUE)
+    html = sub('#!header#', option2char(header), html, fixed = TRUE)
 
     if (!is.character(title) || title == '') {
       # Guess title
-      m <- regexpr('<[Hh][1-6].*?>(.*)</[Hh][1-6].*?>', html, perl = TRUE)
+      m = regexpr('<[Hh][1-6].*?>(.*)</[Hh][1-6].*?>', html, perl = TRUE)
       if (m > -1) {
-        title <- regmatches(html, m)
-        title <- sub('<[Hh][1-6].*?>', '', title)
-        title <- sub('</[Hh][1-6].*?>', '', title)
+        title = regmatches(html, m)
+        title = sub('<[Hh][1-6].*?>', '', title)
+        title = sub('</[Hh][1-6].*?>', '', title)
       } else {
-        title <- ''
+        title = ''
       }
     }
 
     # Need to scrub title more, e.g. strip html, etc.
-    html <- sub('#!title#', title, html, fixed = TRUE)
+    html = sub('#!title#', title, html, fixed = TRUE)
 
-    mathjax <- if (isTRUE(options[['mathjax']]) && .requiresMathJax(html)) {
+    mathjax = if (isTRUE(options[['mathjax']]) && .requiresMathJax(html)) {
       .mathJax(embed = isTRUE(options[['mathjax_embed']]))
     } else ''
-    html <- sub('#!mathjax#', mathjax, html, fixed = TRUE)
+    html = sub('#!mathjax#', mathjax, html, fixed = TRUE)
 
-    highlight <- if (isTRUE(options[['highlight_code']]) && .requiresHighlighting(html)) {
+    highlight = if (isTRUE(options[['highlight_code']]) && .requiresHighlighting(html)) {
       xfun::file_string(system.file('resources', 'r_highlight.html', package = 'markdown'))
     } else ''
-    html <- sub('#!r_highlight#', highlight, html, fixed = TRUE)
+    html = sub('#!r_highlight#', highlight, html, fixed = TRUE)
 
-    ret <- html
+    ret = html
   }
 
-  ret <- if (is.character(output)) xfun::write_utf8(ret, output) else enc2utf8(ret)
+  ret = if (is.character(output)) xfun::write_utf8(ret, output) else enc2utf8(ret)
 
   invisible(ret)
 }
 
 # from an option to an appropriate character string of CSS/header/...
-option2char <- function(x) {
+option2char = function(x) {
   if (!is.character(x)) return('')
   paste(if (length(x) == 1 && file.exists(x)) readLines(x) else x, collapse = '\n')
 }
@@ -319,12 +276,7 @@ option2char <- function(x) {
 #' Transform ASCII strings \verb{(c)} (copyright), \verb{(r)} (registered
 #' trademark), \verb{(tm)} (trademark), and fractions \verb{n/m} into
 #' \emph{smart} typographic HTML entities.
-#' @param file Path to an input file. If not provided, it is presumed that the
-#'   \code{text} argument will be used instead.
-#' @param output Output file path. If not character, the results will be
-#'   returned as a character vector.
-#' @param text A character vector containing the \emph{Markdown} text to
-#'   transform.
+#' @inheritParams renderMarkdown
 #' @return Invisible \code{NULL} when output is to a file, and a character
 #'   vector otherwise.
 #' @seealso \code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
@@ -332,41 +284,41 @@ option2char <- function(x) {
 #' @export
 #' @examples
 #' cat(smartypants(text = "1/2 (c)\n"))
-smartypants <- function(file, output = NULL, text = xfun::read_utf8(file)) {
-  text <- xfun::split_lines(text)
-  i <- xfun::prose_index(text)
-  x <- text[i]
-  r <- '(?<!`)\\((c|r|tm)\\)|(\\d+/\\d+)(?!`)'
-  m <- gregexpr(r, x, perl = TRUE)
-  regmatches(x, m) <- lapply(regmatches(x, m), function(z) {
-    y <- pants[z]
-    i <- is.na(y)
-    y[i] <- z[i]
+smartypants = function(file, output = NULL, text = xfun::read_utf8(file)) {
+  text = xfun::split_lines(text)
+  i = xfun::prose_index(text)
+  x = text[i]
+  r = '(?<!`)\\((c|r|tm)\\)|(\\d+/\\d+)(?!`)'
+  m = gregexpr(r, x, perl = TRUE)
+  regmatches(x, m) = lapply(regmatches(x, m), function(z) {
+    y = pants[z]
+    i = is.na(y)
+    y[i] = z[i]
     y
   })
-  text[i] <- x
+  text[i] = x
   if (is.character(output)) xfun::write_utf8(text, output) else text
 }
 
 # Represent some fractions with HTML entities
-fracs <- local({
-  k <- c(2, 3, 5)
-  z <- list()
+fracs = local({
+  k = c(2, 3, 5)
+  z = list()
   for (i in 2:10) {
     for (j in 1:i) {
       if (j > 1 && (i %% j == 0 || any(i == c(7, 9, 10)))) next
       if (any((i %% k == 0) & (j %% k == 0))) next
-      x <- paste0(j, '/', i)
-      y <- if (j > 1 || i < 9) sprintf('&frac%d%d;', j, i) else {
+      x = paste0(j, '/', i)
+      y = if (j > 1 || i < 9) sprintf('&frac%d%d;', j, i) else {
         if (i == 9) '&#8529;' else if (i == 10) '&#8530;'
       }
-      z[[x]] <- y
+      z[[x]] = y
     }
   }
   z
 })
 
-pants <- c(unlist(fracs), c('(c)' = '&copy;', '(r)' = '&reg;', '(tm)' = '&trade;'))
+pants = c(unlist(fracs), c('(c)' = '&copy;', '(r)' = '&reg;', '(tm)' = '&trade;'))
 
 # Markdown extensions.
 #
@@ -382,8 +334,7 @@ pants <- c(unlist(fracs), c('(c)' = '&copy;', '(r)' = '&reg;', '(tm)' = '&trade;
 
 #' Markdown extensions
 #'
-#' \code{markdownExtensions} returns a character vector listing all the
-#' extensions that are available in the \pkg{markdown} package.
+#' List all available Markdown extensions.
 #'
 #' They are all ON by default.
 #'
@@ -403,30 +354,18 @@ pants <- c(unlist(fracs), c('(c)' = '&copy;', '(r)' = '&reg;', '(tm)' = '&trade;
 #'
 #' \describe{
 #'
-#' \item{\code{'no_intra_emphasis'}}{ skip markdown embedded in words.  }
-#'
 #' \item{\code{'tables'}}{ create HTML tables (see Examples). }
-#'
-#' \item{\code{'fenced_code'}}{ treat text as verbatim when surrounded with
-#' begin and ending lines with three ~ or \emph{`} characters.  }
 #'
 #' \item{\code{'autolink'}}{ create HTML links from urls and email addresses. }
 #'
 #' \item{\code{'strikethrough'}}{ create strikethroughs by surrounding text with
 #' ~~.  }
 #'
-#' \item{\code{'lax_spacing'}}{ allow HTML tags inside paragraphs without being
-#' surrounded by newlines.  }
-#'
-#' \item{\code{'space_headers'}}{ add a space between header hashes and the
-#' header itself.  }
-#'
 #' \item{\code{'superscript'}}{ translate ^ and subsequent text into HTML
 #' superscript. }
 #'
 #' \item{\code{'latex_math'}}{ transforms all math equations into syntactically
 #' correct MathJax equations.  }
-#'
 #' }
 #'
 #' See the EXAMPLES section to see the output of each extension turned on or
@@ -445,27 +384,14 @@ pants <- c(unlist(fracs), c('(c)' = '&copy;', '(r)' = '&reg;', '(tm)' = '&trade;
 #' options(markdown.extensions = NULL)
 #'
 #' @example inst/examples/markdownExtensions.R
-markdownExtensions <- function()
-  c('no_intra_emphasis', 'tables', 'fenced_code', 'autolink', 'strikethrough',
-    'lax_spacing', 'space_headers', 'superscript', 'latex_math')
+markdownExtensions = function(default = TRUE) {
+  setdiff(
+    c(commonmark::list_extensions(), 'superscript', 'subscript', 'latex_math'),
+    if (default) 'tagfiler'
+  )
+}
 
-# HTML renderer options.
-#
-# To turn on all options:
-#
-# options(markdown.HTML.options = markdownHTMLOptions())
-#
-# To turn on default options:
-#
-# options(markdown.HTML.options = markdownHTMLOptions(defaults = TRUE))
-#
-# To turn off all options:
-#
-# options(markdown.HTML.options = c())
-#
-
-
-#' Markdown HTML rendering options
+#' Markdown rendering options
 #'
 #' \code{markdownHTMLOptions} returns a character vector listing all the options
 #' that are available for the HTML renderer in the \pkg{markdown} package. As a
@@ -508,7 +434,7 @@ markdownExtensions <- function()
 #' }
 #'
 #' See the EXAMPLES section to see the output of each option turned on or off.
-#' @param defaults If \code{TRUE}, then only the default options are returned.
+#' @param default If \code{TRUE}, only the default options are returned.
 #'   Otherwise all options are returned.
 #' @return A \code{character} vector listing either all available options or
 #'   just the default options.
@@ -528,35 +454,39 @@ markdownExtensions <- function()
 #' options(markdown.HTML.options = 'smartypants')
 #'
 #' # To turn on package default HTML options globally:
-#' options(markdown.HTML.options = markdownHTMLOptions(defaults = TRUE))
+#' options(markdown.HTML.options = markdownHTMLOptions(default = TRUE))
 #'
 #' @example inst/examples/HTMLOptions.R
-markdownHTMLOptions <- function(defaults = FALSE) {
+markdownOptions = function(default = FALSE) {
   sort(c(
-    c('smart', 'smartypants', 'base64_images', 'mathjax', 'highlight_code'),
-    if (!defaults) c('toc', 'fragment_only', 'hardbreaks')
+    'smart', 'smartypants', 'base64_images', 'mathjax', 'highlight_code',
+    if (!default) c('toc', 'fragment_only', 'hardbreaks')
   ))
 }
 
+#' @rdname markdownOptions
+#' @export
+markdownHTMLOptions = markdownOptions
+
 #' @import stats
-normalizeOptions <- function(x) {
-  if (is.character(x)) x <- as.list(setNames(rep(TRUE, length(x)), x))
+normalizeOptions = function(x) {
+  if (is.character(x)) x = as.list(setNames(rep(TRUE, length(x)), x))
   n = names(x)
   n[n == 'hard_wrap'] = 'hardbreaks'
   names(x) = n
   as.list(x)
 }
 
-.onLoad <- function(libname, pkgname) {
+.onLoad = function(libname, pkgname) {
 
   if (is.null(getOption('markdown.extensions')))
     options(markdown.extensions = markdownExtensions())
 
   if (is.null(getOption('markdown.HTML.options')))
-    options(markdown.HTML.options = markdownHTMLOptions(defaults = TRUE))
+    options(markdown.HTML.options = markdownHTMLOptions(default = TRUE))
 
   if (is.null(getOption('markdown.HTML.stylesheet'))) {
-    sheet <- system.file('resources', 'markdown.css', package = 'markdown')
+    sheet = system.file('resources', 'markdown.css', package = 'markdown')
     options(markdown.HTML.stylesheet = sheet)
   }
 }

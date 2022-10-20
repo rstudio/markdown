@@ -4,14 +4,13 @@
 \alias{markdownExtensions}
 \title{Markdown extensions}
 \usage{
-markdownExtensions()
+markdownExtensions(default = TRUE)
 }
 \value{
 A \code{character} vector listing all available extensions.
 }
 \description{
-\code{markdownExtensions} returns a character vector listing all the
-extensions that are available in the \pkg{markdown} package.
+List all available Markdown extensions.
 }
 \details{
 They are all ON by default.
@@ -32,30 +31,18 @@ Description of all extensions:
 
 \describe{
 
-\item{\code{'no_intra_emphasis'}}{ skip markdown embedded in words.  }
-
 \item{\code{'tables'}}{ create HTML tables (see Examples). }
-
-\item{\code{'fenced_code'}}{ treat text as verbatim when surrounded with
-begin and ending lines with three ~ or \emph{`} characters.  }
 
 \item{\code{'autolink'}}{ create HTML links from urls and email addresses. }
 
 \item{\code{'strikethrough'}}{ create strikethroughs by surrounding text with
 ~~.  }
 
-\item{\code{'lax_spacing'}}{ allow HTML tags inside paragraphs without being
-surrounded by newlines.  }
-
-\item{\code{'space_headers'}}{ add a space between header hashes and the
-header itself.  }
-
 \item{\code{'superscript'}}{ translate ^ and subsequent text into HTML
 superscript. }
 
 \item{\code{'latex_math'}}{ transforms all math equations into syntactically
 correct MathJax equations.  }
-
 }
 
 See the EXAMPLES section to see the output of each extension turned on or
@@ -65,10 +52,10 @@ off.
 # List all available extensions:
 markdownExtensions()
 
-# To turn on all markdown extensions globally:
+# To turn on all Markdown extensions globally:
 options(markdown.extensions = markdownExtensions())
 
-# To turn off all markdown extensions globally:
+# To turn off all Markdown extensions globally:
 options(markdown.extensions = NULL)
 
 # The following examples are short, so we set the HTML option 'fragment_only'

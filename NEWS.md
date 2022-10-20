@@ -1,5 +1,8 @@
 # CHANGES IN markdown VERSION 1.3
 
+- Replaced the underlying Markdown rendering engine from the C library **sundown** (which has been deprecated for a decade) to the R package **commonmark**.
+
+- Removed functions `rendererExists()`, `rendererOutputType()`, and `registeredRenderer()`.
 
 # CHANGES IN markdown VERSION 1.2
 

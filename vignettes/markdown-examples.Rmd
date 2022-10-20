@@ -30,5 +30,5 @@ library(markdown)
 
 
 ```{r include=FALSE}
-options(markdown.HTML.options=markdownHTMLOptions(defaults=TRUE))
+options(markdown.HTML.options=markdownHTMLOptions(default=TRUE))
 ```
