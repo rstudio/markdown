@@ -28,6 +28,7 @@
 #'   vector.
 #' @seealso The spec of GitHub Flavored Markdown:
 #'   \url{https://github.github.com/gfm/}
+#' @import utils
 #' @export
 #' @examples
 #' renderMarkdown(text = "Hello World!")
