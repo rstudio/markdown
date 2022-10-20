@@ -39,11 +39,6 @@ renderMarkdown = function(
   options = NULL, extensions = markdownExtensions()
 ) {
   if (is.null(text)) text = xfun::read_utf8(file)
-  if (length(text) == 0 || text == '') return(if (is.null(output)) {
-    character(length(text))
-  } else {
-    file.create(output); invisible(NULL)
-  })
 
   renderer = renderer[1]
 
