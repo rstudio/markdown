@@ -379,3 +379,6 @@ option2list = function(x) {
 }
 
 pkg_file = function(...) system.file(..., package = 'markdown', mustWork = TRUE)
+
+# TODO: remove this function when revdeps have been fixed
+.b64EncodeFile = function(...) xfun::base64_uri(...)
