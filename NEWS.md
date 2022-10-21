@@ -4,7 +4,7 @@
 
 - Removed functions `rendererExists()`, `rendererOutputType()`, and `registeredRenderer()`. They were primarily for internal use.
 
-- Removed the function `markdownExtensions()`. All extensions should be specified via the `options` argument of functions like `renderMarkdown()`, e.g., `renderMarkdown(options = '+table+tasklist')`.
+- Deprecated the function `markdownExtensions()`. All extensions should be specified via the `options` argument of functions like `renderMarkdown()`, e.g., `renderMarkdown(options = '+table+tasklist')`.
 
 - Renamed `markdownHTMLOptions()` to `markdownOptions()`.
 
