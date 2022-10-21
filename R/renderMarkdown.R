@@ -353,8 +353,8 @@ markdownOptions = function() {
   x2 = c('toc', 'fragment_only', 'hardbreaks', 'tagfilter')
   # TODO: remove this hack after https://github.com/kiernann/gluedown/pull/29
   if (xfun::check_old_package('gluedown', '1.0.4')) {
-    x1 = setdiff(x1, 'tasklist')
-    x2 = c(x2, 'tasklist')
+    x1 = setdiff(x1, c('tasklist', 'smart'))
+    x2 = c(x2, c('tasklist', 'smart'))
   }
   sort(c(paste0('+', x1), paste0('-', x2)))
 }
