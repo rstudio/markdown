@@ -396,3 +396,10 @@ markdownExtensions = function(...) {
   )
   NULL
 }
+
+# TODO: remove this after https://github.com/PolMine/polmineR/pull/232 is fixed
+.onLoad = function(lib, pkg) {
+  if (is.null(getOption('markdown.HTML.stylesheet'))) {
+    options(markdown.HTML.stylesheet = pkg_file('resources', 'markdown.css'))
+  }
+}
