@@ -1,62 +1,23 @@
 library(markdown)
 
-# The following examples are short, so we allways add the HTML option 'fragment_only'
-tOpt <- "fragment_only"
-
-# skip_html example
-mkd = '<style></style><img src="https://cran.rstudio.com/Rlogo.jpg"><a href="#">Hello</a>'
-cat(markdownToHTML(text = mkd, options = c(tOpt)))
-cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html")))
-
-# skip_style example
-cat(markdownToHTML(text = mkd, options = c(tOpt)))
-cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_style")))
-
-# skip_images example
-cat(markdownToHTML(text = mkd, options = c(tOpt)))
-cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_images")))
-
-# skip_links example
-cat(markdownToHTML(text = mkd, options = c(tOpt)))
-cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_links")))
-
-# safelink example
-cat(markdownToHTML(text = '[foo](https://www.google.com "baz")', options = c(tOpt)))
-cat(markdownToHTML(text = '[foo](https://www.google.com "baz")', options = c(tOpt, "safelink")))
+# generate HTML fragments only
+options(markdown.html.options = "fragment_only")
 
 # toc example
 mkd <- paste(c("# Header 1", "p1", "## Header 2", "p2"), collapse = "\n")
 
-cat(markdownToHTML(text = mkd, options = c(tOpt)))
-cat(markdownToHTML(text = mkd, options = c(tOpt, "toc")))
+cat(markdownToHTML(text = mkd))
+cat(markdownToHTML(text = mkd, options = "toc"))
 
 # hard_wrap example
-cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt)))
-cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt, "hard_wrap")))
-
-# use_xhtml example
-cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt, "hard_wrap")))
-cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt, "hard_wrap", "use_xhtml")))
-
-# escape example
-mkd = '<style></style><img src="https://cran.rstudio.com/Rlogo.jpg"><a href="#">Hello</a>'
-cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html")))
-# overrides all 'skip_*' options
-cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html", "escape")))
+cat(markdownToHTML(text = "foo\nbar\n"))
+cat(markdownToHTML(text = "foo\nbar\n", options = "hard_wrap"))
 
 # smartypants example
-cat(markdownToHTML(text = "1/2 (c)", options = c(tOpt)))
-cat(markdownToHTML(text = "1/2 (c)", options = c(tOpt, "smartypants")))
+cat(markdownToHTML(text = "1/2 (c)"))
+cat(markdownToHTML(text = "1/2 (c)", options = "smartypants"))
 
 cat(smartypants(text = "1/2 (c)\n"))
-
-# The following examples are short, so we set the HTML option 'fragment_only'
-
-options(markdown.HTML.options = "fragment_only")
-
-# no_intra_emphasis example
-cat(markdownToHTML(text = "foo_bar_function", extensions = c()))
-cat(markdownToHTML(text = "foo_bar_function", extensions = c("no_intra_emphasis")))
 
 # tables example (need 4 spaces at beginning of line here)
 cat(markdownToHTML(text = "
@@ -64,7 +25,7 @@ cat(markdownToHTML(text = "
     ------------- | -------------
     Content Cell  | Content Cell
     Content Cell  | Content Cell
-", extensions = c()))
+"))
 
 # but not here
 cat(markdownToHTML(text = "
@@ -72,49 +33,26 @@ First Header  | Second Header
 ------------- | -------------
 Content Cell  | Content Cell
 Content Cell  | Content Cell
-", extensions = c("tables")))
-
-# fenced_code example (need at least three leading ~ or `)
-fenced_block <- function(text, x = "`", n = 3) {
-  fence <- paste(rep(x, n), collapse = "")
-  paste(fence, text, fence, sep = "")
-}
-cat(markdownToHTML(text = fenced_block("
-preformatted text here without having to indent
-first line.
-"), extensions = c()))
-
-cat(markdownToHTML(text = fenced_block("
-preformatted text here without having to indent
-first line.
-"), extensions = c("fenced_code")))
+"), options = '-table')
 
 # autolink example
-cat(markdownToHTML(text = "https://www.r-project.org/", extensions = c()))
-cat(markdownToHTML(text = "https://www.r-project.org/", extensions = c("autolink")))
+cat(markdownToHTML(text = "https://www.r-project.org/"))
+cat(markdownToHTML(text = "https://www.r-project.org/", options = "-autolink"))
 
 # strikethrough example
-cat(markdownToHTML(text = "~~awesome~~", extensions = c()))
-cat(markdownToHTML(text = "~~awesome~~", extensions = c("strikethrough")))
+cat(markdownToHTML(text = "~~awesome~~"))
+cat(markdownToHTML(text = "~~awesome~~", options = "-strikethrough"))
 
-# lax_spacing
-cat(markdownToHTML(text = "
-Embedding html without surrounding with empty newline.
-<div>_markdown_</div>
-extra text.
-", extensions = c("")))
-cat(markdownToHTML(text = "
-Embedding html without surrounding with empty newline.
-<div>_markdown_</div>
-extra text.
-", extensions = c("lax_spacing")))
+# superscript and subscript examples
+cat(markdownToHTML(text = "2^10^"))
+cat(markdownToHTML(text = "2^10^", options = "-superscript"))
+cat(markdownToHTML(text = "H~2~O"))
+cat(markdownToHTML(text = "H~2~O", options = "-subscript"))
 
-# space_headers example
-cat(markdownToHTML(text = "#A Header\neven though there is no space between # and A",
-                   extensions = c("")))
-cat(markdownToHTML(text = "#Not A Header\nbecause there is no space between # and N",
-                   extensions = c("space_headers")))
+# skip_html tags
+mkd = '<style>a {}</style><script type="text/javascript">alert("No!");</script>[Hello](#)'
+cat(markdownToHTML(text = mkd))
+# TODO: wait for https://github.com/r-lib/commonmark/issues/15 to be fixed
+# cat(markdownToHTML(text = mkd, options = "tagfilter"))
 
-# superscript example
-cat(markdownToHTML(text = "2^10", extensions = c()))
-cat(markdownToHTML(text = "2^10", extensions = c("superscript")))
+options(markdown.html.options = NULL)

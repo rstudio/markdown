@@ -2,7 +2,11 @@
 
 - Replaced the underlying Markdown rendering engine from the C library **sundown** (which has been deprecated for a decade) to the R package **commonmark**.
 
-- Removed functions `rendererExists()`, `rendererOutputType()`, and `registeredRenderer()`.
+- Removed functions `rendererExists()`, `rendererOutputType()`, and `registeredRenderer()`. They were primarily for internal use.
+
+- Removed the function `markdownExtensions()`. All extensions should be specified via the `options` argument of functions like `renderMarkdown()`, e.g., `renderMarkdown(options = '+table+tasklist')`.
+
+- Renamed `markdownHTMLOptions()` to `markdownOptions()`.
 
 # CHANGES IN markdown VERSION 1.2
 

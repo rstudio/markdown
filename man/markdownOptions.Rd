@@ -2,133 +2,124 @@
 % Please edit documentation in R/renderMarkdown.R
 \name{markdownOptions}
 \alias{markdownOptions}
-\alias{markdownHTMLOptions}
 \title{Markdown rendering options}
 \usage{
-markdownOptions(default = FALSE)
-
-markdownHTMLOptions(default = FALSE)
-}
-\arguments{
-\item{default}{If \code{TRUE}, only the default options are returned.
-Otherwise all options are returned.}
+markdownOptions()
 }
 \value{
-A \code{character} vector listing either all available options or
-  just the default options.
+A character vector of all available options.
 }
 \description{
-\code{markdownHTMLOptions} returns a character vector listing all the options
-that are available for the HTML renderer in the \pkg{markdown} package. As a
-convenience, the package default options were chosen to render well-formed
-stand-alone HTML pages when using \code{\link{markdownToHTML}()}. The default
-options are \code{'smartypants'}, \code{'base64_images'},
-\code{'mathjax'}, and \code{'highlight_code'}.
+A list of all available options to control Markdown rendering. Options that
+are enabled by default are marked by a \code{+} prefix, and those disabled by
+default are marked by \code{-}.
 }
 \details{
-The HTML renderer provides several options described below. To turn these on
-globally in the \pkg{markdown} package, simply place some or all of them in a
-character vector and assign to the global option \code{markdown.HTML.options}.
-
 Description of all options:
 
 \describe{
 
-\item{\code{'toc'}}{ assigns an HTML id to each header of the form 'toc_%d'
-where '%d' is replaced with the position of the header within the document
-(starting at 0), and creates the table of contents.}
+\item{\code{base64_images}}{Embed local images in the HTML output with base64
+encoding.}
 
-\item{\code{'hardbreaks'}}{ adds an HTML br tag for every newline (excluding
-trailing) found within a paragraph.}
+\item{\code{fragment_only}}{Generate a full (HTML/LaTeX) document or only a
+fragment of the body.}
 
-\item{\code{'smartypants'}}{ translates plain ASCII punctuation characters
-into \emph{smart} typographic punctuation HTML entities. }
+\item{\code{highlight_code}}{Includes JavaScript libraries to syntax
+highlight code blocks.}
 
-\item{\code{'fragment_only'}}{ eliminates the inclusion of any HTML header or
-body tags, CSS, or Javascript components. }
+\item{\code{latex_math}}{Identify LaTeX math expressions in pairs of single
+or double dollar signs, and transform them so that they could be correctly
+rendered by MathJax (HTML output) or LaTeX.}
 
-\item{\code{'base64_images'}}{ Any local images linked with the
-\code{'<img>'} tag to the output HTML will automatically be converted to
-base64 and included along with output. }
+\item{\code{mathjax}}{Include MathJax library in HTML output.}
 
-\item{\code{'mathjax'}}{ includes appropriate Javascript libraries to render
-math markup.}
+\item{\code{smartypants}}{Translate certain ASCII strings into smart
+typographic characters (see \code{\link{smartypants}()}.}
 
-\item{\code{'highlight_code'}}{ includes appropriate Javascript libraries to
-highlight code chunks.}
+\item{\code{superscript}}{Translate strings between two carets into
+superscripts, e.g., \verb{text^foo^} to \verb{text<sup>foo</sup>}.}
+
+\item{\code{subscript}}{Translate strings between two tildes into subscripts,
+e.g., \verb{text~foo~} to \verb{text<sub>foo</sub>}.}
+
+\item{\code{toc}}{Generate a table of contents from section headers.}
 
 }
 
-See the EXAMPLES section to see the output of each option turned on or off.
+Options not described above can be found on the help pages of
+\pkg{commonmark}, e.g., the \code{hardbreaks} option is for the
+\code{hardbreaks} argument of
+\code{\link[commonmark:commonmark]{markdown_*}()} functions, and the
+\code{table} option is for the \code{table} extension in \pkg{commonmark}'s
+extensions (\code{commonmark::\link[commonmark]{list_extensions}()}).
+
+See the Examples section of \code{\link{renderMarkdown}()} to see the output
+of each option turned on or off.
 }
 \examples{
-# List all available extensions:
-markdownHTMLOptions()
+# List all available options
+markdown::markdownOptions()
 
-# To turn on all HTML options globally:
-options(markdown.HTML.options = markdownHTMLOptions())
+# Turn on/off some options globally for HTML output
+options(markdown.html.options = '+fragment_only+toc-smartypants')
 
-# To turn off all HTML options globally:
-options(markdown.HTML.options = NULL)
+library(markdown)
 
-# To turn on one option globally:
-options(markdown.HTML.options = 'smartypants')
-
-# To turn on package default HTML options globally:
-options(markdown.HTML.options = markdownHTMLOptions(default = TRUE))
-
-# HTML OPTIONS
-
-# The following examples are short, so we allways add the HTML option 'fragment_only'
-tOpt <- "fragment_only"
-
-# skip_html example
-mkd = '<style></style><img src="https://cran.rstudio.com/Rlogo.jpg"><a href="#">Hello</a>'
-cat(markdownToHTML(text = mkd, options = c(tOpt)))
-cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html")))
-
-# skip_style example
-cat(markdownToHTML(text = mkd, options = c(tOpt)))
-cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_style")))
-
-# skip_images example
-cat(markdownToHTML(text = mkd, options = c(tOpt)))
-cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_images")))
-
-# skip_links example
-cat(markdownToHTML(text = mkd, options = c(tOpt)))
-cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_links")))
-
-# safelink example
-cat(markdownToHTML(text = '[foo](https://www.google.com "baz")', options = c(tOpt)))
-cat(markdownToHTML(text = '[foo](https://www.google.com "baz")', options = c(tOpt, "safelink")))
+# generate HTML fragments only
+options(markdown.html.options = "fragment_only")
 
 # toc example
 mkd <- paste(c("# Header 1", "p1", "## Header 2", "p2"), collapse = "\n")
 
-cat(markdownToHTML(text = mkd, options = c(tOpt)))
-cat(markdownToHTML(text = mkd, options = c(tOpt, "toc")))
+cat(markdownToHTML(text = mkd))
+cat(markdownToHTML(text = mkd, options = "toc"))
 
 # hard_wrap example
-cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt)))
-cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt, "hard_wrap")))
-
-# use_xhtml example
-cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt, "hard_wrap")))
-cat(markdownToHTML(text = "foo\nbar\n", options = c(tOpt, "hard_wrap", "use_xhtml")))
-
-# escape example
-mkd = '<style></style><img src="https://cran.rstudio.com/Rlogo.jpg"><a href="#">Hello</a>'
-cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html")))
-# overrides all 'skip_*' options
-cat(markdownToHTML(text = mkd, options = c(tOpt, "skip_html", "escape")))
+cat(markdownToHTML(text = "foo\nbar\n"))
+cat(markdownToHTML(text = "foo\nbar\n", options = "hard_wrap"))
 
 # smartypants example
-cat(markdownToHTML(text = "1/2 (c)", options = c(tOpt)))
-cat(markdownToHTML(text = "1/2 (c)", options = c(tOpt, "smartypants")))
+cat(markdownToHTML(text = "1/2 (c)"))
+cat(markdownToHTML(text = "1/2 (c)", options = "smartypants"))
 
 cat(smartypants(text = "1/2 (c)\n"))
-}
-\seealso{
-\link{markdownToHTML}
+
+# tables example (need 4 spaces at beginning of line here)
+cat(markdownToHTML(text = "
+    First Header  | Second Header
+    ------------- | -------------
+    Content Cell  | Content Cell
+    Content Cell  | Content Cell
+"))
+
+# but not here
+cat(markdownToHTML(text = "
+First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell
+"), options = '-table')
+
+# autolink example
+cat(markdownToHTML(text = "https://www.r-project.org/"))
+cat(markdownToHTML(text = "https://www.r-project.org/", options = "-autolink"))
+
+# strikethrough example
+cat(markdownToHTML(text = "~~awesome~~"))
+cat(markdownToHTML(text = "~~awesome~~", options = "-strikethrough"))
+
+# superscript and subscript examples
+cat(markdownToHTML(text = "2^10^"))
+cat(markdownToHTML(text = "2^10^", options = "-superscript"))
+cat(markdownToHTML(text = "H~2~O"))
+cat(markdownToHTML(text = "H~2~O", options = "-subscript"))
+
+# skip_html tags
+mkd = '<style>a {}</style><script type="text/javascript">alert("No!");</script>[Hello](#)'
+cat(markdownToHTML(text = mkd))
+# TODO: wait for https://github.com/r-lib/commonmark/issues/15 to be fixed
+# cat(markdownToHTML(text = mkd, options = "tagfilter"))
+
+options(markdown.html.options = NULL)
 }

@@ -1,7 +1,7 @@
 library(markdown)
 f = tempfile()
 if (file.create(f)) {
-   markdownToHTML(f, fragment.only = TRUE)
+   markdownToHTML(f, options = 'fragment_only')
    markdownToHTML(f)
    unlink(f)
 }
