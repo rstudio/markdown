@@ -382,3 +382,17 @@ pkg_file = function(...) system.file(..., package = 'markdown', mustWork = TRUE)
 
 # TODO: remove this function when revdeps have been fixed
 .b64EncodeFile = function(...) xfun::base64_uri(...)
+
+#' Deprecated
+#'
+#' Please specify extensions via the \code{options} argument instead.
+#' @export
+#' @keywords internal
+markdownExtensions = function(...) {
+  # TODO: remove this function in future
+  warning(
+    "The function 'markdownExtensions()' has been deprecated in the markdown package. ",
+    "Please specify extensions via the `options` argument instead."
+  )
+  NULL
+}

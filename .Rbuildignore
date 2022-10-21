@@ -9,3 +9,4 @@ Makefile
 inst/RnwToMd.R
 ^\.travis\.yml$
 ^\.github$
+^revdep$
