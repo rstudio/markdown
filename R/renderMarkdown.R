@@ -22,8 +22,6 @@
 #'   \pkg{commonmark}.
 #' @param options A list of options to be passed to the renderer. See
 #'   \code{\link{markdownOptions}()} for all possible options.
-#' @param extensions A character vector of Markdown extensions See
-#'   \code{\link{markdownExtensions}()}.
 #' @return Invisible \code{NULL} when output is to a file, otherwise a character
 #'   vector.
 #' @seealso The spec of GitHub Flavored Markdown:
@@ -31,13 +29,12 @@
 #' @import utils
 #' @export
 #' @examples
-#' renderMarkdown(text = "Hello World!")
+#' renderMarkdown(text = "Hello _World_!")
 #' # a few corner cases
 #' renderMarkdown(text = character(0))
 #' renderMarkdown(text = '')
 renderMarkdown = function(
-  file, output = NULL, text = NULL, renderer = c('html', 'latex'),
-  options = NULL, extensions = markdownExtensions()
+  file, output = NULL, text = NULL, renderer = c('html', 'latex'), options = NULL
 ) {
   if (is.null(text)) text = xfun::read_utf8(file)
 
@@ -50,10 +47,10 @@ renderMarkdown = function(
     }
   )
 
-  if (is.null(options))
-    options = get_option(sprintf('markdown.%s.options', renderer))
-  options = normalizeOptions(options)
-  options$extensions = intersect(extensions, commonmark::list_extensions())
+  options = normalizeOptions(options, renderer)
+  options$extensions = intersect(
+    names(Filter(isTRUE, options)), commonmark::list_extensions()
+  )
 
   ret = do.call(render, c(
     list(text = text),
@@ -63,10 +60,10 @@ renderMarkdown = function(
 }
 
 # Get an option using a case-insensitive name
-get_option = function(name) {
+get_option = function(name, default = NULL) {
   x = options()
   i = match(tolower(name), tolower(names(x)))
-  x[[i]]
+  if (is.na(i)) default else x[[i]]
 }
 
 #' @importFrom utils URLdecode
@@ -123,83 +120,37 @@ get_option = function(name) {
 
 #' Render Markdown to HTML
 #'
-#' \code{markdownToHTML} transforms the Markdown text provided by the
-#' user in either the \code{file} or \code{text} variable. The HTML
-#' transformation is either written to the \code{output} file or returned to the
-#' user as a \code{character} vector.
-#'
-#' Three notable HTML options have been added to support collaborative
-#' reproducible research. They are as follows:
-#'
-#' \itemize{
-#'
-#' \item Latex math expressions enclosed by one of the block level syntaxes,
-#' $latex ... $ , $$ ... $$, or \[ ... \], or one of the inline syntaxes, $...$,
-#' or \( ... \), will be rendered in real-time by the MathJax Javascript
-#' library.
-#'
-#' \item \emph{R} code blocks enclosed between \verb{```r} and \verb{```} will
-#' automatically be syntax highlighted.
-#'
-#' \item Any local images linked using the <img> tag will be base64 encoded and
-#' included in the output HTML.
-#'
-#' }
-#'
-#' See the DETAILS section below and \code{\link{markdownHTMLOptions}} for more
-#' information.
-#'
-#' There are two basic modes to \code{markdownToHTML} determined by the value of
-#' the \code{fragment.only} argument:
-#'
-#' When \code{FALSE}, \code{markdownToHTML} creates well-formed stand-alone HTML
-#' pages complete with HTML header, title, and body tags. The default template
-#' used for this mode may be found here:
-#'
-#' \code{system.file('resources', 'markdown.html', package = 'markdown')}
-#'
-#' Also, \code{markdownToHTML} will automatically determine whether or not
-#' mathjax and R code highlighting are needed and will include the appropriate
-#' Javascript libraries in the output. Thus, there's no need to explicitly set
-#' the \code{'mathjax'} or \code{'highlight_code'} options (see
-#' \code{\link{markdownHTMLOptions}} for more details).
-#'
-#' When \code{fragment.only} is TRUE, nothing extra is added.
+#' Render Markdown to HTML with optional customization (e.g., custom stylesheets
+#' or template).
 #' @inheritParams renderMarkdown
 #' @param title The HTML title.
-#' @param stylesheet either valid CSS or a file containing CSS. will be included
-#'   in the output.
-#' @param header either valid HTML or a file containing HTML will be included in
-#'   the header of the output.
-#' @param template an HTML file used as template.
-#' @param fragment.only Whether or not to produce an HTML fragment without the
-#'   HTML header and body tags, CSS, and Javascript components.
-#' @param encoding ignored (always assumes the file is encoded in UTF-8).
+#' @param css Either a vector of CSS code or a file containing CSS to be
+#'   included in the output. The default value is
+#'   \code{getOption('markdown.html.css', markdown:::pkg_file('resources',
+#'   'markdown.css'))}, i.e., it can be set via the global option
+#'   \code{markdown.html.css}.
+#' @param header Either a vector of HTML code or a file containing HTML to be
+#'   included in the header of the output. The default value is
+#'   \code{getOption('markdown.html.header')}.
+#' @param template An HTML template file. The default value is
+#'   \code{getOption('markdown.html.template', markdown:::pkg_file('resources',
+#'   'markdown.html'))}.
+#' @param encoding Ignored (always assumes the file is encoded in UTF-8).
 #' @return Invisible \code{NULL} when output is to a file, and a character
 #'   vector otherwise.
-#' @seealso \code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
-#'   \code{\link{renderMarkdown}}.
+#' @seealso \code{\link{renderMarkdown}()}
 #' @export
 #' @examples
-#' (markdownToHTML(text = "Hello World!", fragment.only = TRUE))
-#' (markdownToHTML(file = NULL, text = "_text_ will override _file_",
-#'   fragment.only = TRUE))
+#' (markdownToHTML(text = 'Hello _World_!', options = '+fragment_only'))
 #' # write HTML to an output file
-#' markdownToHTML(text = "_Hello_, **World**!", output = tempfile())
+#' markdownToHTML(text = '_Hello_, **World**!', output = tempfile())
 markdownToHTML = function(
-  file, output = NULL, text = NULL, options = getOption('markdown.HTML.options'),
-  extensions = getOption('markdown.extensions'),
-  title = '',
-  stylesheet = getOption('markdown.HTML.stylesheet'),
-  header = getOption('markdown.HTML.header'),
-  template = getOption('markdown.HTML.template'),
-  fragment.only = FALSE,
-  encoding = 'UTF-8'
+  file, output = NULL, text = NULL, options = NULL, title = '', css = NULL,
+  header = NULL, template = NULL, encoding = 'UTF-8'
 ) {
-  options = normalizeOptions(options)
-  if (fragment.only) options[['fragment_only']] = TRUE
 
-  ret = renderMarkdown(file, NULL, text, options, extensions, renderer = 'html')
+  options = normalizeOptions(options, 'html')
+  ret = renderMarkdown(file, NULL, text, 'html', options)
 
   if (isTRUE(options[['base64_images']])) {
     filedir = if (!missing(file) && is.character(file) && file.exists(file)) {
@@ -209,17 +160,21 @@ markdownToHTML = function(
   }
 
   if (!isTRUE(options[['fragment_only']])) {
-    if (is.null(template))
-      template = pkg_file('resources', 'markdown.html')
+    if (is.null(template)) template = get_option(
+      'markdown.html.template', pkg_file('resources', 'markdown.html')
+    )
     html = xfun::file_string(template)
     html = sub('#!html_output#', if (length(ret)) ret else '', html, fixed = TRUE)
 
-    if (is.character(stylesheet)) {
-      html = sub('#!markdown_css#', option2char(stylesheet), html, fixed = TRUE)
+    if (is.null(css))
+      css = get_option('markdown.html.css', pkg_file('resources', 'markdown.css'))
+    if (is.character(css)) {
+      html = sub('#!markdown_css#', option2char(css), html, fixed = TRUE)
     } else {
-      warning('stylesheet must either be valid CSS or a file containing CSS!')
+      warning("The 'css' argument must be character!")
     }
 
+    header = get_option('markdown.html.header', header)
     html = sub('#!header#', option2char(header), html, fixed = TRUE)
 
     if (!is.character(title) || title == '') {
@@ -269,8 +224,6 @@ option2char = function(x) {
 #' @inheritParams renderMarkdown
 #' @return Invisible \code{NULL} when output is to a file, and a character
 #'   vector otherwise.
-#' @seealso \code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
-#'   \code{\link{markdownToHTML}}.
 #' @export
 #' @examples
 #' cat(smartypants(text = "1/2 (c)\n"))
@@ -310,171 +263,102 @@ fracs = local({
 
 pants = c(unlist(fracs), c('(c)' = '&copy;', '(r)' = '&reg;', '(tm)' = '&trade;'))
 
-# Markdown extensions.
-#
-# To turn on all extensions:
-#
-# options(markdown.extensions = markdownExtensions())
-#
-# To turn off all extensions:
-#
-# options(markdown.extensions = c())
-#
-
-
-#' Markdown extensions
-#'
-#' List all available Markdown extensions.
-#'
-#' They are all ON by default.
-#'
-#' The \pkg{Sundown} library (upon which \pkg{markdown} is built) has optional
-#' support for several extensions described below. To turn these on globally in
-#' the \pkg{markdown} package, simply place some or all of them in a character
-#' vector and assign to the global option \code{markdown.extensions} like so:
-#'
-#' \code{options(markdown.extensions = markdownExtensions())}
-#'
-#' To override the global option, pass the \code{extensions} as an argument to
-#' one of the render functions, e.g.:
-#'
-#' \code{markdownToHTML(..., extensions = c('no_intra_emphasis'))}
-#'
-#' Description of all extensions:
-#'
-#' \describe{
-#'
-#' \item{\code{'tables'}}{ create HTML tables (see Examples). }
-#'
-#' \item{\code{'autolink'}}{ create HTML links from urls and email addresses. }
-#'
-#' \item{\code{'strikethrough'}}{ create strikethroughs by surrounding text with
-#' ~~.  }
-#'
-#' \item{\code{'superscript'}}{ translate ^ and subsequent text into HTML
-#' superscript. }
-#'
-#' \item{\code{'latex_math'}}{ transforms all math equations into syntactically
-#' correct MathJax equations.  }
-#' }
-#'
-#' See the EXAMPLES section to see the output of each extension turned on or
-#' off.
-#' @return A \code{character} vector listing all available extensions.
-#' @seealso \link{markdownHTMLOptions}
-#' @export markdownExtensions
-#' @examples
-#' # List all available extensions:
-#' markdownExtensions()
-#'
-#' # To turn on all Markdown extensions globally:
-#' options(markdown.extensions = markdownExtensions())
-#'
-#' # To turn off all Markdown extensions globally:
-#' options(markdown.extensions = NULL)
-#'
-#' @example inst/examples/markdownExtensions.R
-markdownExtensions = function(default = TRUE) {
-  setdiff(
-    c(commonmark::list_extensions(), 'superscript', 'subscript', 'latex_math'),
-    if (default) 'tagfiler'
-  )
-}
 
 #' Markdown rendering options
 #'
-#' \code{markdownHTMLOptions} returns a character vector listing all the options
-#' that are available for the HTML renderer in the \pkg{markdown} package. As a
-#' convenience, the package default options were chosen to render well-formed
-#' stand-alone HTML pages when using \code{\link{markdownToHTML}()}. The default
-#' options are \code{'smartypants'}, \code{'base64_images'},
-#' \code{'mathjax'}, and \code{'highlight_code'}.
-#'
-#' The HTML renderer provides several options described below. To turn these on
-#' globally in the \pkg{markdown} package, simply place some or all of them in a
-#' character vector and assign to the global option \code{markdown.HTML.options}.
+#' A list of all available options to control Markdown rendering. Options that
+#' are enabled by default are marked by a \code{+} prefix, and those disabled by
+#' default are marked by \code{-}.
 #'
 #' Description of all options:
 #'
 #' \describe{
 #'
-#' \item{\code{'toc'}}{ assigns an HTML id to each header of the form 'toc_%d'
-#' where '%d' is replaced with the position of the header within the document
-#' (starting at 0), and creates the table of contents.}
+#' \item{\code{base64_images}}{Embed local images in the HTML output with base64
+#' encoding.}
 #'
-#' \item{\code{'hardbreaks'}}{ adds an HTML br tag for every newline (excluding
-#' trailing) found within a paragraph.}
+#' \item{\code{fragment_only}}{Generate a full (HTML/LaTeX) document or only a
+#' fragment of the body.}
 #'
-#' \item{\code{'smartypants'}}{ translates plain ASCII punctuation characters
-#' into \emph{smart} typographic punctuation HTML entities. }
+#' \item{\code{highlight_code}}{Includes JavaScript libraries to syntax
+#' highlight code blocks.}
 #'
-#' \item{\code{'fragment_only'}}{ eliminates the inclusion of any HTML header or
-#' body tags, CSS, or Javascript components. }
+#' \item{\code{latex_math}}{Identify LaTeX math expressions in pairs of single
+#' or double dollar signs, and transform them so that they could be correctly
+#' rendered by MathJax (HTML output) or LaTeX.}
 #'
-#' \item{\code{'base64_images'}}{ Any local images linked with the
-#' \code{'<img>'} tag to the output HTML will automatically be converted to
-#' base64 and included along with output. }
+#' \item{\code{mathjax}}{Include MathJax library in HTML output.}
 #'
-#' \item{\code{'mathjax'}}{ includes appropriate Javascript libraries to render
-#' math markup.}
+#' \item{\code{smartypants}}{Translate certain ASCII strings into smart
+#' typographic characters (see \code{\link{smartypants}()}.}
 #'
-#' \item{\code{'highlight_code'}}{ includes appropriate Javascript libraries to
-#' highlight code chunks.}
+#' \item{\code{superscript}}{Translate strings between two carets into
+#' superscripts, e.g., \verb{text^foo^} to \verb{text<sup>foo</sup>}.}
+#'
+#' \item{\code{subscript}}{Translate strings between two tildes into subscripts,
+#' e.g., \verb{text~foo~} to \verb{text<sub>foo</sub>}.}
+#'
+#' \item{\code{toc}}{Generate a table of contents from section headers.}
 #'
 #' }
 #'
-#' See the EXAMPLES section to see the output of each option turned on or off.
-#' @param default If \code{TRUE}, only the default options are returned.
-#'   Otherwise all options are returned.
-#' @return A \code{character} vector listing either all available options or
-#'   just the default options.
-#' @seealso \link{markdownToHTML}
+#' Options not described above can be found on the help pages of
+#' \pkg{commonmark}, e.g., the \code{hardbreaks} option is for the
+#' \code{hardbreaks} argument of
+#' \code{\link[commonmark:commonmark]{markdown_*}()} functions, and the
+#' \code{table} option is for the \code{table} extension in \pkg{commonmark}'s
+#' extensions (\code{commonmark::\link[commonmark]{list_extensions}()}).
+#'
+#' See the Examples section of \code{\link{renderMarkdown}()} to see the output
+#' of each option turned on or off.
+#' @return A character vector of all available options.
 #' @export
 #' @examples
-#' # List all available extensions:
-#' markdownHTMLOptions()
+#' # List all available options
+#' markdown::markdownOptions()
 #'
-#' # To turn on all HTML options globally:
-#' options(markdown.HTML.options = markdownHTMLOptions())
-#'
-#' # To turn off all HTML options globally:
-#' options(markdown.HTML.options = NULL)
-#'
-#' # To turn on one option globally:
-#' options(markdown.HTML.options = 'smartypants')
-#'
-#' # To turn on package default HTML options globally:
-#' options(markdown.HTML.options = markdownHTMLOptions(default = TRUE))
+#' # Turn on/off some options globally for HTML output
+#' options(markdown.html.options = '+fragment_only+toc-smartypants')
 #'
 #' @example inst/examples/render-options.R
-markdownOptions = function(default = FALSE) {
-  sort(c(
+markdownOptions = function() {
+  # options enabled by default
+  x1 = c(
     'smart', 'smartypants', 'base64_images', 'mathjax', 'highlight_code',
-    if (!default) c('toc', 'fragment_only', 'hardbreaks')
-  ))
+    'superscript', 'subscript', 'latex_math',
+    setdiff(commonmark::list_extensions(), 'tagfilter')
+  )
+  # options disabled by default
+  x2 = c('toc', 'fragment_only', 'hardbreaks', 'tagfilter')
+  sort(c(paste0('+', x1), paste0('-', x2)))
 }
 
-#' @rdname markdownOptions
-#' @export
-markdownHTMLOptions = markdownOptions
-
-#' @import stats
-normalizeOptions = function(x) {
-  if (is.character(x)) x = as.list(setNames(rep(TRUE, length(x)), x))
+normalizeOptions = function(x, format = 'html') {
+  g = get_option(sprintf('markdown.%s.options', format))
+  x = option2list(x)
   n = names(x)
   n[n == 'hard_wrap'] = 'hardbreaks'
+  n[n == 'tables'] = 'table'
   names(x) = n
-  as.list(x)
+  # default options
+  d = option2list(markdownOptions())
+  g = option2list(g)
+  d[names(g)] = g  # merge global options() into default options
+  d[n] = x  # then merge user-provided options
+  d
+}
+
+#' @import stats
+namedBool = function(x, val = TRUE) as.list(setNames(rep(val, length(x)), x))
+
+# turn '+a-b c' to list(a = TRUE, b = FALSE, c = TRUE)
+option2list = function(x) {
+  if (!is.character(x)) return(as.list(x))
+  x = unlist(strsplit(x, '\\b(?=[+-])', perl = TRUE))
+  x = unlist(strsplit(x, '\\s+'))
+  x = setdiff(x, '')
+  i = grepl('^-', x)
+  c(namedBool(sub('^[-]', '', x[i]), FALSE), namedBool(sub('^[+]', '', x[!i])))
 }
 
 pkg_file = function(...) system.file(..., package = 'markdown', mustWork = TRUE)
-
-.onLoad = function(libname, pkgname) {
-  if (is.null(getOption('markdown.HTML.options')))
-    options(markdown.HTML.options = markdownOptions(default = TRUE))
-
-  if (is.null(getOption('markdown.HTML.stylesheet'))) {
-    sheet = pkg_file('resources', 'markdown.css')
-    options(markdown.HTML.stylesheet = sheet)
-  }
-}

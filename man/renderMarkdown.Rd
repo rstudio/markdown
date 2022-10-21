@@ -9,8 +9,7 @@ renderMarkdown(
   output = NULL,
   text = NULL,
   renderer = c("html", "latex"),
-  options = NULL,
-  extensions = markdownExtensions()
+  options = NULL
 )
 }
 \arguments{
@@ -30,9 +29,6 @@ from \code{file}.}
 
 \item{options}{A list of options to be passed to the renderer. See
 \code{\link{markdownOptions}()} for all possible options.}
-
-\item{extensions}{A character vector of Markdown extensions See
-\code{\link{markdownExtensions}()}.}
 }
 \value{
 Invisible \code{NULL} when output is to a file, otherwise a character
@@ -42,7 +38,7 @@ Invisible \code{NULL} when output is to a file, otherwise a character
 Render Markdown to an output format via the \pkg{commonmark} package.
 }
 \examples{
-renderMarkdown(text = "Hello World!")
+renderMarkdown(text = "Hello _World_!")
 # a few corner cases
 renderMarkdown(text = character(0))
 renderMarkdown(text = "")

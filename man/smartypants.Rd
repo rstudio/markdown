@@ -28,7 +28,3 @@ trademark), \verb{(tm)} (trademark), and fractions \verb{n/m} into
 \examples{
 cat(smartypants(text = "1/2 (c)\n"))
 }
-\seealso{
-\code{\link{markdownExtensions}}, \code{\link{markdownHTMLOptions}},
-  \code{\link{markdownToHTML}}.
-}
