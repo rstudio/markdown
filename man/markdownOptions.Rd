@@ -87,10 +87,10 @@ cat(smartypants(text = "1/2 (c)\n"))
 
 # tables example (need 4 spaces at beginning of line here)
 cat(markdownToHTML(text = "
-    First Header  | Second Header
-    ------------- | -------------
-    Content Cell  | Content Cell
-    Content Cell  | Content Cell
+First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell
 "))
 
 # but not here
@@ -99,7 +99,7 @@ First Header  | Second Header
 ------------- | -------------
 Content Cell  | Content Cell
 Content Cell  | Content Cell
-"), options = '-table')
+", options = '-table'))
 
 # autolink example
 cat(markdownToHTML(text = "https://www.r-project.org/"))
@@ -116,7 +116,7 @@ cat(markdownToHTML(text = "H~2~O"))
 cat(markdownToHTML(text = "H~2~O", options = "-subscript"))
 
 # skip_html tags
-mkd = '<style>a {}</style><script type="text/javascript">alert("No!");</script>[Hello](#)'
+mkd = '<style>a {}</style><script type="text/javascript">console.log("No!");</script>\n[Hello](#)'
 cat(markdownToHTML(text = mkd))
 # TODO: wait for https://github.com/r-lib/commonmark/issues/15 to be fixed
 # cat(markdownToHTML(text = mkd, options = "tagfilter"))
