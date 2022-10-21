@@ -56,6 +56,11 @@ renderMarkdown = function(
     list(text = text),
     options[intersect(names(formals(render)), names(options))]
   ))
+
+  if (renderer == 'html') {
+    ret = tweak_html(ret, text)
+  }
+
   if (is.character(output)) xfun::write_utf8(ret, output) else ret
 }
 
@@ -168,10 +173,6 @@ markdownToHTML = function(
       "Please use the argument `options = 'fragment_only'` instead."
     )
   }
-
-  # TODO: remove this hack (generate two \n before <p> for these packages)
-  if (xfun::check_old_package('plumbertableau', '0.1.0') || xfun::check_old_package('tutorial', '0.4.3'))
-    ret = gsub('>\n<p>', '>\n\n<p>', ret)
 
   if (isTRUE(options[['base64_images']])) {
     filedir = if (!missing(file) && is.character(file) && file.exists(file)) {
@@ -413,9 +414,23 @@ markdownExtensions = function(...) {
   }
 }
 
-# TODO: remove this hack eventually
+# TODO: remove these hacks eventually
 # whether we need to "cheat" in certain cases (to avoid breaking packages on CRAN)
 cruel = function() {
   xfun::is_CRAN_incoming() || any(tolower(Sys.getenv(c('NOT_CRAN', 'CI'))) == 'true')
 }
 warn2 = function(...) if (cruel()) warning(...)
+tweak_html = function(x, text) {
+  if (xfun::check_old_package('plumbertableau', '0.1.0') ||
+      xfun::check_old_package('tutorial', '0.4.3') ||
+      xfun::check_old_package('polmineR', '0.8.7')) {
+    # remove extra blockquote
+    x = gsub('</blockquote>\n<blockquote>', '', x)
+    # double \n
+    x = gsub('>\n<(p|h3|blockquote)>', '>\n\n<\\1>', x)
+    # preserve trailing spaces
+    if (length(sp <- xfun::grep_sub('.*?( +)\n*?$', '\\1', tail(text, 1))))
+      x = gsub('></p>(\n+)?$', paste0('>', sp, '</p>\\1'), x)
+  }
+  x
+}
