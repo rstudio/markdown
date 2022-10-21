@@ -13,7 +13,8 @@ markdownToHTML(
   css = NULL,
   header = NULL,
   template = NULL,
-  encoding = "UTF-8"
+  encoding = "UTF-8",
+  ...
 )
 }
 \arguments{
@@ -46,6 +47,9 @@ included in the header of the output. The default value is
 'markdown.html'))}.}
 
 \item{encoding}{Ignored (always assumes the file is encoded in UTF-8).}
+
+\item{...}{Unused but for backward-compatibility with previous versions of
+\pkg{markdown}.}
 }
 \value{
 Invisible \code{NULL} when output is to a file, and a character
