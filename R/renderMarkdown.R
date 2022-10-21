@@ -169,6 +169,10 @@ markdownToHTML = function(
     )
   }
 
+  # TODO: remove this hack (generate two \n before <p> for these packages)
+  if (xfun::check_old_package('plumbertableau', '0.1.0') || xfun::check_old_package('tutorial', '0.4.3'))
+    ret = gsub('>\n<p>', '>\n\n<p>', ret)
+
   if (isTRUE(options[['base64_images']])) {
     filedir = if (!missing(file) && is.character(file) && file.exists(file)) {
       dirname(file)
@@ -347,6 +351,11 @@ markdownOptions = function() {
   )
   # options disabled by default
   x2 = c('toc', 'fragment_only', 'hardbreaks', 'tagfilter')
+  # TODO: remove this hack after https://github.com/kiernann/gluedown/pull/29
+  if (xfun::check_old_package('gluedown', '1.0.4')) {
+    x1 = setdiff(x1, 'tasklist')
+    x2 = c(x2, 'tasklist')
+  }
   sort(c(paste0('+', x1), paste0('-', x2)))
 }
 
