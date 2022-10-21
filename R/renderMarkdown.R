@@ -136,6 +136,8 @@ get_option = function(name, default = NULL) {
 #'   \code{getOption('markdown.html.template', markdown:::pkg_file('resources',
 #'   'markdown.html'))}.
 #' @param encoding Ignored (always assumes the file is encoded in UTF-8).
+#' @param ... Unused but for backward-compatibility with previous versions of
+#'   \pkg{markdown}.
 #' @return Invisible \code{NULL} when output is to a file, and a character
 #'   vector otherwise.
 #' @seealso \code{\link{renderMarkdown}()}
@@ -146,11 +148,19 @@ get_option = function(name, default = NULL) {
 #' markdownToHTML(text = '_Hello_, **World**!', output = tempfile())
 markdownToHTML = function(
   file, output = NULL, text = NULL, options = NULL, title = '', css = NULL,
-  header = NULL, template = NULL, encoding = 'UTF-8'
+  header = NULL, template = NULL, encoding = 'UTF-8', ...
 ) {
 
   options = normalizeOptions(options, 'html')
   ret = renderMarkdown(file, NULL, text, 'html', options)
+  extra = list(...)
+  if (is.null(css)) {
+    # TODO: deprecate the 'stylesheet' argument in future
+    css = extra[['stylesheet']]
+    if (is.character(css)) warning(
+      "The 'stylesheet' argument has been renamed to 'css' in markdown::markdownToHTML()"
+    )
+  }
 
   if (isTRUE(options[['base64_images']])) {
     filedir = if (!missing(file) && is.character(file) && file.exists(file)) {
