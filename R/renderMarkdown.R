@@ -428,6 +428,8 @@ tweak_html = function(x, text) {
     x = gsub('</blockquote>\n<blockquote>', '', x)
     # double \n
     x = gsub('>\n<(p|h3|blockquote)>', '>\n\n<\\1>', x)
+    # tweak language class names
+    x = gsub('(<code class=")language-([^"]+)(">)', '\\1\\2\\3', x)
     # preserve trailing spaces
     if (length(sp <- xfun::grep_sub('.*?( +)\n*?$', '\\1', tail(text, 1))))
       x = gsub('></p>(\n+)?$', paste0('>', sp, '</p>\\1'), x)
