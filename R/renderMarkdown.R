@@ -161,6 +161,13 @@ markdownToHTML = function(
       "The 'stylesheet' argument has been renamed to 'css' in markdown::markdownToHTML()"
     )
   }
+  if (is.logical(extra[['fragment.only']])) {
+    options[['fragment_only']] = extra[['fragment.only']]
+    warning(
+      "The 'fragment.only' argument has been deprecated. ",
+      "Please use the argument `options = 'fragment_only'` instead."
+    )
+  }
 
   if (isTRUE(options[['base64_images']])) {
     filedir = if (!missing(file) && is.character(file) && file.exists(file)) {
