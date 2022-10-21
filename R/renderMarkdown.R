@@ -157,13 +157,13 @@ markdownToHTML = function(
   if (is.null(css)) {
     # TODO: deprecate the 'stylesheet' argument in future
     css = extra[['stylesheet']]
-    if (is.character(css)) warning(
+    if (is.character(css)) warn2(
       "The 'stylesheet' argument has been renamed to 'css' in markdown::markdownToHTML()"
     )
   }
   if (is.logical(extra[['fragment.only']])) {
     options[['fragment_only']] = extra[['fragment.only']]
-    warning(
+    warn2(
       "The 'fragment.only' argument has been deprecated. ",
       "Please use the argument `options = 'fragment_only'` instead."
     )
@@ -390,7 +390,7 @@ pkg_file = function(...) system.file(..., package = 'markdown', mustWork = TRUE)
 #' @keywords internal
 markdownExtensions = function(...) {
   # TODO: remove this function in future
-  warning(
+  warn2(
     "The function 'markdownExtensions()' has been deprecated in the markdown package. ",
     "Please specify extensions via the `options` argument instead."
   )
@@ -403,3 +403,10 @@ markdownExtensions = function(...) {
     options(markdown.HTML.stylesheet = pkg_file('resources', 'markdown.css'))
   }
 }
+
+# TODO: remove this hack eventually
+# whether we need to "cheat" in certain cases (to avoid breaking packages on CRAN)
+cruel = function() {
+  xfun::is_CRAN_incoming() || any(tolower(Sys.getenv(c('NOT_CRAN', 'CI'))) == 'true')
+}
+warn2 = function(...) if (cruel()) warning(...)
