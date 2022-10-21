@@ -54,13 +54,6 @@ bar</p>
 
 > cat(smartypants(text = "1/2 (c)\n"))
 &frac12; &copy; 
-> cat(markdownToHTML(text = "\n    First Header  | Second Header\n    ------------- | -------------\n    Content Cell  | Content Cell\n    Content Cel ..." ... [TRUNCATED] 
-<pre><code>First Header  | Second Header
-------------- | -------------
-Content Cell  | Content Cell
-Content Cell  | Content Cell
-</code></pre>
-
 > cat(markdownToHTML(text = "\nFirst Header  | Second Header\n------------- | -------------\nContent Cell  | Content Cell\nContent Cell  | Content Cel ..." ... [TRUNCATED] 
 <table>
 <thead>
@@ -80,7 +73,13 @@ Content Cell  | Content Cell
 </tr>
 </tbody>
 </table>
- -table
+
+> cat(markdownToHTML(text = "\nFirst Header  | Second Header\n------------- | -------------\nContent Cell  | Content Cell\nContent Cell  | Content Cel ..." ... [TRUNCATED] 
+<p>First Header  | Second Header
+———–– | ———––
+Content Cell  | Content Cell
+Content Cell  | Content Cell</p>
+
 > cat(markdownToHTML(text = "https://www.r-project.org/"))
 <p><a href="https://www.r-project.org/">https://www.r-project.org/</a></p>
 
@@ -106,10 +105,11 @@ Content Cell  | Content Cell
 > cat(markdownToHTML(text = "H~2~O", options = "-subscript"))
 <p>H<del>2</del>O</p>
 
-> mkd = "<style>a {}</style><script type=\"text/javascript\">alert(\"No!\");</script>[Hello](#)"
+> mkd = "<style>a {}</style><script type=\"text/javascript\">console.log(\"No!\");</script>\n[Hello](#)"
 
 > cat(markdownToHTML(text = mkd))
-<style>a {}</style><script type="text/javascript">alert("No!");</script>[Hello](#)
+<style>a {}</style><script type="text/javascript">console.log("No!");</script>
+<p><a href="#">Hello</a></p>
 
 > options(markdown.html.options = NULL)
 > 
