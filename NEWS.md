@@ -2,6 +2,8 @@
 
 - Replaced the underlying Markdown rendering engine from the C library **sundown** (which has been deprecated for a decade) to the R package **commonmark**.
 
+- Renamed the argument `stylesheet` to `css` in `markdownToHTML()`, and removed the argument `fragment.only` (please use `markdownToHTML(options = 'fragment_only')` instead.
+
 - Removed functions `rendererExists()`, `rendererOutputType()`, and `registeredRenderer()`. They were primarily for internal use.
 
 - Deprecated the function `markdownExtensions()`. All extensions should be specified via the `options` argument of functions like `renderMarkdown()`, e.g., `renderMarkdown(options = '+table+tasklist')`.
