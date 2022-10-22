@@ -274,8 +274,8 @@ fracs = local({
       if (j > 1 && (i %% j == 0 || any(i == c(7, 9, 10)))) next
       if (any((i %% k == 0) & (j %% k == 0))) next
       x = paste0(j, '/', i)
-      y = if (j > 1 || i < 9) sprintf('&frac%d%d;', j, i) else {
-        if (i == 9) '&#8529;' else if (i == 10) '&#8530;'
+      y = if (j > 1 || !i %in% c(7, 9, 10)) sprintf('&frac%d%d;', j, i) else {
+        list(`7` = '&#8528;', `9` = '&#8529;', `10` = '&#8530;')[[as.character(i)]]
       }
       z[[x]] = y
     }
