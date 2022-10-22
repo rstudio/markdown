@@ -149,7 +149,7 @@ get_option = function(name, default = NULL) {
 #' @seealso \code{\link{renderMarkdown}()}
 #' @export
 #' @examples
-#' (markdownToHTML(text = 'Hello _World_!', options = '+fragment_only'))
+#' markdownToHTML(text = 'Hello _World_!', options = '+fragment_only')
 #' # write HTML to an output file
 #' markdownToHTML(text = '_Hello_, **World**!', output = tempfile())
 markdownToHTML = function(
@@ -228,9 +228,7 @@ markdownToHTML = function(
     ret = html
   }
 
-  ret = if (is.character(output)) xfun::write_utf8(ret, output) else enc2utf8(ret)
-
-  invisible(ret)
+  if (is.character(output)) xfun::write_utf8(ret, output) else enc2utf8(ret)
 }
 
 # from an option to an appropriate character string of CSS/header/...
