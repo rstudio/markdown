@@ -310,6 +310,9 @@ pants = c(unlist(fracs), c('(c)' = '&copy;', '(r)' = '&reg;', '(tm)' = '&trade;'
 #'
 #' \item{\code{mathjax}}{Include MathJax library in HTML output.}
 #'
+#' \item{\code{mathjax_embed}}{Whether to download and embed the MathJax library
+#' in HTML output.}
+#'
 #' \item{\code{smartypants}}{Translate certain ASCII strings into smart
 #' typographic characters (see \code{\link{smartypants}()}.}
 #'
@@ -350,7 +353,7 @@ markdownOptions = function() {
     setdiff(commonmark::list_extensions(), 'tagfilter')
   )
   # options disabled by default
-  x2 = c('toc', 'fragment_only', 'hardbreaks', 'tagfilter')
+  x2 = c('toc', 'fragment_only', 'hardbreaks', 'tagfilter', 'mathjax_embed')
   # TODO: remove this hack after https://github.com/kiernann/gluedown/pull/29
   if (xfun::check_old_package('gluedown', '1.0.4')) {
     x1 = setdiff(x1, c('tasklist', 'smart'))
