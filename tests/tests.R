@@ -1,3 +1,5 @@
-source(markdown:::pkg_file('examples', 'render-options.R'), echo = TRUE)
-
-rm(mkd)
+local({
+  if (!file.exists(f <- '../inst/examples/render-options.R'))
+    f = markdown:::pkg_file('examples', 'render-options.R')
+  source(f, local = TRUE, echo = TRUE)
+})

@@ -52,6 +52,7 @@ renderMarkdown = function(
     names(Filter(isTRUE, options)), commonmark::list_extensions()
   )
 
+  if (isTRUE(options[['smartypants']])) text = smartypants(text = text)
   ret = do.call(render, c(
     list(text = text),
     options[intersect(names(formals(render)), names(options))]

@@ -15,7 +15,12 @@ cat(markdownToHTML(text = "foo\nbar\n", options = "hard_wrap"))
 
 # smartypants example
 cat(markdownToHTML(text = "1/2 (c)"))
-cat(markdownToHTML(text = "1/2 (c)", options = "smartypants"))
+cat(markdownToHTML(text = "1/2 (c)", options = "-smartypants"))
+
+mkd <- names(markdown:::pants)
+mkd <- paste(c(mkd, paste0('`', mkd, '`')), collapse = ' ')
+cat(markdownToHTML(text = mkd))
+cat(markdownToHTML(text = mkd, options = "-smartypants"))
 
 cat(smartypants(text = "1/2 (c)\n"))
 

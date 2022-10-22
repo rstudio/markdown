@@ -17,7 +17,11 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> source(markdown:::pkg_file('examples', 'render-options.R'), echo = TRUE)
+> local({
++   if (!file.exists(f <- '../inst/examples/render-options.R'))
++     f = markdown:::pkg_file('examples', 'render-options.R')
++   source(f, local = TRUE, echo = TRUE)
++ })
 
 > library(markdown)
 
@@ -47,10 +51,20 @@ bar</p>
 bar</p>
 
 > cat(markdownToHTML(text = "1/2 (c)"))
+<p>½ ©</p>
+
+> cat(markdownToHTML(text = "1/2 (c)", options = "-smartypants"))
 <p>1/2 (c)</p>
 
-> cat(markdownToHTML(text = "1/2 (c)", options = "smartypants"))
-<p>1/2 (c)</p>
+> mkd <- names(markdown:::pants)
+
+> mkd <- paste(c(mkd, paste0("`", mkd, "`")), collapse = " ")
+
+> cat(markdownToHTML(text = mkd))
+<p>½ ⅓ ⅔ ¼ ¾ ⅕ ⅖ ⅗ ⅘ ⅙ ⅚ ⅐ ⅛ ⅜ ⅝ ⅞ ⅑ ⅒ © ® ™ <code>1/2</code> <code>1/3</code> <code>2/3</code> <code>1/4</code> <code>3/4</code> <code>1/5</code> <code>2/5</code> <code>3/5</code> <code>4/5</code> <code>1/6</code> <code>5/6</code> <code>1/7</code> <code>1/8</code> <code>3/8</code> <code>5/8</code> <code>7/8</code> <code>1/9</code> <code>1/10</code> <code>(c)</code> <code>(r)</code> <code>(tm)</code></p>
+
+> cat(markdownToHTML(text = mkd, options = "-smartypants"))
+<p>1/2 1/3 2/3 1/4 3/4 1/5 2/5 3/5 4/5 1/6 5/6 1/7 1/8 3/8 5/8 7/8 1/9 1/10 (c) (r) (tm) <code>1/2</code> <code>1/3</code> <code>2/3</code> <code>1/4</code> <code>3/4</code> <code>1/5</code> <code>2/5</code> <code>3/5</code> <code>4/5</code> <code>1/6</code> <code>5/6</code> <code>1/7</code> <code>1/8</code> <code>3/8</code> <code>5/8</code> <code>7/8</code> <code>1/9</code> <code>1/10</code> <code>(c)</code> <code>(r)</code> <code>(tm)</code></p>
 
 > cat(smartypants(text = "1/2 (c)\n"))
 &frac12; &copy; 
@@ -112,6 +126,4 @@ Content Cell  | Content Cell</p>
 <p><a href="#">Hello</a></p>
 
 > options(markdown.html.options = NULL)
-> 
-> rm(mkd)
 > 
