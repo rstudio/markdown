@@ -423,6 +423,7 @@ warn2 = function(...) if (cruel()) warning(...)
 tweak_html = function(x, text) {
   if (xfun::check_old_package('plumbertableau', '0.1.0') ||
       xfun::check_old_package('tutorial', '0.4.3') ||
+      xfun::check_old_package('gluedown', '1.0.4') ||
       xfun::check_old_package('polmineR', '0.8.7')) {
     # remove extra blockquote
     x = gsub('</blockquote>\n<blockquote>', '', x)
