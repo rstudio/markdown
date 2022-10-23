@@ -4,21 +4,13 @@
 \alias{smartypants}
 \title{Convert some ASCII strings to HTML entities}
 \usage{
-smartypants(file, output = NULL, text = xfun::read_utf8(file))
+smartypants(text)
 }
 \arguments{
-\item{file}{Path to an input file. If not provided, it is presumed that the
-\code{text} argument will be used instead.}
-
-\item{output}{Output file path. If not character, the results will be
-returned as a character vector.}
-
-\item{text}{A character vector of the Markdown text. By default, it is read
-from \code{file}.}
+\item{text}{A character vector of the Markdown text.}
 }
 \value{
-Invisible \code{NULL} when output is to a file, and a character
-  vector otherwise.
+A character vector of the transformed text.
 }
 \description{
 Transform ASCII strings \verb{(c)} (copyright), \verb{(r)} (registered
@@ -26,5 +18,5 @@ trademark), \verb{(tm)} (trademark), and fractions \verb{n/m} into
 \emph{smart} typographic HTML entities.
 }
 \examples{
-cat(smartypants(text = "1/2 (c)\n"))
+cat(smartypants("1/2 (c)\n"))
 }
