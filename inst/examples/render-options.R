@@ -22,7 +22,7 @@ mkd <- paste(c(mkd, paste0('`', mkd, '`')), collapse = ' ')
 cat(markdownToHTML(text = mkd))
 cat(markdownToHTML(text = mkd, options = "-smartypants"))
 
-cat(smartypants(text = "1/2 (c)\n"))
+cat(smartypants("1/2 (c)\n"))
 
 # tables example (need 4 spaces at beginning of line here)
 cat(markdownToHTML(text = "

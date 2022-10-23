@@ -52,7 +52,7 @@ renderMarkdown = function(
     names(Filter(isTRUE, options)), commonmark::list_extensions()
   )
 
-  if (isTRUE(options[['smartypants']])) text = smartypants(text = text)
+  if (isTRUE(options[['smartypants']])) text = smartypants(text)
   ret = do.call(render, c(
     list(text = text),
     options[intersect(names(formals(render)), names(options))]
@@ -242,13 +242,12 @@ option2char = function(x) {
 #' Transform ASCII strings \verb{(c)} (copyright), \verb{(r)} (registered
 #' trademark), \verb{(tm)} (trademark), and fractions \verb{n/m} into
 #' \emph{smart} typographic HTML entities.
-#' @inheritParams renderMarkdown
-#' @return Invisible \code{NULL} when output is to a file, and a character
-#'   vector otherwise.
+#' @param text A character vector of the Markdown text.
+#' @return A character vector of the transformed text.
 #' @export
 #' @examples
-#' cat(smartypants(text = "1/2 (c)\n"))
-smartypants = function(file, output = NULL, text = xfun::read_utf8(file)) {
+#' cat(smartypants("1/2 (c)\n"))
+smartypants = function(text) {
   text = xfun::split_lines(text)
   i = xfun::prose_index(text)
   x = text[i]
@@ -261,7 +260,7 @@ smartypants = function(file, output = NULL, text = xfun::read_utf8(file)) {
     y
   })
   text[i] = x
-  if (is.character(output)) xfun::write_utf8(text, output) else text
+  text
 }
 
 # Represent some fractions with HTML entities
