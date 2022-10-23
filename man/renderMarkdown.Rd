@@ -8,7 +8,7 @@ renderMarkdown(
   file,
   output = NULL,
   text = NULL,
-  renderer = c("html", "latex"),
+  format = c("html", "latex"),
   options = NULL
 )
 }
@@ -22,9 +22,9 @@ returned as a character vector.}
 \item{text}{A character vector of the Markdown text. By default, it is read
 from \code{file}.}
 
-\item{renderer}{An output format supported by \pkg{commonmark}, e.g.,
+\item{format}{An output format supported by \pkg{commonmark}, e.g.,
 \code{'html'}, \code{'man'}, and \code{'text'}, etc. See the
-\code{\link[commonmark:commonmark]{markdown_*}} functions in
+\code{\link[commonmark:commonmark]{markdown_*}} renderers in
 \pkg{commonmark}.}
 
 \item{options}{A list of options to be passed to the renderer. See

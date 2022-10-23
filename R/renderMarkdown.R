@@ -16,9 +16,9 @@
 #'   returned as a character vector.
 #' @param text A character vector of the Markdown text. By default, it is read
 #'   from \code{file}.
-#' @param renderer An output format supported by \pkg{commonmark}, e.g.,
+#' @param format An output format supported by \pkg{commonmark}, e.g.,
 #'   \code{'html'}, \code{'man'}, and \code{'text'}, etc. See the
-#'   \code{\link[commonmark:commonmark]{markdown_*}} functions in
+#'   \code{\link[commonmark:commonmark]{markdown_*}} renderers in
 #'   \pkg{commonmark}.
 #' @param options A list of options to be passed to the renderer. See
 #'   \code{\link{markdownOptions}()} for all possible options.
@@ -34,20 +34,20 @@
 #' renderMarkdown(text = character(0))
 #' renderMarkdown(text = '')
 renderMarkdown = function(
-  file, output = NULL, text = NULL, renderer = c('html', 'latex'), options = NULL
+  file, output = NULL, text = NULL, format = c('html', 'latex'), options = NULL
 ) {
   if (is.null(text)) text = xfun::read_utf8(file)
 
-  renderer = renderer[1]
+  format = format[1]
 
   render = tryCatch(
-    getFromNamespace(paste0('markdown_', tolower(renderer)), 'commonmark'),
+    getFromNamespace(paste0('markdown_', tolower(format)), 'commonmark'),
     error = function(e) {
-      stop("Renderer '", renderer, "' is not available in commonmark.")
+      stop("Output format '", format, "' is not supported in commonmark.")
     }
   )
 
-  options = normalizeOptions(options, renderer)
+  options = normalizeOptions(options, format)
   options$extensions = intersect(
     names(Filter(isTRUE, options)), commonmark::list_extensions()
   )
@@ -58,7 +58,7 @@ renderMarkdown = function(
     options[intersect(names(formals(render)), names(options))]
   ))
 
-  if (renderer == 'html') {
+  if (format == 'html') {
     ret = tweak_html(ret, text)
   }
 
