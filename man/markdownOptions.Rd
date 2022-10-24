@@ -73,7 +73,7 @@ library(markdown)
 options(markdown.html.options = "fragment_only")
 
 # toc example
-mkd <- paste(c("# Header 1", "p1", "## Header 2", "p2"), collapse = "\n")
+mkd <- c("# Header 1", "p1", "## Header 2", "p2")
 
 cat(markdownToHTML(text = mkd))
 cat(markdownToHTML(text = mkd, options = "toc"))
@@ -81,6 +81,18 @@ cat(markdownToHTML(text = mkd, options = "toc"))
 # hard_wrap example
 cat(markdownToHTML(text = "foo\nbar\n"))
 cat(markdownToHTML(text = "foo\nbar\n", options = "hard_wrap"))
+
+# latex math example
+mkd <- c(
+  "`$x$` is inline math $x$!", "", "Display style:", "", "$$x + y$$", "",
+  "\\\\begin{eqnarray}
+a^{2}+b^{2} & = & c^{2}\\\\\\\\
+\\\\sin^{2}(x)+\\\\cos^{2}(x) & = & 1
+\\\\end{eqnarray}"
+)
+
+cat(markdownToHTML(text = mkd))
+cat(markdownToHTML(text = mkd, options = "-latex_math"))
 
 # smartypants example
 cat(markdownToHTML(text = "1/2 (c)"))

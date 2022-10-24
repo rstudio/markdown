@@ -53,6 +53,28 @@ renderMarkdown = function(
   )
 
   if (isTRUE(options[['smartypants']])) text = smartypants(text)
+
+  # protect $ $ and $$ $$ math expressions for html/latex output
+  has_math = isTRUE(options[['latex_math']]) && format %in% c('html', 'latex') &&
+    length(grep('[$]', text))
+  if (has_math) {
+    id = id_string(text); maths = NULL
+    text = xfun::protect_math(text, id)
+    # temporarily replace math expressions with tokens and restore them later;
+    # no need to do this for html output because we need special HTML characters
+    # like &<> in math expressions to be converted to entities, but shouldn't
+    # convert them for latex output
+    if (format == 'latex') {
+      text = paste(text, collapse = '\n')
+      m = gregexpr(sprintf('`%s.{3,}?%s`', id, id), text)
+      regmatches(text, m) = lapply(regmatches(text, m), function(x) {
+        maths <<- c(maths, gsub(sprintf('`%s|%s`', id, id), '', x))
+        # replace math with !id-n-id! where n is the index of the math
+        sprintf('!%s-%d-%s!', id, length(maths) + seq_along(x), id)
+      })
+    }
+  }
+
   ret = do.call(render, c(
     list(text = text),
     options[intersect(names(formals(render)), names(options))]
@@ -60,6 +82,23 @@ renderMarkdown = function(
 
   if (format == 'html') {
     ret = tweak_html(ret, text)
+    if (has_math) {
+      ret = gsub(sprintf('<code>%s(.{5,}?)%s</code>', id, id), '\\1', ret)
+      # `\(math\)` may fail to render to <code>\(math\)</code> when backticks
+      # are inside HTML tags, e.g., commonmark::markdown_html('<p>`a`</p>')
+      ret = gsub(sprintf('`%s\\\\\\((.+?)\\\\\\)%s`', id, id), '$\\1$', ret)
+    }
+  } else if (format == 'latex') {
+    if (has_math) {
+      m = gregexpr(sprintf('!%s-(\\d+)-%s!', id, id), ret)
+      regmatches(ret, m) = lapply(regmatches(ret, m), function(x) {
+        if (length(maths) != length(x)) warning(
+          'LaTeX math expressions cannot be restored correctly (expected ',
+          length(maths), ' expressions but found ', length(x), ' in the output).'
+        )
+        maths
+      })
+    }
   }
 
   if (is.character(output)) xfun::write_utf8(ret, output) else ret
@@ -116,7 +155,7 @@ get_option = function(name, default = NULL) {
 })
 
 .requiresMathJax = function(html) {
-  regs = c('\\\\\\(([\\s\\S]+?)\\\\\\)', '\\\\\\[([\\s\\S]+?)\\\\\\]')
+  regs = c('\\\\\\(.+?\\\\\\)', '[$]{2}.+?[$]{2}', '\\\\\\[.+?\\\\\\]')
   for (i in regs) if (any(grepl(i, html, perl = TRUE))) return(TRUE)
   FALSE
 }
