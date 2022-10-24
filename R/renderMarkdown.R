@@ -249,7 +249,7 @@ build_toc = function(html, n = 3) {
 #' @seealso \code{\link{renderMarkdown}()}
 #' @export
 #' @examples
-#' markdownToHTML(text = 'Hello _World_!', options = '+fragment_only')
+#' markdownToHTML(text = 'Hello _World_!', options = '-standalone')
 #' # write HTML to an output file
 #' markdownToHTML(text = '_Hello_, **World**!', output = tempfile())
 markdownToHTML = function(
@@ -268,10 +268,10 @@ markdownToHTML = function(
     )
   }
   if (is.logical(extra[['fragment.only']])) {
-    options[['fragment_only']] = extra[['fragment.only']]
+    options[['standalone']] = !extra[['fragment.only']]
     warn2(
-      "The 'fragment.only' argument has been deprecated. ",
-      "Please use the argument `options = 'fragment_only'` instead."
+      "The 'fragment.only' argument has been deprecated. For fragment.only = TRUE, ",
+      "please use the argument `options = '-standalone'` instead."
     )
   }
 
@@ -282,7 +282,7 @@ markdownToHTML = function(
     ret = xfun::in_dir(filedir, .b64EncodeImages(ret))
   }
 
-  if (!isTRUE(options[['fragment_only']])) {
+  if (isTRUE(options[['standalone']])) {
     if (is.null(template)) template = get_option(
       'markdown.html.template', pkg_file('resources', 'markdown.html')
     )
@@ -397,9 +397,6 @@ pants = c(unlist(fracs), c('(c)' = '&copy;', '(r)' = '&reg;', '(tm)' = '&trade;'
 #' \item{\code{base64_images}}{Embed local images in the HTML output with base64
 #' encoding.}
 #'
-#' \item{\code{fragment_only}}{Generate a full (HTML/LaTeX) document or only a
-#' fragment of the body.}
-#'
 #' \item{\code{highlight_code}}{Includes JavaScript libraries to syntax
 #' highlight code blocks.}
 #'
@@ -414,6 +411,9 @@ pants = c(unlist(fracs), c('(c)' = '&copy;', '(r)' = '&reg;', '(tm)' = '&trade;'
 #'
 #' \item{\code{smartypants}}{Translate certain ASCII strings into smart
 #' typographic characters (see \code{\link{smartypants}()}.}
+#'
+#' \item{\code{standalone}}{Generate a full (HTML/LaTeX) document or only a
+#' fragment of the body.}
 #'
 #' \item{\code{superscript}}{Translate strings between two carets into
 #' superscripts, e.g., \verb{text^foo^} to \verb{text<sup>foo</sup>}.}
@@ -444,18 +444,18 @@ pants = c(unlist(fracs), c('(c)' = '&copy;', '(r)' = '&reg;', '(tm)' = '&trade;'
 #' markdown::markdownOptions()
 #'
 #' # Turn on/off some options globally for HTML output
-#' options(markdown.html.options = '+fragment_only+toc-smartypants')
+#' options(markdown.html.options = '+toc-smartypants-standalone')
 #'
 #' @example inst/examples/render-options.R
 markdownOptions = function() {
   # options enabled by default
   x1 = c(
     'smart', 'smartypants', 'base64_images', 'mathjax', 'highlight_code',
-    'superscript', 'subscript', 'latex_math',
+    'superscript', 'subscript', 'latex_math', 'standalone',
     setdiff(commonmark::list_extensions(), 'tagfilter')
   )
   # options disabled by default
-  x2 = c('toc', 'fragment_only', 'hardbreaks', 'tagfilter', 'mathjax_embed')
+  x2 = c('toc', 'hardbreaks', 'tagfilter', 'mathjax_embed')
   # TODO: remove this hack after https://github.com/kiernann/gluedown/pull/29
   if (xfun::check_old_package('gluedown', '1.0.4')) {
     x1 = setdiff(x1, c('tasklist', 'smart'))
