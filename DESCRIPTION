@@ -38,3 +38,4 @@ BugReports: https://github.com/rstudio/markdown/issues
 VignetteBuilder: knitr
 RoxygenNote: 7.2.1
 Encoding: UTF-8
+Remotes: yihui/xfun
