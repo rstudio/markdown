@@ -5,5 +5,5 @@
 
 This vignette shows some examples for different Markdown rendering options.
 
-```{r render-options, tidy=FALSE, file=markdown:::pkg_file('examples', 'render-options.R')}
+```{r render-options, tidy=FALSE, file=markdown:::pkg_file('examples', 'render-options.R'), comment=''}
 ```
