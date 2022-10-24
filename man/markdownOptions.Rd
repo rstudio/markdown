@@ -22,9 +22,6 @@ Description of all options:
 \item{\code{base64_images}}{Embed local images in the HTML output with base64
 encoding.}
 
-\item{\code{fragment_only}}{Generate a full (HTML/LaTeX) document or only a
-fragment of the body.}
-
 \item{\code{highlight_code}}{Includes JavaScript libraries to syntax
 highlight code blocks.}
 
@@ -39,6 +36,9 @@ in HTML output.}
 
 \item{\code{smartypants}}{Translate certain ASCII strings into smart
 typographic characters (see \code{\link{smartypants}()}.}
+
+\item{\code{standalone}}{Generate a full (HTML/LaTeX) document or only a
+fragment of the body.}
 
 \item{\code{superscript}}{Translate strings between two carets into
 superscripts, e.g., \verb{text^foo^} to \verb{text<sup>foo</sup>}.}
@@ -68,7 +68,7 @@ of each option turned on or off.
 markdown::markdownOptions()
 
 # Turn on/off some options globally for HTML output
-options(markdown.html.options = '+fragment_only+toc-smartypants')
+options(markdown.html.options = '+toc-smartypants-standalone')
 
 library(markdown)
 

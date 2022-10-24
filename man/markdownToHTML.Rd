@@ -60,7 +60,7 @@ Render Markdown to HTML with optional customization (e.g., custom stylesheets
 or template).
 }
 \examples{
-markdownToHTML(text = "Hello _World_!", options = "+fragment_only")
+markdownToHTML(text = "Hello _World_!", options = "-standalone")
 # write HTML to an output file
 markdownToHTML(text = "_Hello_, **World**!", output = tempfile())
 }
