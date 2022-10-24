@@ -34,6 +34,15 @@ Type 'q()' to quit R.
 <p>p2</p>
 
 > cat(renderMarkdown(text = mkd, options = "toc"))
+<div id="TOC">
+<ul>
+<li>Header 1
+<ul>
+<li>Header 2</li>
+</ul>
+</li>
+</ul>
+</div>
 <h1>Header 1</h1>
 <p>p1</p>
 <h2>Header 2</h2>
@@ -123,16 +132,16 @@ Content Cell  | Content Cell</p>
 <p>~~awesome~~</p>
 
 > cat(renderMarkdown(text = "2^10^"))
-<p>2^10^</p>
+<p>2<sup>10</sup></p>
 
 > cat(renderMarkdown(text = "2^10^", options = "-superscript"))
 <p>2^10^</p>
 
 > cat(renderMarkdown(text = "H~2~O"))
-<p>H<del>2</del>O</p>
+<p>H<sub>2</sub>O</p>
 
 > cat(renderMarkdown(text = "H~2~O", options = "-subscript"))
-<p>H<del>2</del>O</p>
+<p>H~2~O</p>
 
 > mkd = "<style>a {}</style><script type=\"text/javascript\">console.log(\"No!\");</script>\n[Hello](#)"
 
