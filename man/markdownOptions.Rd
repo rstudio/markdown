@@ -48,6 +48,9 @@ e.g., \verb{text~foo~} to \verb{text<sub>foo</sub>}.}
 
 \item{\code{toc}}{Generate a table of contents from section headers.}
 
+\item{\code{toc_depth}}{The number of section levels to include in the table
+of contents (\code{3} by default).}
+
 }
 
 Options not described above can be found on the help pages of

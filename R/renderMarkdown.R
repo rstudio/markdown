@@ -126,6 +126,9 @@ renderMarkdown = function(
       ret = gsub(sprintf('!%s(.+?)%s!', id2, id2), '<sup>\\1</sup>', ret)
     if (has_sub)
       ret = gsub(sprintf('!%s(.+?)%s!', id3, id3), '<sub>\\1</sub>', ret)
+    if (isTRUE(options[['toc']])) ret = paste(
+      c(build_toc(ret, options[['toc_depth']]), ret), collapse = '\n'
+    )
   } else if (format == 'latex') {
     if (has_math) {
       m = gregexpr(sprintf('!%s-(\\d+)-%s!', id, id), ret)
@@ -151,6 +154,22 @@ get_option = function(name, default = NULL) {
   x = options()
   i = match(tolower(name), tolower(names(x)))
   if (is.na(i)) default else x[[i]]
+}
+
+# find headers and build a table of contents as an unordered list
+build_toc = function(html, n = 3) {
+  if (n <= 0) return()
+  if (n > 6) n = 6
+  r = sprintf('<(h[1-%d])>([^<]+)</\\1>', n)
+  items = unlist(regmatches(html, gregexpr(r, html)))
+  if (length(items) == 0) return()
+  x = gsub(r, '<toc>\\2</toc>', items)  # use a tag <toc> to protect header text
+  h = as.integer(gsub('^h', '', gsub(r, '\\1', items)))  # header level
+  s = sapply(seq_len(n), function(i) paste(rep('  ', i), collapse = ''))  # indent
+  x = paste0(s[h], '- ', x)  # create an unordered list
+  x = commonmark::markdown_html(x)
+  x = gsub('</?toc>', '', x)
+  paste0('<div id="TOC">\n', x, '</div>')
 }
 
 #' @importFrom utils URLdecode
@@ -404,6 +423,9 @@ pants = c(unlist(fracs), c('(c)' = '&copy;', '(r)' = '&reg;', '(tm)' = '&trade;'
 #'
 #' \item{\code{toc}}{Generate a table of contents from section headers.}
 #'
+#' \item{\code{toc_depth}}{The number of section levels to include in the table
+#' of contents (\code{3} by default).}
+#'
 #' }
 #'
 #' Options not described above can be found on the help pages of
@@ -454,6 +476,7 @@ normalizeOptions = function(x, format = 'html') {
   g = option2list(g)
   d[names(g)] = g  # merge global options() into default options
   d[n] = x  # then merge user-provided options
+  if (!is.numeric(d[['toc_depth']])) d$toc_depth = 3L
   d
 }
 
