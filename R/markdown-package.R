@@ -9,7 +9,7 @@
 #' @keywords package
 NULL
 
-CHARS = c(letters, LETTERS, 0:9, '!', '#', '%', "'", ',', '/', ':', ';', '=', '@', '_', '~')
+CHARS = c(letters, LETTERS, 0:9, '!', ',', '/', ':', ';', '=', '@')
 
 # generate a random string that is not present in provided text
 id_string = function(text, lens = c(2:10, 20), times = 20) {
@@ -21,4 +21,11 @@ id_string = function(text, lens = c(2:10, 20), times = 20) {
   }
   # failure should be very rare
   stop('Failed to generate a unique ID string. You may try again.')
+}
+
+# a shorthand for gregexpr() and regmatches()
+match_replace = function(x, pattern, replace = identity, ...) {
+  m = gregexpr(pattern, x, ...)
+  regmatches(x, m) = lapply(regmatches(x, m), replace)
+  x
 }

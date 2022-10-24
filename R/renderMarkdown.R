@@ -54,10 +54,14 @@ renderMarkdown = function(
 
   if (isTRUE(options[['smartypants']])) text = smartypants(text)
 
+  # test if a feature needs to be enabled
+  test_feature = function(name, pattern) {
+    isTRUE(options[[name]]) && format %in% c('html', 'latex') &&
+      length(grep(pattern, text, perl = TRUE))
+  }
+
   # protect $ $ and $$ $$ math expressions for html/latex output
-  has_math = isTRUE(options[['latex_math']]) && format %in% c('html', 'latex') &&
-    length(grep('[$]', text))
-  if (has_math) {
+  if (has_math <- test_feature('latex_math', '[$]')) {
     id = id_string(text); maths = NULL
     text = xfun::protect_math(text, id)
     # temporarily replace math expressions with tokens and restore them later;
@@ -66,14 +70,44 @@ renderMarkdown = function(
     # convert them for latex output
     if (format == 'latex') {
       text = paste(text, collapse = '\n')
-      m = gregexpr(sprintf('`%s.{3,}?%s`', id, id), text)
-      regmatches(text, m) = lapply(regmatches(text, m), function(x) {
+      text = match_replace(text, sprintf('`%s.{3,}?%s`', id, id), function(x) {
         maths <<- c(maths, gsub(sprintf('`%s|%s`', id, id), '', x))
         # replace math with !id-n-id! where n is the index of the math
         sprintf('!%s-%d-%s!', id, length(maths) + seq_along(x), id)
       })
+      text = xfun::split_lines(text)
     }
   }
+
+  p = NULL  # indices of prose
+  # superscript and subscript; for now, we allow only characters alnum|*|(|) for
+  # script text but can consider changing this rule upon users' request
+  r2 = '(?<=[[:graph:]])\\^([[:alnum:]*()]+?)\\^'
+  if (has_sup <- test_feature('superscript', r2)) {
+    id2 = id_string(text)
+    p = xfun::prose_index(text)
+    text[p] = match_replace(text[p], r2, perl = TRUE, function(x) {
+      # place superscripts inside !id...id!
+      x = gsub('^\\^|\\^$', id2, x)
+      sprintf('!%s!', x)
+    })
+  }
+  r3 = '(?<![~[:space:]])~([[:alnum:]*()]+?)~'
+  if (has_sub <- test_feature('subscript', r3)) {
+    id3 = id_string(text)
+    if (is.null(p)) p = xfun::prose_index(text)
+    text[p]= match_replace(text[p], r3, perl = TRUE, function(x) {
+      # place subscripts inside !id...id!
+      x = gsub('^~|~$', id3, x)
+      sprintf('!%s!', x)
+    })
+  }
+  # disallow single tilde for <del> (I think it is an aweful idea in GFM's
+  # strikethrough extension to allow both single and double tilde for <del>)
+  if (is.null(p)) p = xfun::prose_index(text)
+  text[p] = match_replace(text[p], r3, perl = TRUE, function(x) {
+    gsub('^~|~$', '\\\\~', x)
+  })
 
   ret = do.call(render, c(
     list(text = text),
@@ -88,6 +122,10 @@ renderMarkdown = function(
       # are inside HTML tags, e.g., commonmark::markdown_html('<p>`a`</p>')
       ret = gsub(sprintf('`%s\\\\\\((.+?)\\\\\\)%s`', id, id), '$\\1$', ret)
     }
+    if (has_sup)
+      ret = gsub(sprintf('!%s(.+?)%s!', id2, id2), '<sup>\\1</sup>', ret)
+    if (has_sub)
+      ret = gsub(sprintf('!%s(.+?)%s!', id3, id3), '<sub>\\1</sub>', ret)
   } else if (format == 'latex') {
     if (has_math) {
       m = gregexpr(sprintf('!%s-(\\d+)-%s!', id, id), ret)
@@ -99,6 +137,10 @@ renderMarkdown = function(
         maths
       })
     }
+    if (has_sup)
+      ret = gsub(sprintf('!%s(.+?)%s!', id2, id2), '\\\\textsuperscript{\\1}', ret)
+    if (has_sub)
+      ret = gsub(sprintf('!%s(.+?)%s!', id3, id3), '\\\\textsubscript{\\1}', ret)
   }
 
   if (is.character(output)) xfun::write_utf8(ret, output) else ret
