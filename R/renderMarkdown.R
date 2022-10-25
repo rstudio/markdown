@@ -322,11 +322,11 @@ markdownToHTML = function(
 
     if (!is.character(title) || title == '') {
       # Guess title
-      m = regexpr('<[Hh][1-6].*?>(.*)</[Hh][1-6].*?>', html, perl = TRUE)
+      m = regexpr('<h[1-6].*?>(.*)</h[1-6].*?>', html, perl = TRUE)
       if (m > -1) {
         title = regmatches(html, m)
-        title = sub('<[Hh][1-6].*?>', '', title)
-        title = sub('</[Hh][1-6].*?>', '', title)
+        title = sub('<h[1-6].*?>', '', title)
+        title = sub('</h[1-6].*?>', '', title)
       } else {
         title = ''
       }
