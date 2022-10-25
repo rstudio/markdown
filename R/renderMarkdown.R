@@ -11,7 +11,12 @@
 #'
 #' Render Markdown to an output format via the \pkg{commonmark} package.
 #' @param file Path to an input file. If not provided, it is presumed that the
-#'   \code{text} argument will be used instead.
+#'   \code{text} argument will be used instead. This argument can also take a
+#'   character vector of Markdown text directly. To avoid ambiguity in the
+#'   latter case, a single character string input will be treated as a file only
+#'   when the file exists or it has a file extension. If a string happens to
+#'   have a \dQuote{file extension} and should be treated as Markdown text
+#'   instead, wrap it in \code{I()}.
 #' @param output Output file path. If not character, the results will be
 #'   returned as a character vector.
 #' @param text A character vector of the Markdown text. By default, it is read
@@ -36,14 +41,23 @@
 #' @import utils
 #' @export
 #' @examples
-#' renderMarkdown(text = "Hello _World_!")
+#' library(markdown)
+#' renderMarkdown(c('Hello _World_!', '', 'Welcome to **markdown**.'))
 #' # a few corner cases
-#' renderMarkdown(text = character(0))
-#' renderMarkdown(text = '')
+#' renderMarkdown(character(0))
+#' renderMarkdown('')
+#' # if input looks like file but should be treated as text, use I()
+#' renderMarkdown(I('This is *not* a file.md'))
+#' # that's equivalent to
+#' renderMarkdown(text = 'This is *not* a file.md')
 renderMarkdown = function(
-  file, output = NULL, text = NULL, format = c('html', 'latex'), options = NULL
+  file = NULL, output = NULL, text = NULL, format = c('html', 'latex'), options = NULL
 ) {
-  text = if (is.null(text)) xfun::read_utf8(file) else xfun::split_lines(text)
+  if (is.null(text)) {
+    if (!is.character(file)) stop("Either 'file' or 'text' must be provided.")
+    text = if (is_file(file)) xfun::read_utf8(file) else file
+  }
+  text = xfun::split_lines(text)
 
   format = format[1]
 
@@ -255,11 +269,11 @@ build_toc = function(html, n = 3) {
 #' @seealso \code{\link{renderMarkdown}()}
 #' @export
 #' @examples
-#' markdownToHTML(text = 'Hello _World_!', options = '-standalone')
+#' markdownToHTML('Hello _World_!', options = '-standalone')
 #' # write HTML to an output file
-#' markdownToHTML(text = '_Hello_, **World**!', output = tempfile())
+#' markdownToHTML('_Hello_, **World**!', output = tempfile())
 markdownToHTML = function(
-  file, output = NULL, text = NULL, options = NULL, title = '', css = NULL,
+  file = NULL, output = NULL, text = NULL, options = NULL, title = '', css = NULL,
   header = NULL, template = NULL, ...
 ) {
   # fragment_only -> !standalone (TODO: may drop fragment_only in future)
@@ -286,9 +300,7 @@ markdownToHTML = function(
   }
 
   if (isTRUE(options[['base64_images']])) {
-    filedir = if (!missing(file) && is.character(file) && file.exists(file)) {
-      dirname(file)
-    } else '.'
+    filedir = if (is_file(file)) dirname(file) else '.'
     ret = xfun::in_dir(filedir, .b64EncodeImages(ret))
   }
 

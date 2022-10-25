@@ -4,6 +4,8 @@
 
 - Renamed the argument `stylesheet` to `css` in `markdownToHTML()`, and removed the argument `fragment.only` (please use `markdownToHTML(options = '-standalone')` instead of `fragment.only = TRUE`).
 
+- The `file` argument of `renderMarkdown()` and `markdownToHTML()` can also take a character vector of Markdown text now.
+
 - Removed functions `rendererExists()`, `rendererOutputType()`, and `registeredRenderer()`. They were primarily for internal use.
 
 - Deprecated the function `markdownExtensions()`. All extensions should be specified via the `options` argument of functions like `renderMarkdown()`, e.g., `renderMarkdown(options = '+table+tasklist')`. See all options on the help page `?markdown::markdownOptions`.

@@ -5,7 +5,7 @@
 \title{Render Markdown to an output format}
 \usage{
 renderMarkdown(
-  file,
+  file = NULL,
   output = NULL,
   text = NULL,
   format = c("html", "latex"),
@@ -14,7 +14,12 @@ renderMarkdown(
 }
 \arguments{
 \item{file}{Path to an input file. If not provided, it is presumed that the
-\code{text} argument will be used instead.}
+\code{text} argument will be used instead. This argument can also take a
+character vector of Markdown text directly. To avoid ambiguity in the
+latter case, a single character string input will be treated as a file only
+when the file exists or it has a file extension. If a string happens to
+have a \dQuote{file extension} and should be treated as Markdown text
+instead, wrap it in \code{I()}.}
 
 \item{output}{Output file path. If not character, the results will be
 returned as a character vector.}
@@ -45,10 +50,15 @@ Invisible \code{NULL} when output is to a file, otherwise a character
 Render Markdown to an output format via the \pkg{commonmark} package.
 }
 \examples{
-renderMarkdown(text = "Hello _World_!")
+library(markdown)
+renderMarkdown(c("Hello _World_!", "", "Welcome to **markdown**."))
 # a few corner cases
-renderMarkdown(text = character(0))
-renderMarkdown(text = "")
+renderMarkdown(character(0))
+renderMarkdown("")
+# if input looks like file but should be treated as text, use I()
+renderMarkdown(I("This is *not* a file.md"))
+# that's equivalent to
+renderMarkdown(text = "This is *not* a file.md")
 }
 \seealso{
 The spec of GitHub Flavored Markdown:

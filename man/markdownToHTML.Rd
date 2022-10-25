@@ -5,7 +5,7 @@
 \title{Render Markdown to HTML}
 \usage{
 markdownToHTML(
-  file,
+  file = NULL,
   output = NULL,
   text = NULL,
   options = NULL,
@@ -18,7 +18,12 @@ markdownToHTML(
 }
 \arguments{
 \item{file}{Path to an input file. If not provided, it is presumed that the
-\code{text} argument will be used instead.}
+\code{text} argument will be used instead. This argument can also take a
+character vector of Markdown text directly. To avoid ambiguity in the
+latter case, a single character string input will be treated as a file only
+when the file exists or it has a file extension. If a string happens to
+have a \dQuote{file extension} and should be treated as Markdown text
+instead, wrap it in \code{I()}.}
 
 \item{output}{Output file path. If not character, the results will be
 returned as a character vector.}
@@ -64,9 +69,9 @@ Render Markdown to HTML with optional customization (e.g., custom stylesheets
 or template).
 }
 \examples{
-markdownToHTML(text = "Hello _World_!", options = "-standalone")
+markdownToHTML("Hello _World_!", options = "-standalone")
 # write HTML to an output file
-markdownToHTML(text = "_Hello_, **World**!", output = tempfile())
+markdownToHTML("_Hello_, **World**!", output = tempfile())
 }
 \seealso{
 \code{\link{renderMarkdown}()}
