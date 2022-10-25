@@ -43,7 +43,7 @@
 renderMarkdown = function(
   file, output = NULL, text = NULL, format = c('html', 'latex'), options = NULL
 ) {
-  if (is.null(text)) text = xfun::read_utf8(file)
+  text = if (is.null(text)) xfun::read_utf8(file) else xfun::split_lines(text)
 
   format = format[1]
 
