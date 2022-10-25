@@ -371,23 +371,16 @@ smartypants = function(text) {
 
 # Represent some fractions with HTML entities
 fracs = local({
-  k = c(2, 3, 5)
-  z = list()
-  for (i in 2:10) {
-    for (j in 1:i) {
-      if (j > 1 && (i %% j == 0 || any(i == c(7, 9, 10)))) next
-      if (any((i %% k == 0) & (j %% k == 0))) next
-      x = paste0(j, '/', i)
-      y = if (j > 1 || !i %in% c(7, 9, 10)) sprintf('&frac%d%d;', j, i) else {
-        list(`7` = '&#8528;', `9` = '&#8529;', `10` = '&#8530;')[[as.character(i)]]
-      }
-      z[[x]] = y
-    }
-  }
-  z
+  n1 = c(
+    '1/2', '1/3', '2/3', '1/4', '3/4', '1/5', '2/5', '3/5', '4/5', '1/6', '5/6',
+    '1/8', '3/8', '5/8', '7/8'
+  )
+  n2 = c('1/7', '1/9', '1/10')
+  x2 = seq_along(n2) + 8527  # &#8528;, 8529, 8530
+  setNames(c(sprintf('&frac%s;', gsub('/', '', n1)), sprintf('&#%d;', x2)), c(n1, n2))
 })
 
-pants = c(unlist(fracs), c('(c)' = '&copy;', '(r)' = '&reg;', '(tm)' = '&trade;'))
+pants = c(fracs, c('(c)' = '&copy;', '(r)' = '&reg;', '(tm)' = '&trade;'))
 
 
 #' Markdown rendering options
