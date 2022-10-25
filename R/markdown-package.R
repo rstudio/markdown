@@ -30,6 +30,13 @@ match_replace = function(x, pattern, replace = identity, ...) {
   x
 }
 
+# *guess* if an input is a file
+is_file = function(x) {
+  length(x) == 1 && !inherits(x, 'AsIs') && (
+    xfun::file_exists(x) || xfun::file_ext(x) != ''
+  )
+}
+
 # TODO: remove these functions when xfun 0.35 is released to CRAN
 protect_math = function(x, token = '') {
   i = xfun::prose_index(x)
