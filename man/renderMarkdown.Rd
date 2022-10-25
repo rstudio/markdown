@@ -27,8 +27,15 @@ from \code{file}.}
 \code{\link[commonmark:commonmark]{markdown_*}} renderers in
 \pkg{commonmark}.}
 
-\item{options}{A list of options to be passed to the renderer. See
-\code{\link{markdownOptions}()} for all possible options.}
+\item{options}{Options to be passed to the renderer. See
+\code{\link{markdownOptions}()} for all possible options. This argument can
+take either a character vector of the form \code{"+option1
+option2-option3"} (use \code{+} or a space to enable an option, and
+\code{-} to disable an option), or a list of the form \code{list(option1 =
+value1, option2 = value2, ...)}. A string \code{"+option1"} is equivalent
+to \code{list(option1 = TRUE)}, and \code{"-option2"} means
+\code{list(option2 = FALSE)}. Options that do not take logical values must
+be specified via a list, e.g., \code{list(width = 30)}.}
 }
 \value{
 Invisible \code{NULL} when output is to a file, otherwise a character

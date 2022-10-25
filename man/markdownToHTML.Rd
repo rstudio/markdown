@@ -13,7 +13,6 @@ markdownToHTML(
   css = NULL,
   header = NULL,
   template = NULL,
-  encoding = "UTF-8",
   ...
 )
 }
@@ -27,8 +26,15 @@ returned as a character vector.}
 \item{text}{A character vector of the Markdown text. By default, it is read
 from \code{file}.}
 
-\item{options}{A list of options to be passed to the renderer. See
-\code{\link{markdownOptions}()} for all possible options.}
+\item{options}{Options to be passed to the renderer. See
+\code{\link{markdownOptions}()} for all possible options. This argument can
+take either a character vector of the form \code{"+option1
+option2-option3"} (use \code{+} or a space to enable an option, and
+\code{-} to disable an option), or a list of the form \code{list(option1 =
+value1, option2 = value2, ...)}. A string \code{"+option1"} is equivalent
+to \code{list(option1 = TRUE)}, and \code{"-option2"} means
+\code{list(option2 = FALSE)}. Options that do not take logical values must
+be specified via a list, e.g., \code{list(width = 30)}.}
 
 \item{title}{The HTML title.}
 
@@ -45,8 +51,6 @@ included in the header of the output. The default value is
 \item{template}{An HTML template file. The default value is
 \code{getOption('markdown.html.template', markdown:::pkg_file('resources',
 'markdown.html'))}.}
-
-\item{encoding}{Ignored (always assumes the file is encoded in UTF-8).}
 
 \item{...}{Unused but for backward-compatibility with previous versions of
 \pkg{markdown}.}

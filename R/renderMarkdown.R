@@ -20,8 +20,15 @@
 #'   \code{'html'}, \code{'man'}, and \code{'text'}, etc. See the
 #'   \code{\link[commonmark:commonmark]{markdown_*}} renderers in
 #'   \pkg{commonmark}.
-#' @param options A list of options to be passed to the renderer. See
-#'   \code{\link{markdownOptions}()} for all possible options.
+#' @param options Options to be passed to the renderer. See
+#'   \code{\link{markdownOptions}()} for all possible options. This argument can
+#'   take either a character vector of the form \code{"+option1
+#'   option2-option3"} (use \code{+} or a space to enable an option, and
+#'   \code{-} to disable an option), or a list of the form \code{list(option1 =
+#'   value1, option2 = value2, ...)}. A string \code{"+option1"} is equivalent
+#'   to \code{list(option1 = TRUE)}, and \code{"-option2"} means
+#'   \code{list(option2 = FALSE)}. Options that do not take logical values must
+#'   be specified via a list, e.g., \code{list(width = 30)}.
 #' @return Invisible \code{NULL} when output is to a file, otherwise a character
 #'   vector.
 #' @seealso The spec of GitHub Flavored Markdown:
@@ -241,7 +248,6 @@ build_toc = function(html, n = 3) {
 #' @param template An HTML template file. The default value is
 #'   \code{getOption('markdown.html.template', markdown:::pkg_file('resources',
 #'   'markdown.html'))}.
-#' @param encoding Ignored (always assumes the file is encoded in UTF-8).
 #' @param ... Unused but for backward-compatibility with previous versions of
 #'   \pkg{markdown}.
 #' @return Invisible \code{NULL} when output is to a file, and a character
@@ -254,7 +260,7 @@ build_toc = function(html, n = 3) {
 #' markdownToHTML(text = '_Hello_, **World**!', output = tempfile())
 markdownToHTML = function(
   file, output = NULL, text = NULL, options = NULL, title = '', css = NULL,
-  header = NULL, template = NULL, encoding = 'UTF-8', ...
+  header = NULL, template = NULL, ...
 ) {
 
   options = normalizeOptions(options, 'html')
@@ -434,9 +440,6 @@ pants = c(unlist(fracs), c('(c)' = '&copy;', '(r)' = '&reg;', '(tm)' = '&trade;'
 #' \code{\link[commonmark:commonmark]{markdown_*}()} functions, and the
 #' \code{table} option is for the \code{table} extension in \pkg{commonmark}'s
 #' extensions (\code{commonmark::\link[commonmark]{list_extensions}()}).
-#'
-#' See the Examples section of \code{\link{renderMarkdown}()} to see the output
-#' of each option turned on or off.
 #' @return A character vector of all available options.
 #' @export
 #' @examples
