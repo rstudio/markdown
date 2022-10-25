@@ -262,6 +262,10 @@ markdownToHTML = function(
   file, output = NULL, text = NULL, options = NULL, title = '', css = NULL,
   header = NULL, template = NULL, ...
 ) {
+  # fragment_only -> !standalone (TODO: may drop fragment_only in future)
+  if (is.character(options) && 'fragment_only' %in% options) {
+    options[options == 'fragment_only'] = '-standalone'
+  }
 
   options = normalizeOptions(options, 'html')
   ret = renderMarkdown(file, NULL, text, 'html', options)
