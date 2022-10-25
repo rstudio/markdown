@@ -150,6 +150,9 @@ renderMarkdown = function(
     if (isTRUE(options[['toc']])) ret = paste(
       c(build_toc(ret, options[['toc_depth']]), ret), collapse = '\n'
     )
+    if (isTRUE(options[['base64_images']])) ret = xfun::in_dir(
+      if (is_file(file)) dirname(file) else '.', .b64EncodeImages(ret)
+    )
   } else if (format == 'latex') {
     if (has_math) {
       m = gregexpr(sprintf('!%s-(\\d+)-%s!', id, id), ret)
@@ -297,11 +300,6 @@ markdownToHTML = function(
       "The 'fragment.only' argument has been deprecated. For fragment.only = TRUE, ",
       "please use the argument `options = '-standalone'` instead."
     )
-  }
-
-  if (isTRUE(options[['base64_images']])) {
-    filedir = if (is_file(file)) dirname(file) else '.'
-    ret = xfun::in_dir(filedir, .b64EncodeImages(ret))
   }
 
   if (isTRUE(options[['standalone']])) {
