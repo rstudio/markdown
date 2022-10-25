@@ -59,9 +59,6 @@ Options not described above can be found on the help pages of
 \code{\link[commonmark:commonmark]{markdown_*}()} functions, and the
 \code{table} option is for the \code{table} extension in \pkg{commonmark}'s
 extensions (\code{commonmark::\link[commonmark]{list_extensions}()}).
-
-See the Examples section of \code{\link{renderMarkdown}()} to see the output
-of each option turned on or off.
 }
 \examples{
 # List all available options
