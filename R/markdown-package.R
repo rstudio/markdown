@@ -29,3 +29,36 @@ match_replace = function(x, pattern, replace = identity, ...) {
   regmatches(x, m) = lapply(regmatches(x, m), replace)
   x
 }
+
+# TODO: remove these functions when xfun 0.35 is released to CRAN
+protect_math = function(x, token = '') {
+  i = xfun::prose_index(x)
+  if (length(i)) x[i] = escape_math(x[i], token)
+  x
+}
+escape_math = function(x, token = '') {
+  m = gregexpr('(?<=^|[\\s])[$](?! )[^$]+?(?<! )[$](?![$0123456789])', x, perl = TRUE)
+  regmatches(x, m) = lapply(regmatches(x, m), function(z) {
+    if (length(z) == 0) return(z)
+    z = sub('^[$]', paste0('`', token, '\\\\('), z)
+    z = sub('[$]$', paste0('\\\\)', token, '`'), z)
+    z
+  })
+  m = gregexpr('(?<=^|[\\s])[$][$](?! )[^$]+?(?<! )[$][$]', x, perl = TRUE)
+  regmatches(x, m) = lapply(regmatches(x, m), function(z) {
+    if (length(z) == 0) return(z)
+    paste0('`', token, z, token, '`')
+  })
+  i = vapply(gregexpr('[$]', x), length, integer(1)) == 2
+  if (any(i)) {
+    x[i] = gsub('^([$][$])([^ ]+)', paste0('`', token, '\\1\\2'), x[i], perl = TRUE)
+    x[i] = gsub('([^ ])([$][$])$', paste0('\\1\\2', token, '`'), x[i], perl = TRUE)
+  }
+  i1 = grep('^\\\\begin\\{[^}]+\\}$', x)
+  i2 = grep('^\\\\end\\{[^}]+\\}$', x)
+  if (length(i1) == length(i2)) {
+    x[i1] = paste0('`', token, x[i1])
+    x[i2] = paste0(x[i2], token, '`')
+  }
+  x
+}
