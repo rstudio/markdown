@@ -279,6 +279,14 @@ markdownToHTML = function(
   file = NULL, output = NULL, text = NULL, options = NULL, title = '', css = NULL,
   header = NULL, template = NULL, ...
 ) {
+  extra = list(...)
+  if (isTRUE(extra[['fragment.only']])) {
+    if (is.null(options) || is.character(options)) options = c(options, '-standalone')
+    warn2(
+      "The 'fragment.only' argument has been deprecated. For fragment.only = TRUE, ",
+      "please use the argument `options = '-standalone'` instead."
+    )
+  }
   # fragment_only -> !standalone (TODO: may drop fragment_only in future)
   if (is.character(options) && 'fragment_only' %in% options) {
     options[options == 'fragment_only'] = '-standalone'
@@ -286,19 +294,11 @@ markdownToHTML = function(
 
   options = normalizeOptions(options, 'html')
   ret = renderMarkdown(file, NULL, text, 'html', options)
-  extra = list(...)
   if (is.null(css)) {
     # TODO: deprecate the 'stylesheet' argument in future
     css = extra[['stylesheet']]
     if (is.character(css)) warn2(
       "The 'stylesheet' argument has been renamed to 'css' in markdown::markdownToHTML()"
-    )
-  }
-  if (is.logical(extra[['fragment.only']])) {
-    options[['standalone']] = !extra[['fragment.only']]
-    warn2(
-      "The 'fragment.only' argument has been deprecated. For fragment.only = TRUE, ",
-      "please use the argument `options = '-standalone'` instead."
     )
   }
 
