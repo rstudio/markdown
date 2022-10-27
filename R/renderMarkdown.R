@@ -1,15 +1,59 @@
-# Copyright (C) 2009-2022 by RStudio, PBC
-#
-# This program is licensed to you under the terms of version 2 of the
-# GNU General Public License. This program is distributed WITHOUT ANY
-# EXPRESS OR IMPLIED WARRANTY, INCLUDING THOSE OF NON-INFRINGEMENT,
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. Please refer to the
-# GPL (https://www.gnu.org/licenses/gpl-2.0.txt) for more details.
-
-
 #' Render Markdown to an output format
 #'
-#' Render Markdown to an output format via the \pkg{commonmark} package.
+#' Render Markdown to an output format via the \pkg{commonmark} package. The
+#' function \code{markdownToHTML()} is a shorthand of
+#' \code{renderMarkdown(format = 'html')}, and \code{markdownToLaTeX()} is a
+#' shorthand of \code{renderMarkdown(format = 'latex')}.
+#'
+#' Supported variables in metadata for both HTML and HTML templates (the string
+#' \code{FORMAT} below is the output format name, i.e., \code{html} or
+#' \code{latex}):
+#'
+#' \describe{
+#'
+#' \item{\code{header-includes}, \code{include-before},
+#' \code{include-after}}{Either a vector of code (HTML/LaTeX) or a code file to
+#' be included in the header, before the body, or after the body of the output.
+#' For \code{header-include}, the default value is taken from
+#' \code{getOption('markdown.FORMAT.header')} if not provided in \code{meta}.}
+#'
+#' \item{\code{title}}{The document title.}
+#'
+#' }
+#'
+#' Variables for the HTML template:
+#'
+#' \describe{
+#'
+#' \item{\code{css}}{Either a vector of CSS code or a file containing CSS to be
+#' included in the output. The default value is
+#' \code{getOption('markdown.html.css', markdown:::pkg_file('resources',
+#' 'markdown.css'))}, i.e., it can be set via the global option
+#' \code{markdown.html.css}.}
+#'
+#' \item{\code{highlight}}{JavaScript code for syntax-highlighting code blocks.
+#' By default, the highlight.js library is used.}
+#'
+#' \item{\code{math}}{JavaScript code for rendering LaTeX math. By default,
+#' MathJax is used.}
+#'
+#' }
+#'
+#' Variables for the LaTeX template:
+#'
+#' \describe{
+#'
+#' \item{\code{classoption}}{A string containing options for the document
+#' class.}
+#'
+#' \item{\code{documentclass}}{The document class (by default,
+#' \code{'article'}).}
+#'
+#' }
+#'
+#' Note that you can use either underscores or hyphens in the variable names.
+#' Underscores will be normalized to hyphens internally, e.g.,
+#' \code{header_includes} will be converted to \code{header-includes}.
 #' @param file Path to an input file. If not provided, it is presumed that the
 #'   \code{text} argument will be used instead. This argument can also take a
 #'   character vector of Markdown text directly. To avoid ambiguity in the
@@ -34,8 +78,18 @@
 #'   to \code{list(option1 = TRUE)}, and \code{"-option2"} means
 #'   \code{list(option2 = FALSE)}. Options that do not take logical values must
 #'   be specified via a list, e.g., \code{list(width = 30)}.
+#' @param template Path to a template file. The default value is
+#'   \code{getOption('markdown.FORMAT.template',
+#'   markdown:::pkg_file('resources', 'markdown.FORMAT'))} where \code{FORMAT}
+#'   is the output format name (\code{html} or \code{latex}). It can also take a
+#'   logical value: \code{TRUE} means to use the default template, and
+#'   \code{FALSE} means to generate only a fragment without using any template.
+#' @param meta A named list of metadata. Elements in the metadata will be used
+#'   to fill out the template by their names and values, e.g., \code{list(title
+#'   = ...)} will replace the \code{$title$} variable in the template. See the
+#'   \sQuote{Details} section for supported variables.
 #' @return Invisible \code{NULL} when output is to a file, otherwise a character
-#'   vector.
+#'   vector of the rendered output.
 #' @seealso The spec of GitHub Flavored Markdown:
 #'   \url{https://github.github.com/gfm/}
 #' @import utils
@@ -51,7 +105,8 @@
 #' # that's equivalent to
 #' renderMarkdown(text = 'This is *not* a file.md')
 renderMarkdown = function(
-  file = NULL, output = NULL, text = NULL, format = c('html', 'latex'), options = NULL
+  file = NULL, output = NULL, text = NULL, format = c('html', 'latex'),
+  options = NULL, template = FALSE, meta = list()
 ) {
   if (is.null(text)) {
     if (!is.character(file)) stop("Either 'file' or 'text' must be provided.")
@@ -168,234 +223,104 @@ renderMarkdown = function(
       ret = gsub(sprintf('!%s(.+?)%s!', id2, id2), '\\\\textsuperscript{\\1}', ret)
     if (has_sub)
       ret = gsub(sprintf('!%s(.+?)%s!', id3, id3), '\\\\textsubscript{\\1}', ret)
+    ret = redefine_level(ret, options[['top_level']])
   }
+
+  meta$body = ret
+  # use the template (if provided) to create a standalone document
+  ret = build_output(format, options, template, meta)
 
   if (is.character(output)) xfun::write_utf8(ret, output) else ret
 }
 
-# Get an option using a case-insensitive name
-get_option = function(name, default = NULL) {
-  x = options()
-  i = match(tolower(name), tolower(names(x)))
-  if (is.na(i)) default else x[[i]]
-}
-
-# find headers and build a table of contents as an unordered list
-build_toc = function(html, n = 3) {
-  if (n <= 0) return()
-  if (n > 6) n = 6
-  r = sprintf('<(h[1-%d])>([^<]+)</\\1>', n)
-  items = unlist(regmatches(html, gregexpr(r, html)))
-  if (length(items) == 0) return()
-  x = gsub(r, '<toc>\\2</toc>', items)  # use a tag <toc> to protect header text
-  h = as.integer(gsub('^h', '', gsub(r, '\\1', items)))  # header level
-  s = sapply(seq_len(n), function(i) paste(rep('  ', i), collapse = ''))  # indent
-  x = paste0(s[h], '- ', x)  # create an unordered list
-  x = commonmark::markdown_html(x)
-  x = gsub('</?toc>', '', x)
-  paste0('<div id="TOC">\n', x, '</div>')
-}
-
-#' @importFrom utils URLdecode
-.b64EncodeImages = function(html) {
-  if (length(html) == 0) return(html)
-  reg = '<img\\s+src\\s*=\\s*"([^"]+)"'
-  m = gregexpr(reg, html, ignore.case = TRUE)
-  regmatches(html, m) = lapply(regmatches(html, m), function(x) {
-    src = sub(reg, '\\1', x)
-    # skip images already base64 encoded
-    for (i in grep('^data:.+;base64,.+', src, invert = TRUE)) {
-      if (file.exists(f <- URLdecode(src[i]))) x[i] = sub(
-        src[i], xfun::base64_uri(f, mime::guess_type(f)), x[i], fixed = TRUE
-      )
-    }
-    x
-  })
-  html
-}
-
-
-.mathJax = local({
-  js = NULL
-
-  function(embed=FALSE, force=FALSE) {
-    if (!embed)
-      return(xfun::file_string(pkg_file('resources', 'mathjax.html')))
-
-    url = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML'
-
-    # Insert or link to MathJax script?
-    html = c('<!-- MathJax scripts -->', if (embed) {
-      # Already in cache?
-      if (force || is.null(js)) {
-        js <<- readLines(url, warn=FALSE)
-      }
-      c('<script>', js)
-    } else {
-      sprintf('<script src="%s" async>', url)
-    }, '</script>')
-
-    paste(html, collapse="\n")
-  }
-})
-
-.requiresMathJax = function(html) {
-  regs = c('\\\\\\(.+?\\\\\\)', '[$]{2}.+?[$]{2}', '\\\\\\[.+?\\\\\\]')
-  for (i in regs) if (any(grepl(i, html, perl = TRUE))) return(TRUE)
-  FALSE
-}
-
-.requiresHighlighting = function(html) any(grepl('<pre><code class="r"', html))
-
-
-#' Render Markdown to HTML
-#'
-#' Render Markdown to HTML with optional customization (e.g., custom stylesheets
-#' or template).
-#' @inheritParams renderMarkdown
-#' @param title The HTML title.
-#' @param css Either a vector of CSS code or a file containing CSS to be
-#'   included in the output. The default value is
-#'   \code{getOption('markdown.html.css', markdown:::pkg_file('resources',
-#'   'markdown.css'))}, i.e., it can be set via the global option
-#'   \code{markdown.html.css}.
-#' @param header Either a vector of HTML code or a file containing HTML to be
-#'   included in the header of the output. The default value is
-#'   \code{getOption('markdown.html.header')}.
-#' @param template An HTML template file. The default value is
-#'   \code{getOption('markdown.html.template', markdown:::pkg_file('resources',
-#'   'markdown.html'))}.
-#' @param ... Unused but for backward-compatibility with previous versions of
-#'   \pkg{markdown}.
-#' @return Invisible \code{NULL} when output is to a file, and a character
-#'   vector otherwise.
-#' @seealso \code{\link{renderMarkdown}()}
+#' @rdname renderMarkdown
+#' @param ... For \code{markdownToLaTeX()}, arguments to be passed to
+#'   \code{renderMarkdown()}. For \code{markdownToHTML()}, additional arguments
+#'   for backward-compatibility with previous versions of \pkg{markdown}. These
+#'   are no longer recommended. For example, the \code{stylesheet} argument
+#'   should be replaced by the \code{css} variable in \code{meta}, and the
+#'   \code{fragment.only = TRUE} argument should be specified via \code{options
+#'   = '-standalone'} instead.
 #' @export
 #' @examples
+#'
 #' markdownToHTML('Hello _World_!', options = '-standalone')
 #' # write HTML to an output file
 #' markdownToHTML('_Hello_, **World**!', output = tempfile())
 markdownToHTML = function(
-  file = NULL, output = NULL, text = NULL, options = NULL, title = '', css = NULL,
-  header = NULL, template = NULL, ...
+  file = NULL, output = NULL, text = NULL, options = NULL,
+  template = NULL, meta = list(), ...
 ) {
+  # for backward-compatibility of arguments `stylesheet`, `title`, `header`, etc.
   extra = list(...)
-  if (isTRUE(extra[['fragment.only']])) {
-    if (is.null(options) || is.character(options)) options = c(options, '-standalone')
-    warn2(
-      "The 'fragment.only' argument has been deprecated. For fragment.only = TRUE, ",
-      "please use the argument `options = '-standalone'` instead."
-    )
-  }
   # fragment_only -> !standalone (TODO: may drop fragment_only in future)
-  if (is.character(options) && 'fragment_only' %in% options) {
-    options[options == 'fragment_only'] = '-standalone'
-  }
-
-  options = normalizeOptions(options, 'html')
-  ret = renderMarkdown(file, NULL, text, 'html', options)
-  if (is.null(css)) {
-    # TODO: deprecate the 'stylesheet' argument in future
-    css = extra[['stylesheet']]
-    if (is.character(css)) warn2(
-      "The 'stylesheet' argument has been renamed to 'css' in markdown::markdownToHTML()"
-    )
-  }
-
-  if (isTRUE(options[['standalone']])) {
-    if (is.null(template)) template = get_option(
-      'markdown.html.template', pkg_file('resources', 'markdown.html')
-    )
-    html = xfun::file_string(template)
-    html = sub('#!html_output#', if (length(ret)) ret else '', html, fixed = TRUE)
-
-    if (is.null(css))
-      css = get_option('markdown.html.css', pkg_file('resources', 'markdown.css'))
-    if (is.character(css)) {
-      html = sub('#!markdown_css#', option2char(css), html, fixed = TRUE)
-    } else {
-      warning("The 'css' argument must be character!")
-    }
-
-    header = get_option('markdown.html.header', header)
-    html = sub('#!header#', option2char(header), html, fixed = TRUE)
-
-    if (!is.character(title) || title == '') {
-      # Guess title
-      m = regexpr('<h[1-6].*?>(.*)</h[1-6].*?>', html, perl = TRUE)
-      if (m > -1) {
-        title = regmatches(html, m)
-        title = sub('<h[1-6].*?>', '', title)
-        title = sub('</h[1-6].*?>', '', title)
-      } else {
-        title = ''
-      }
-    }
-
-    # Need to scrub title more, e.g. strip html, etc.
-    html = sub('#!title#', title, html, fixed = TRUE)
-
-    mathjax = if (isTRUE(options[['mathjax']]) && .requiresMathJax(html)) {
-      .mathJax(embed = isTRUE(options[['mathjax_embed']]))
-    } else ''
-    html = sub('#!mathjax#', mathjax, html, fixed = TRUE)
-
-    highlight = if (isTRUE(options[['highlight_code']]) && .requiresHighlighting(html)) {
-      xfun::file_string(pkg_file('resources', 'r_highlight.html'))
-    } else ''
-    html = sub('#!r_highlight#', highlight, html, fixed = TRUE)
-
-    ret = html
-  }
-
-  if (is.character(output)) xfun::write_utf8(ret, output) else enc2utf8(ret)
-}
-
-# from an option to an appropriate character string of CSS/header/...
-option2char = function(x) {
-  if (!is.character(x)) return('')
-  paste(if (length(x) == 1 && file.exists(x)) readLines(x) else x, collapse = '\n')
-}
-
-#' Convert some ASCII strings to HTML entities
-#'
-#' Transform ASCII strings \verb{(c)} (copyright), \verb{(r)} (registered
-#' trademark), \verb{(tm)} (trademark), and fractions \verb{n/m} into
-#' \emph{smart} typographic HTML entities.
-#' @param text A character vector of the Markdown text.
-#' @return A character vector of the transformed text.
-#' @export
-#' @examples
-#' cat(smartypants("1/2 (c)\n"))
-smartypants = function(text) {
-  text = xfun::split_lines(text)
-  i = xfun::prose_index(text)
-  x = text[i]
-  r = '(?<!`)\\((c|r|tm)\\)|(\\d+/\\d+)(?!`)'
-  m = gregexpr(r, x, perl = TRUE)
-  regmatches(x, m) = lapply(regmatches(x, m), function(z) {
-    y = pants[z]
-    i = is.na(y)
-    y[i] = z[i]
-    y
-  })
-  text[i] = x
-  text
-}
-
-# Represent some fractions with HTML entities
-fracs = local({
-  n1 = c(
-    '1/2', '1/3', '2/3', '1/4', '3/4', '1/5', '2/5', '3/5', '4/5', '1/6', '5/6',
-    '1/8', '3/8', '5/8', '7/8'
+  if (isTRUE(extra[['fragment.only']]) ||
+      (is.character(options) && 'fragment_only' %in% options)) template = FALSE
+  css = meta[['css']] %||% extra[['stylesheet']] %||% get_option(
+    c('markdown.html.css', 'markdown.html.stylesheet'),
+    pkg_file('resources', 'markdown.css')
   )
-  n2 = c('1/7', '1/9', '1/10')
-  x2 = seq_along(n2) + 8527  # &#8528;, 8529, 8530
-  setNames(c(sprintf('&frac%s;', gsub('/', '', n1)), sprintf('&#%d;', x2)), c(n1, n2))
-})
+  meta = normalizeMeta(meta)
+  title = meta[['title']] %||% extra[['title']]
+  header = meta[['header-includes']] %||% extra[['header']] %||%
+    get_option('markdown.html.header')
 
-pants = c(fracs, c('(c)' = '&copy;', '(r)' = '&reg;', '(tm)' = '&trade;'))
+  renderMarkdown(
+    file, output, text, 'html', options, template, merge_list(meta, list(
+      css = css, title = title, `header-includes` = header
+    ))
+  )
+}
 
+#' @export
+#' @rdname renderMarkdown
+markdownToLaTeX = function(...) {
+  renderMarkdown(..., format = 'latex')
+}
+
+# insert body and meta variables into a template
+build_output = function(format, options, template, meta) {
+  if (!isTRUE(options[['standalone']]) || !format %in% c('html', 'latex') ||
+      xfun::isFALSE(template)) return(meta$body)
+  if (is.null(template) || isTRUE(template)) template = get_option(
+    sprintf('markdown.%s.template', format),
+    pkg_file('resources', sprintf('markdown.%s', format))
+  )
+  tpl = one_string(template)
+  meta = normalizeMeta(meta)
+  if (format == 'html') {
+    b = meta$body
+    if (is.null(meta[['title']])) meta$title = first_header(b)
+    if (is.null(length(meta[['math']])))
+      meta$math = if (isTRUE(options[['mathjax']]) && .requiresMathJax(b)) {
+        .mathJax(embed = isTRUE(options[['mathjax_embed']]))
+      }
+    if (is.null(meta[['highlight']]))
+      meta$highlight = if (isTRUE(options[['highlight_code']]) && .requiresHighlight(b)) {
+        pkg_file('resources', 'r_highlight.html')
+      }
+    tpl = tpl_html(tpl)
+  }
+  # find all variables in the template
+  vars = unlist(regmatches(tpl, gregexpr('[$][-[:alnum:]]+[$]', tpl)))
+  # insert $body$ at last in case the body contain any $variables$ accidentally
+  if (!is.na(i <- match('$body$', vars))) vars = c(vars[-i], vars[i])
+  for (v in vars) {
+    tpl = sub_var(tpl, v, meta[[gsub('[$]', '', v)]])
+  }
+  tpl
+}
+
+# fix variable names for backward-compatibility
+tpl_html = function(x) {
+  x = sub_var('#!markdown_css#', '$css$', x)
+  x = sub_var('#!header#', '$header-includes$', x)
+  x = sub_var('#!title#', '$title$', x)
+  x = sub_var('#!mathjax#', '$math$', x)
+  x = sub_var('#!r_highlight#', '$highlight$', x)
+  x = sub_var('#!html_output#', '$body$', x)
+  x
+}
 
 #' Markdown rendering options
 #'
@@ -439,6 +364,11 @@ pants = c(fracs, c('(c)' = '&copy;', '(r)' = '&reg;', '(tm)' = '&trade;'))
 #' \item{\code{toc_depth}}{The number of section levels to include in the table
 #' of contents (\code{3} by default).}
 #'
+#' \item{\code{top_level}}{The desired type of the top-level headings in LaTeX
+#' output. Possible values are \code{'chapter'} and \code{'part'}. For example,
+#' if \code{top_level = 'chapter'}, \code{# header} will be rendered to
+#' \verb{\chapter{header}} instead of the default \verb{\section{header}}.}
+#'
 #' }
 #'
 #' Options not described above can be found on the help pages of
@@ -472,83 +402,4 @@ markdownOptions = function() {
     x2 = c(x2, c('tasklist', 'smart'))
   }
   sort(c(paste0('+', x1), paste0('-', x2)))
-}
-
-normalizeOptions = function(x, format = 'html') {
-  g = get_option(sprintf('markdown.%s.options', format))
-  x = option2list(x)
-  n = names(x)
-  n[n == 'hard_wrap'] = 'hardbreaks'
-  n[n == 'tables'] = 'table'
-  names(x) = n
-  # default options
-  d = option2list(markdownOptions())
-  g = option2list(g)
-  d[names(g)] = g  # merge global options() into default options
-  d[n] = x  # then merge user-provided options
-  if (!is.numeric(d[['toc_depth']])) d$toc_depth = 3L
-  d
-}
-
-#' @import stats
-namedBool = function(x, val = TRUE) as.list(setNames(rep(val, length(x)), x))
-
-# turn '+a-b c' to list(a = TRUE, b = FALSE, c = TRUE)
-option2list = function(x) {
-  if (!is.character(x)) return(as.list(x))
-  x = unlist(strsplit(x, '\\b(?=[+-])', perl = TRUE))
-  x = unlist(strsplit(x, '\\s+'))
-  x = setdiff(x, '')
-  i = grepl('^-', x)
-  c(namedBool(sub('^[-]', '', x[i]), FALSE), namedBool(sub('^[+]', '', x[!i])))
-}
-
-pkg_file = function(...) system.file(..., package = 'markdown', mustWork = TRUE)
-
-# TODO: remove this function when revdeps have been fixed
-.b64EncodeFile = function(...) xfun::base64_uri(...)
-
-#' Deprecated
-#'
-#' Please specify extensions via the \code{options} argument instead.
-#' @export
-#' @keywords internal
-markdownExtensions = function(...) {
-  # TODO: remove this function in future
-  warn2(
-    "The function 'markdownExtensions()' has been deprecated in the markdown package. ",
-    "Please specify extensions via the `options` argument instead."
-  )
-  NULL
-}
-
-# TODO: remove this after https://github.com/PolMine/polmineR/pull/232 is fixed
-.onLoad = function(lib, pkg) {
-  if (is.null(getOption('markdown.HTML.stylesheet')) && 'polmineR' %in% loadedNamespaces()) {
-    options(markdown.HTML.stylesheet = pkg_file('resources', 'markdown.css'))
-  }
-}
-
-# TODO: remove these hacks eventually
-# whether we need to "cheat" in certain cases (to avoid breaking packages on CRAN)
-cruel = function() {
-  xfun::is_CRAN_incoming() || any(tolower(Sys.getenv(c('NOT_CRAN', 'CI'))) == 'true')
-}
-warn2 = function(...) if (cruel()) warning(...)
-tweak_html = function(x, text) {
-  if (xfun::check_old_package('plumbertableau', '0.1.0') ||
-      xfun::check_old_package('tutorial', '0.4.3') ||
-      xfun::check_old_package('gluedown', '1.0.4') ||
-      xfun::check_old_package('polmineR', '0.8.7')) {
-    # remove extra blockquote
-    x = gsub('</blockquote>\n<blockquote>', '', x)
-    # double \n
-    x = gsub('>\n<(p|h3|blockquote)>', '>\n\n<\\1>', x)
-    # tweak language class names
-    x = gsub('(<code class=")language-([^"]+)(">)', '\\1\\2\\3', x)
-    # preserve trailing spaces
-    if (length(sp <- xfun::grep_sub('.*?( +)\n*?$', '\\1', tail(paste(text, collapse = '\n'), 1))))
-      x = gsub('></p>(\n+)?$', paste0('>', sp, '</p>\\1'), x)
-  }
-  x
 }

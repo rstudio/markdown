@@ -2,6 +2,8 @@
 % Please edit documentation in R/renderMarkdown.R
 \name{renderMarkdown}
 \alias{renderMarkdown}
+\alias{markdownToHTML}
+\alias{markdownToLaTeX}
 \title{Render Markdown to an output format}
 \usage{
 renderMarkdown(
@@ -9,8 +11,22 @@ renderMarkdown(
   output = NULL,
   text = NULL,
   format = c("html", "latex"),
-  options = NULL
+  options = NULL,
+  template = FALSE,
+  meta = list()
 )
+
+markdownToHTML(
+  file = NULL,
+  output = NULL,
+  text = NULL,
+  options = NULL,
+  template = NULL,
+  meta = list(),
+  ...
+)
+
+markdownToLaTeX(...)
 }
 \arguments{
 \item{file}{Path to an input file. If not provided, it is presumed that the
@@ -41,13 +57,87 @@ value1, option2 = value2, ...)}. A string \code{"+option1"} is equivalent
 to \code{list(option1 = TRUE)}, and \code{"-option2"} means
 \code{list(option2 = FALSE)}. Options that do not take logical values must
 be specified via a list, e.g., \code{list(width = 30)}.}
+
+\item{template}{Path to a template file. The default value is
+\code{getOption('markdown.FORMAT.template',
+markdown:::pkg_file('resources', 'markdown.FORMAT'))} where \code{FORMAT}
+is the output format name (\code{html} or \code{latex}). It can also take a
+logical value: \code{TRUE} means to use the default template, and
+\code{FALSE} means to generate only a fragment without using any template.}
+
+\item{meta}{A named list of metadata. Elements in the metadata will be used
+to fill out the template by their names and values, e.g., \code{list(title
+= ...)} will replace the \code{$title$} variable in the template. See the
+\sQuote{Details} section for supported variables.}
+
+\item{...}{For \code{markdownToLaTeX()}, arguments to be passed to
+\code{renderMarkdown()}. For \code{markdownToHTML()}, additional arguments
+for backward-compatibility with previous versions of \pkg{markdown}. These
+are no longer recommended. For example, the \code{stylesheet} argument
+should be replaced by the \code{css} variable in \code{meta}, and the
+\code{fragment.only = TRUE} argument should be specified via \code{options
+= '-standalone'} instead.}
 }
 \value{
 Invisible \code{NULL} when output is to a file, otherwise a character
-  vector.
+  vector of the rendered output.
 }
 \description{
-Render Markdown to an output format via the \pkg{commonmark} package.
+Render Markdown to an output format via the \pkg{commonmark} package. The
+function \code{markdownToHTML()} is a shorthand of
+\code{renderMarkdown(format = 'html')}, and \code{markdownToLaTeX()} is a
+shorthand of \code{renderMarkdown(format = 'latex')}.
+}
+\details{
+Supported variables in metadata for both HTML and HTML templates (the string
+\code{FORMAT} below is the output format name, i.e., \code{html} or
+\code{latex}):
+
+\describe{
+
+\item{\code{header-includes}, \code{include-before},
+\code{include-after}}{Either a vector of code (HTML/LaTeX) or a code file to
+be included in the header, before the body, or after the body of the output.
+For \code{header-include}, the default value is taken from
+\code{getOption('markdown.FORMAT.header')} if not provided in \code{meta}.}
+
+\item{\code{title}}{The document title.}
+
+}
+
+Variables for the HTML template:
+
+\describe{
+
+\item{\code{css}}{Either a vector of CSS code or a file containing CSS to be
+included in the output. The default value is
+\code{getOption('markdown.html.css', markdown:::pkg_file('resources',
+'markdown.css'))}, i.e., it can be set via the global option
+\code{markdown.html.css}.}
+
+\item{\code{highlight}}{JavaScript code for syntax-highlighting code blocks.
+By default, the highlight.js library is used.}
+
+\item{\code{math}}{JavaScript code for rendering LaTeX math. By default,
+MathJax is used.}
+
+}
+
+Variables for the LaTeX template:
+
+\describe{
+
+\item{\code{classoption}}{A string containing options for the document
+class.}
+
+\item{\code{documentclass}}{The document class (by default,
+\code{'article'}).}
+
+}
+
+Note that you can use either underscores or hyphens in the variable names.
+Underscores will be normalized to hyphens internally, e.g.,
+\code{header_includes} will be converted to \code{header-includes}.
 }
 \examples{
 library(markdown)
@@ -59,6 +149,10 @@ renderMarkdown("")
 renderMarkdown(I("This is *not* a file.md"))
 # that's equivalent to
 renderMarkdown(text = "This is *not* a file.md")
+
+markdownToHTML("Hello _World_!", options = "-standalone")
+# write HTML to an output file
+markdownToHTML("_Hello_, **World**!", output = tempfile())
 }
 \seealso{
 The spec of GitHub Flavored Markdown:

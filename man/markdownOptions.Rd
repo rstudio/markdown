@@ -51,6 +51,11 @@ e.g., \verb{text~foo~} to \verb{text<sub>foo</sub>}.}
 \item{\code{toc_depth}}{The number of section levels to include in the table
 of contents (\code{3} by default).}
 
+\item{\code{top_level}}{The desired type of the top-level headings in LaTeX
+output. Possible values are \code{'chapter'} and \code{'part'}. For example,
+if \code{top_level = 'chapter'}, \code{# header} will be rendered to
+\verb{\chapter{header}} instead of the default \verb{\section{header}}.}
+
 }
 
 Options not described above can be found on the help pages of

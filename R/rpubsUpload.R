@@ -1,13 +1,3 @@
-# Copyright (C) 2009-2020 by RStudio, PBC
-#
-# This program is licensed to you under the terms of version 2 of the
-# GNU General Public License. This program is distributed WITHOUT ANY
-# EXPRESS OR IMPLIED WARRANTY, INCLUDING THOSE OF NON-INFRINGEMENT,
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. Please refer to the
-# GPL (https://www.gnu.org/licenses/gpl-2.0.txt) for more details.
-#
-#
-
 #' Upload an HTML file to RPubs
 #'
 #' This function uploads an HTML file to rpubs.com. If the upload succeeds a
