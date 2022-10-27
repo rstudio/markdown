@@ -173,7 +173,7 @@ redefine_level = function(x, top) {
   x
 }
 
-normalizeOptions = function(x, format = 'html') {
+normalize_options = function(x, format = 'html') {
   g = get_option(sprintf('markdown.%s.options', format))
   x = option2list(x)
   n = names(x)
@@ -194,7 +194,7 @@ normalizeOptions = function(x, format = 'html') {
 namedBool = function(x, val = TRUE) as.list(setNames(rep(val, length(x)), x))
 
 # normalize metadata variable names: change _ to -
-normalizeMeta = function(x) {
+normalize_meta = function(x) {
   # make sure some variables are available in metadata
   x = merge_list(list(classoption = '', documentclass = 'article'), x)
   names(x) = gsub('_', '-', names(x))
