@@ -10,9 +10,9 @@
 
 - Removed functions `rendererExists()`, `rendererOutputType()`, and `registeredRenderer()`. They were primarily for internal use.
 
-- Deprecated the function `markdownExtensions()`. All extensions should be specified via the `options` argument of functions like `renderMarkdown()`, e.g., `renderMarkdown(options = '+table+tasklist')`. See all options on the help page `?markdown::markdownOptions`.
+- Deprecated the function `markdownExtensions()`. All extensions should be specified via the `options` argument of functions like `mark()`, e.g., `mark(options = '+table+tasklist')`. See all options on the help page `?markdown::markdown_options`.
 
-- Renamed `markdownHTMLOptions()` to `markdownOptions()`.
+- Renamed `markdownHTMLOptions()` to `markdown_options()`.
 
 # CHANGES IN markdown VERSION 1.2
 

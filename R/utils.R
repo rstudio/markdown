@@ -181,7 +181,7 @@ normalizeOptions = function(x, format = 'html') {
   n[n == 'tables'] = 'table'
   names(x) = n
   # default options
-  d = option2list(markdownOptions())
+  d = option2list(markdown_options())
   g = option2list(g)
   d[names(g)] = g  # merge global options() into default options
   d[n] = x  # then merge user-provided options
