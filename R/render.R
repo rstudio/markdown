@@ -312,12 +312,12 @@ build_output = function(format, options, template, meta) {
 
 # fix variable names for backward-compatibility
 tpl_html = function(x) {
-  x = sub_var('#!markdown_css#', '$css$', x)
-  x = sub_var('#!header#', '$header-includes$', x)
-  x = sub_var('#!title#', '$title$', x)
-  x = sub_var('#!mathjax#', '$math$', x)
-  x = sub_var('#!r_highlight#', '$highlight$', x)
-  x = sub_var('#!html_output#', '$body$', x)
+  x = sub_var(x, '#!markdown_css#', '$css$')
+  x = sub_var(x, '#!header#', '$header-includes$')
+  x = sub_var(x, '#!title#', '$title$')
+  x = sub_var(x, '#!mathjax#', '$math$')
+  x = sub_var(x, '#!r_highlight#', '$highlight$')
+  x = sub_var(x, '#!html_output#', '$body$')
   x
 }
 
