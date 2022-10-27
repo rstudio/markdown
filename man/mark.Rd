@@ -49,7 +49,7 @@ from \code{file}.}
 \pkg{commonmark}.}
 
 \item{options}{Options to be passed to the renderer. See
-\code{\link{markdownOptions}()} for all possible options. This argument can
+\code{\link{markdown_options}()} for all possible options. This argument can
 take either a character vector of the form \code{"+option1
 option2-option3"} (use \code{+} or a space to enable an option, and
 \code{-} to disable an option), or a list of the form \code{list(option1 =
