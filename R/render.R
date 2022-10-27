@@ -69,7 +69,7 @@
 #'   \code{\link[commonmark:commonmark]{markdown_*}} renderers in
 #'   \pkg{commonmark}.
 #' @param options Options to be passed to the renderer. See
-#'   \code{\link{markdownOptions}()} for all possible options. This argument can
+#'   \code{\link{markdown_options}()} for all possible options. This argument can
 #'   take either a character vector of the form \code{"+option1
 #'   option2-option3"} (use \code{+} or a space to enable an option, and
 #'   \code{-} to disable an option), or a list of the form \code{list(option1 =
@@ -380,13 +380,13 @@ tpl_html = function(x) {
 #' @export
 #' @examples
 #' # List all available options
-#' markdown::markdownOptions()
+#' markdown::markdown_options()
 #'
 #' # Turn on/off some options globally for HTML output
 #' options(markdown.html.options = '+toc-smartypants-standalone')
 #'
 #' @example inst/examples/render-options.R
-markdownOptions = function() {
+markdown_options = function() {
   # options enabled by default
   x1 = c(
     'smart', 'smartypants', 'base64_images', 'mathjax', 'highlight_code',
