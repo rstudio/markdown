@@ -1,7 +1,7 @@
 library(markdown)
 f = tempfile()
 if (file.create(f)) {
-   markdownToHTML(f, options = '-standalone')
-   markdownToHTML(f)
+   mark_html(f, options = '-standalone')
+   mark_html(f)
    unlink(f)
 }

@@ -1,9 +1,8 @@
 #' Render Markdown to an output format
 #'
 #' Render Markdown to an output format via the \pkg{commonmark} package. The
-#' function \code{markdownToHTML()} is a shorthand of
-#' \code{renderMarkdown(format = 'html')}, and \code{markdownToLaTeX()} is a
-#' shorthand of \code{renderMarkdown(format = 'latex')}.
+#' function \code{mark_html()} is a shorthand of \code{mark(format = 'html')},
+#' and \code{mark_latex()} is a shorthand of \code{mark(format = 'latex')}.
 #'
 #' Supported variables in metadata for both HTML and HTML templates (the string
 #' \code{FORMAT} below is the output format name, i.e., \code{html} or
@@ -96,15 +95,15 @@
 #' @export
 #' @examples
 #' library(markdown)
-#' renderMarkdown(c('Hello _World_!', '', 'Welcome to **markdown**.'))
+#' mark(c('Hello _World_!', '', 'Welcome to **markdown**.'))
 #' # a few corner cases
-#' renderMarkdown(character(0))
-#' renderMarkdown('')
+#' mark(character(0))
+#' mark('')
 #' # if input looks like file but should be treated as text, use I()
-#' renderMarkdown(I('This is *not* a file.md'))
+#' mark(I('This is *not* a file.md'))
 #' # that's equivalent to
-#' renderMarkdown(text = 'This is *not* a file.md')
-renderMarkdown = function(
+#' mark(text = 'This is *not* a file.md')
+mark = function(
   file = NULL, output = NULL, text = NULL, format = c('html', 'latex'),
   options = NULL, template = FALSE, meta = list()
 ) {
@@ -233,9 +232,9 @@ renderMarkdown = function(
   if (is.character(output)) xfun::write_utf8(ret, output) else ret
 }
 
-#' @rdname renderMarkdown
-#' @param ... For \code{markdownToLaTeX()}, arguments to be passed to
-#'   \code{renderMarkdown()}. For \code{markdownToHTML()}, additional arguments
+#' @rdname mark
+#' @param ... For \code{mark_latex()}, arguments to be passed to
+#'   \code{mark()}. For \code{mark_html()}, additional arguments
 #'   for backward-compatibility with previous versions of \pkg{markdown}. These
 #'   are no longer recommended. For example, the \code{stylesheet} argument
 #'   should be replaced by the \code{css} variable in \code{meta}, and the
@@ -244,10 +243,10 @@ renderMarkdown = function(
 #' @export
 #' @examples
 #'
-#' markdownToHTML('Hello _World_!', options = '-standalone')
+#' mark_html('Hello _World_!', options = '-standalone')
 #' # write HTML to an output file
-#' markdownToHTML('_Hello_, **World**!', output = tempfile())
-markdownToHTML = function(
+#' mark_html('_Hello_, **World**!', output = tempfile())
+mark_html = function(
   file = NULL, output = NULL, text = NULL, options = NULL,
   template = NULL, meta = list(), ...
 ) {
@@ -265,7 +264,7 @@ markdownToHTML = function(
   header = meta[['header-includes']] %||% extra[['header']] %||%
     get_option('markdown.html.header')
 
-  renderMarkdown(
+  mark(
     file, output, text, 'html', options, template, merge_list(meta, list(
       css = css, title = title, `header-includes` = header
     ))
@@ -273,9 +272,9 @@ markdownToHTML = function(
 }
 
 #' @export
-#' @rdname renderMarkdown
-markdownToLaTeX = function(...) {
-  renderMarkdown(..., format = 'latex')
+#' @rdname mark
+mark_latex = function(...) {
+  mark(..., format = 'latex')
 }
 
 # insert body and meta variables into a template
