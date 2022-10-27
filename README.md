@@ -12,10 +12,11 @@ Markdown is a plain-text formatting syntax that can be converted to HTML or
 other formats. This package provides wrappers based on the
 [commonmark](https://github.com/r-lib/commonmark) package.
 
-The function `renderMarkdown()` renders Markdown to various outupt formats
-supported by **commonmark**; `markdownToHTML()` is a wrapper function to render
-Markdown HTML. Options controlling output and supported Markdown extensions can
-be optionally specified.
+The main function `mark()` renders Markdown to various output formats supported
+by **commonmark**; `mark_html()` is a wrapper function to render Markdown to
+HTML, and `mark_latex()` is a wrapper function for LaTeX output. Options
+controlling output and supported Markdown extensions can be optionally
+specified.
 
 To learn more about Markdown syntax see: <https://github.github.com/gfm/>
 

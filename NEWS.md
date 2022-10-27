@@ -2,9 +2,11 @@
 
 - Replaced the underlying Markdown rendering engine from the C library **sundown** (which has been deprecated for a decade) to the R package **commonmark**.
 
-- Renamed the argument `stylesheet` to `css` in `markdownToHTML()`, and removed the argument `fragment.only` (please use `markdownToHTML(options = '-standalone')` instead of `fragment.only = TRUE`).
+- The functions `renderMarkdown()` and `markdownToHTML()` have been renamed to `mark()` and `mark_html()`, respectively.
 
-- The `file` argument of `renderMarkdown()` and `markdownToHTML()` can also take a character vector of Markdown text now.
+- Renamed the argument `stylesheet` to `css` in `mark_html()`, and removed the argument `fragment.only` (please use `mark_html(options = '-standalone')` instead of `fragment.only = TRUE`). Currently these arguments are still accepted internally, but may be deprecated and dropped in the long run.
+
+- The `file` argument of `mark()` and `mark_html()` can also take a character vector of Markdown text now.
 
 - Removed functions `rendererExists()`, `rendererOutputType()`, and `registeredRenderer()`. They were primarily for internal use.
 
