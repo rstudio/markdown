@@ -122,7 +122,7 @@ mark = function(
     }
   )
 
-  options = normalizeOptions(options, format)
+  options = normalize_options(options, format)
   options$extensions = intersect(
     names(Filter(isTRUE, options)), commonmark::list_extensions()
   )
@@ -259,7 +259,7 @@ mark_html = function(
     c('markdown.html.css', 'markdown.html.stylesheet'),
     pkg_file('resources', 'markdown.css')
   )
-  meta = normalizeMeta(meta)
+  meta = normalize_meta(meta)
   title = meta[['title']] %||% extra[['title']]
   header = meta[['header-includes']] %||% extra[['header']] %||%
     get_option('markdown.html.header')
@@ -286,7 +286,7 @@ build_output = function(format, options, template, meta) {
     pkg_file('resources', sprintf('markdown.%s', format))
   )
   tpl = one_string(template)
-  meta = normalizeMeta(meta)
+  meta = normalize_meta(meta)
   if (format == 'html') {
     b = meta$body
     if (is.null(meta[['title']])) meta$title = first_header(b)
