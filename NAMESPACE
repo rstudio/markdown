@@ -3,6 +3,7 @@
 export(markdownExtensions)
 export(markdownOptions)
 export(markdownToHTML)
+export(markdownToLaTeX)
 export(renderMarkdown)
 export(rpubsUpload)
 export(smartypants)
