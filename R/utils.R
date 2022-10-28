@@ -111,7 +111,7 @@ first_header = function(html) {
   FALSE
 }
 
-.requiresHighlight = function(x) any(grepl('<pre><code class="r"', x))
+.requiresHighlight = function(x) any(grepl('<pre><code class="(language-)?[^"]+"', x))
 
 # get an option using a case-insensitive name
 get_option = function(name, default = NULL) {
