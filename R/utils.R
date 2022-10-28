@@ -66,10 +66,10 @@ match_replace = function(x, pattern, replace = identity, ...) {
   x
 }
 
-# *guess* if an input is a file
-is_file = function(x) {
-  length(x) == 1 && !inherits(x, 'AsIs') && (
-    xfun::file_exists(x) || xfun::file_ext(x) != ''
+# *guess* if an input is a file: if ext = TRUE, avoid guessing by file extension
+is_file = function(x, ext = FALSE) {
+  length(x) == 1 && !inherits(x, 'AsIs') && nchar(x) < 1000 && !grepl('\n', x) && (
+    xfun::file_exists(x) || (!ext && xfun::file_ext(x) != '')
   )
 }
 
@@ -124,7 +124,7 @@ get_option = function(name, default = NULL) {
 # if a string is a file path, read the file; then concatenate elements by \n
 one_string = function(x) {
   if (!is.character(x)) return('')
-  if (length(x) == 1 && xfun::file_exists(x)) x = xfun::read_utf8(x)
+  if (is_file(x, TRUE)) x = xfun::read_utf8(x)
   paste(x, collapse = '\n')
 }
 

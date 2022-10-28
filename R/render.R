@@ -205,7 +205,7 @@ mark = function(
       c(build_toc(ret, options[['toc_depth']]), ret), collapse = '\n'
     )
     if (isTRUE(options[['base64_images']])) ret = xfun::in_dir(
-      if (is_file(file)) dirname(file) else '.', .b64EncodeImages(ret)
+      if (is_file(file, TRUE)) dirname(file) else '.', .b64EncodeImages(ret)
     )
   } else if (format == 'latex') {
     if (has_math) {
