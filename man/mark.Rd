@@ -49,8 +49,8 @@ from \code{file}.}
 \pkg{commonmark}.}
 
 \item{options}{Options to be passed to the renderer. See
-\code{\link{markdown_options}()} for all possible options. This argument can
-take either a character vector of the form \code{"+option1
+\code{\link{markdown_options}()} for all possible options. This argument
+can take either a character vector of the form \code{"+option1
 option2-option3"} (use \code{+} or a space to enable an option, and
 \code{-} to disable an option), or a list of the form \code{list(option1 =
 value1, option2 = value2, ...)}. A string \code{"+option1"} is equivalent
@@ -136,7 +136,9 @@ class.}
 
 Note that you can use either underscores or hyphens in the variable names.
 Underscores will be normalized to hyphens internally, e.g.,
-\code{header_includes} will be converted to \code{header-includes}.
+\code{header_includes} will be converted to \code{header-includes}. This
+means if you use a custom template, you must use hyphens instead of
+underscores as separators in variable names in the template.
 }
 \examples{
 library(markdown)
