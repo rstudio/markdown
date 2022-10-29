@@ -245,7 +245,11 @@ split_yaml = function(x) {
 }
 
 yaml_load = function(x, use_yaml = xfun::loadable('yaml')) {
-  if (use_yaml) return(yaml::yaml.load(x, eval.expr = TRUE))
+  if (use_yaml) {
+    res = xfun::try_silent(yaml::yaml.load(x, eval.expr = TRUE))
+    if (!inherits(res, 'try-error')) return(res)
+    warning(paste(c(x, '\nThe above YAML metadata may be invalid:\n', res), collapse = '\n'))
+  }
   # the below simple parser is quite limited
   res = list()
   r = '^( *)([^ ]+?):($|\\s+.*)'
