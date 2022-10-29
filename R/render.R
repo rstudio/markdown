@@ -184,6 +184,8 @@ mark = function(
     gsub('^~|~$', '\\\\~', x)
   })
 
+  # TODO: protect ```{=latex} content, and support code highlighting for latex
+
   ret = do.call(render, c(
     list(text = text),
     options[intersect(names(formals(render)), names(options))]
@@ -228,6 +230,9 @@ mark = function(
       ret = gsub(sprintf('!%s(.+?)%s!', id2, id2), '\\\\textsuperscript{\\1}', ret)
     if (has_sub)
       ret = gsub(sprintf('!%s(.+?)%s!', id3, id3), '\\\\textsubscript{\\1}', ret)
+    # TODO: if \title{} is empty, remove \maketitle
+    # fix horizontal rules from --- (\linethickness doesn't work)
+    ret = gsub('{\\linethickness}', '{1pt}', ret, fixed = TRUE)
     ret = redefine_level(ret, options[['top_level']])
   }
 
