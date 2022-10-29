@@ -102,7 +102,7 @@ restore_html = function(x) {
 
 # find the first header in html
 first_header = function(html) {
-  m = regexpr(r <- '<(h[1-6])[^>]*?>(.+?)</\\1>', html)
+  m = regexpr(r <- '<(h[1-6])[^>]*?>(.+?)</\\1>', html, perl = TRUE)
   gsub(r, '\\2', regmatches(html, m))
 }
 
@@ -149,7 +149,7 @@ build_toc = function(html, n = 3) {
   if (n <= 0) return()
   if (n > 6) n = 6
   r = sprintf('<(h[1-%d])>([^<]+)</\\1>', n)
-  items = unlist(regmatches(html, gregexpr(r, html)))
+  items = unlist(regmatches(html, gregexpr(r, html, perl = TRUE)))
   if (length(items) == 0) return()
   x = gsub(r, '<toc>\\2</toc>', items)  # use a tag <toc> to protect header text
   h = as.integer(gsub('^h', '', gsub(r, '\\1', items)))  # header level
