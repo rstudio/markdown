@@ -45,3 +45,10 @@ html_format = output_format('html')
 #' @rdname html_format
 #' @export
 latex_format = output_format('latex')
+
+# get metadata from the `meta` field under an output format
+format_meta = function(yaml, format) {
+  if (is.list(out <- yaml[['output']]) &&
+      is.list(out <- out[[sprintf('markdown::%s_format', format)]]))
+    out[['meta']]
+}

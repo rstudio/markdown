@@ -120,7 +120,7 @@ mark = function(
   # title/author/date can be provided as top-level YAML options
   meta = merge_list(
     yaml[intersect(names(yaml), c('title', 'author', 'date'))],
-    yaml[['output']][[sprintf('markdown::%s_format', format)]][['meta']],
+    format_meta(yaml, format),
     meta
   )
 
