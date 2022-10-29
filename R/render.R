@@ -301,6 +301,7 @@ mark_latex = function(...) {
 build_output = function(format, options, template, meta) {
   if (!isTRUE(options[['standalone']]) || !format %in% c('html', 'latex') ||
       xfun::isFALSE(template)) return(meta$body)
+  # TODO: clean up the default HTML template (e.g., use highlight.js from CDN)
   if (is.null(template) || isTRUE(template)) template = get_option(
     sprintf('markdown.%s.template', format),
     pkg_file('resources', sprintf('markdown.%s', format))
