@@ -115,7 +115,14 @@ mark = function(
   }
   text = xfun::split_lines(text)
 
+  part = split_yaml(text); yaml = part$yaml; text = part$body
   format = format[1]
+  # title/author/date can be provided as top-level YAML options
+  meta = merge_list(
+    yaml[intersect(names(yaml), c('title', 'author', 'date'))],
+    yaml[['output']][[sprintf('markdown::%s_format', format)]][['meta']],
+    meta
+  )
 
   render = tryCatch(
     getFromNamespace(paste0('markdown_', tolower(format)), 'commonmark'),

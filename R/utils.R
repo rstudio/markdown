@@ -39,10 +39,17 @@ fracs = local({
 
 pants = c(fracs, c('(c)' = '&copy;', '(r)' = '&reg;', '(tm)' = '&trade;'))
 
-# merge y into x by name
-merge_list = function(x, y) {
-  x[names(y)] = y
-  x
+# merge a later list in arguments into a former one by name
+merge_list = function(...) {
+  dots = list(...)
+  res  = dots[[1]]
+  for (i in seq_along(dots) - 1L) {
+    if (i == 0) next
+    x = dots[[i + 1]]
+    if (!is.list(x)) next
+    res[names(x)] = x
+  }
+  res
 }
 
 CHARS = c(letters, LETTERS, 0:9, '!', ',', '/', ':', ';', '=', '@')
@@ -221,6 +228,55 @@ option2list = function(x) {
 }
 
 pkg_file = function(...) system.file(..., package = 'markdown', mustWork = TRUE)
+
+# partition the YAML metadata from the document body and parse it
+split_yaml = function(x) {
+  i = grep('^---\\s*$', x)
+  n = length(x)
+  res = if (n < 2 || length(i) < 2 || (i[1] > 1 && !all(is_blank(x[seq(i[1] - 1)])))) {
+    list(yaml = list(), body = x)
+  } else list(
+    yaml = x[i[1]:i[2]], body = c(rep('', i[2]), tail(x, n - i[2]))
+  )
+  if ((n <- length(res$yaml)) >= 3) {
+    res$yaml = yaml_load(res$yaml[-c(1, n)])
+  }
+  res
+}
+
+yaml_load = function(x, use_yaml = xfun::loadable('yaml')) {
+  if (use_yaml) return(yaml::yaml.load(x, eval.expr = TRUE))
+  # the below simple parser is quite limited
+  res = list()
+  r = '^( *)([^ ]+?):($|\\s+.*)'
+  x = xfun::split_lines(x)
+  x = x[grep(r, x)]
+  x = x[grep('^\\s*#', x, invert = TRUE)]  # comments
+  if (length(x) == 0) return(res)
+  lvl = gsub(r, '\\1', x)  # indentation level
+  key = gsub(r, '\\2', x)
+  val = gsub('^\\s*|\\s*$', '', gsub(r, '\\3', x))
+  keys = NULL
+  for (i in seq_along(x)) {
+    keys = c(head(keys, nchar(lvl[i])/2), key[i])
+    res[[keys]] = if (is_blank(val[i])) list() else yaml_value(val[i])
+  }
+  res
+}
+
+is_blank = function(x) grepl('^\\s*$', x)
+
+# only support scalar logical, numeric, and character values
+yaml_value = function(x) {
+  v = tolower(x)
+  if (v == 'null') return()
+  if (grepl('^true|false$', v)) return(as.logical(x))
+  if (grepl('^[0-9.e+-]', v)) {
+    v = suppressWarnings(as.numeric(v))
+    if (!is.na(v)) return(v)
+  }
+  x
+}
 
 # TODO: remove this function when revdeps have been fixed
 .b64EncodeFile = function(...) xfun::base64_uri(...)
