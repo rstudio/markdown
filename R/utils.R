@@ -293,10 +293,6 @@ yaml_value = function(x) {
 #' @keywords internal
 markdownExtensions = function(...) {
   # TODO: remove this function in future
-  warn2(
-    "The function 'markdownExtensions()' has been deprecated in the markdown package. ",
-    "Please specify extensions via the `options` argument instead."
-  )
   NULL
 }
 
@@ -308,11 +304,6 @@ markdownExtensions = function(...) {
 }
 
 # TODO: remove these hacks eventually
-# whether we need to "cheat" in certain cases (to avoid breaking packages on CRAN)
-cruel = function() {
-  xfun::is_CRAN_incoming() || any(tolower(Sys.getenv(c('NOT_CRAN', 'CI'))) == 'true')
-}
-warn2 = function(...) if (cruel()) warning(...)
 tweak_html = function(x, text) {
   if (xfun::check_old_package('plumbertableau', '0.1.0') ||
       xfun::check_old_package('tutorial', '0.4.3') ||
