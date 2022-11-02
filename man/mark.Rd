@@ -16,17 +16,9 @@ mark(
   meta = list()
 )
 
-mark_html(
-  file = NULL,
-  output = NULL,
-  text = NULL,
-  options = NULL,
-  template = NULL,
-  meta = list(),
-  ...
-)
+mark_html(..., options = NULL, template = TRUE, meta = list())
 
-mark_latex(...)
+mark_latex(..., template = TRUE)
 }
 \arguments{
 \item{file}{Path to an input file. If not provided, it is presumed that the
@@ -70,13 +62,12 @@ to fill out the template by their names and values, e.g., \code{list(title
 = ...)} will replace the \code{$title$} variable in the template. See the
 \sQuote{Details} section for supported variables.}
 
-\item{...}{For \code{mark_latex()}, arguments to be passed to
-\code{mark()}. For \code{mark_html()}, additional arguments
-for backward-compatibility with previous versions of \pkg{markdown}. These
-are no longer recommended. For example, the \code{stylesheet} argument
-should be replaced by the \code{css} variable in \code{meta}, and the
-\code{fragment.only = TRUE} argument should be specified via \code{options
-= '-standalone'} instead.}
+\item{...}{Arguments to be passed to \code{mark()}. For \code{mark_html()},
+also additional arguments for backward-compatibility with previous versions
+of \pkg{markdown}. These are no longer recommended. For example, the
+\code{stylesheet} argument should be replaced by the \code{css} variable in
+\code{meta}, and the \code{fragment.only = TRUE} argument should be
+specified via \code{options = '-standalone'} instead.}
 }
 \value{
 Invisible \code{NULL} when output is to a file, otherwise a character
@@ -154,6 +145,8 @@ mark(text = "This is *not* a file.md")
 mark_html("Hello _World_!", options = "-standalone")
 # write HTML to an output file
 mark_html("_Hello_, **World**!", output = tempfile())
+
+mark_latex("Hello _World_!", template = FALSE)
 }
 \seealso{
 The spec of GitHub Flavored Markdown:

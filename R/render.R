@@ -253,23 +253,19 @@ mark = function(
 }
 
 #' @rdname mark
-#' @param ... For \code{mark_latex()}, arguments to be passed to
-#'   \code{mark()}. For \code{mark_html()}, additional arguments
-#'   for backward-compatibility with previous versions of \pkg{markdown}. These
-#'   are no longer recommended. For example, the \code{stylesheet} argument
-#'   should be replaced by the \code{css} variable in \code{meta}, and the
-#'   \code{fragment.only = TRUE} argument should be specified via \code{options
-#'   = '-standalone'} instead.
+#' @param ... Arguments to be passed to \code{mark()}. For \code{mark_html()},
+#'   also additional arguments for backward-compatibility with previous versions
+#'   of \pkg{markdown}. These are no longer recommended. For example, the
+#'   \code{stylesheet} argument should be replaced by the \code{css} variable in
+#'   \code{meta}, and the \code{fragment.only = TRUE} argument should be
+#'   specified via \code{options = '-standalone'} instead.
 #' @export
 #' @examples
 #'
 #' mark_html('Hello _World_!', options = '-standalone')
 #' # write HTML to an output file
 #' mark_html('_Hello_, **World**!', output = tempfile())
-mark_html = function(
-  file = NULL, output = NULL, text = NULL, options = NULL,
-  template = NULL, meta = list(), ...
-) {
+mark_html = function(..., options = NULL, template = TRUE, meta = list()) {
   # for backward-compatibility of arguments `stylesheet`, `title`, `header`, etc.
   extra = list(...)
   # fragment_only -> !standalone (TODO: may drop fragment_only in future)
@@ -285,7 +281,8 @@ mark_html = function(
     get_option('markdown.html.header')
 
   mark(
-    file, output, text, 'html', options, template, merge_list(meta, list(
+    ..., format = 'html', options = options, template = template,
+    meta = merge_list(meta, list(
       css = css, title = title, `header-includes` = header
     ))
   )
@@ -293,8 +290,11 @@ mark_html = function(
 
 #' @export
 #' @rdname mark
-mark_latex = function(...) {
-  mark(..., format = 'latex')
+#' @examples
+#'
+#' mark_latex('Hello _World_!', template = FALSE)
+mark_latex = function(..., template = TRUE) {
+  mark(..., format = 'latex', template = template)
 }
 
 # insert body and meta variables into a template
