@@ -22,17 +22,6 @@ a^{2}+b^{2} & = & c^{2}\\\\
 cat(mark(mkd))
 cat(mark(mkd, options = "-latex_math"))
 
-# smartypants example
-cat(mark("1/2 (c)"))
-cat(mark("1/2 (c)", options = "-smartypants"))
-
-mkd <- names(markdown:::pants)
-mkd <- paste(c(mkd, paste0('`', mkd, '`')), collapse = ' ')
-cat(mark(mkd))
-cat(mark(mkd, options = "-smartypants"))
-
-cat(smartypants("1/2 (c)\n"))
-
 # tables example (need 4 spaces at beginning of line here)
 cat(mark("
 First Header  | Second Header

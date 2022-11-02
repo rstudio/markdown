@@ -5,10 +5,13 @@
 
 This vignette shows how the output looks like in HTML from the other vignette `markdown-examples.Rmd`, in which the literal HTML code was shown.
 
-```{r read, include=FALSE}
-library(knitr)
-opts_chunk$set(results = 'asis')
-out = knit_child(text = scan('markdown-examples.Rmd', what = 'character', skip = 7, sep = '\n'))
+```{r, markdown-output, results='asis', tidy=FALSE, file=markdown:::pkg_file('examples', 'render-options.R')}
 ```
 
-`r paste(out, collapse = '\n')`
+```{r, smartypants, results='asis', eval=isTRUE(l10n_info()[['UTF-8']])}
+# smartypants example
+cat(mark("1/2 (c)"))
+
+mkd <- paste(names(markdown:::pants), collapse = ' ')
+cat(mark(mkd))
+```

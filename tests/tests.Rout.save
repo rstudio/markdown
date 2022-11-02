@@ -1,5 +1,5 @@
 
-R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+R version 4.2.2 (2022-10-31) -- "Innocent and Trusting"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-apple-darwin17.0 (64-bit)
 
@@ -74,24 +74,6 @@ a^{2}+b^{2} &amp; = &amp; c^{2}\
 \sin^{2}(x)+\cos^{2}(x) &amp; = &amp; 1
 \end{eqnarray}</p>
 
-> cat(mark("1/2 (c)"))
-<p>½ ©</p>
-
-> cat(mark("1/2 (c)", options = "-smartypants"))
-<p>1/2 (c)</p>
-
-> mkd <- names(markdown:::pants)
-
-> mkd <- paste(c(mkd, paste0("`", mkd, "`")), collapse = " ")
-
-> cat(mark(mkd))
-<p>½ ⅓ ⅔ ¼ ¾ ⅕ ⅖ ⅗ ⅘ ⅙ ⅚ ⅛ ⅜ ⅝ ⅞ ⅐ ⅑ ⅒ © ® ™ <code>1/2</code> <code>1/3</code> <code>2/3</code> <code>1/4</code> <code>3/4</code> <code>1/5</code> <code>2/5</code> <code>3/5</code> <code>4/5</code> <code>1/6</code> <code>5/6</code> <code>1/8</code> <code>3/8</code> <code>5/8</code> <code>7/8</code> <code>1/7</code> <code>1/9</code> <code>1/10</code> <code>(c)</code> <code>(r)</code> <code>(tm)</code></p>
-
-> cat(mark(mkd, options = "-smartypants"))
-<p>1/2 1/3 2/3 1/4 3/4 1/5 2/5 3/5 4/5 1/6 5/6 1/8 3/8 5/8 7/8 1/7 1/9 1/10 (c) (r) (tm) <code>1/2</code> <code>1/3</code> <code>2/3</code> <code>1/4</code> <code>3/4</code> <code>1/5</code> <code>2/5</code> <code>3/5</code> <code>4/5</code> <code>1/6</code> <code>5/6</code> <code>1/8</code> <code>3/8</code> <code>5/8</code> <code>7/8</code> <code>1/7</code> <code>1/9</code> <code>1/10</code> <code>(c)</code> <code>(r)</code> <code>(tm)</code></p>
-
-> cat(smartypants("1/2 (c)\n"))
-&frac12; &copy; 
 > cat(mark("\nFirst Header  | Second Header\n------------- | -------------\nContent Cell  | Content Cell\nContent Cell  | Content Cell\n"))
 <table>
 <thead>
