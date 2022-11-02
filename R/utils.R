@@ -13,16 +13,13 @@
 smartypants = function(text) {
   text = xfun::split_lines(text)
   i = xfun::prose_index(text)
-  x = text[i]
   r = '(?<!`)\\((c|r|tm)\\)|(\\d+/\\d+)(?!`)'
-  m = gregexpr(r, x, perl = TRUE)
-  regmatches(x, m) = lapply(regmatches(x, m), function(z) {
+  text[i] = match_replace(text[i], r, perl = TRUE, function(z) {
     y = pants[z]
     i = is.na(y)
     y[i] = z[i]
     y
   })
-  text[i] = x
   text
 }
 
