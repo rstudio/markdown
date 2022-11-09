@@ -4,8 +4,8 @@ output_format = function(to = 'html') {
     meta = NULL, template = NULL, options = NULL, keep_md = FALSE,
     keep_tex = FALSE, latex_engine = 'xelatex'
   ) {
-    if (packageVersion('rmarkdown') < '2.17.2')
-      stop('rmarkdown version >= 2.17.2 required.')
+    if (packageVersion('rmarkdown') < '2.18')
+      stop('rmarkdown version >= 2.18 required.')
     opts = rmarkdown::pandoc_options(
       to = to, keep_tex = keep_tex, latex_engine = latex_engine, args = '--template'
     )
