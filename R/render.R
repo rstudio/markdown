@@ -239,7 +239,6 @@ mark = function(
       ret = gsub(sprintf('!%s(.+?)%s!', id2, id2), '\\\\textsuperscript{\\1}', ret)
     if (has_sub)
       ret = gsub(sprintf('!%s(.+?)%s!', id3, id3), '\\\\textsubscript{\\1}', ret)
-    # TODO: if \title{} is empty, remove \maketitle
     # fix horizontal rules from --- (\linethickness doesn't work)
     ret = gsub('{\\linethickness}', '{1pt}', ret, fixed = TRUE)
     ret = redefine_level(ret, options[['top_level']])
@@ -248,6 +247,9 @@ mark = function(
   meta$body = ret
   # use the template (if provided) to create a standalone document
   ret = build_output(format, options, template, meta)
+  # remove \title and \maketitle if title is empty
+  if (format == 'latex' && grepl('\n\\title{}\n', ret, fixed = TRUE))
+    ret = gsub('\n(\\\\title\\{}|\\\\maketitle)\n', '\n', ret)
 
   if (is.character(output)) xfun::write_utf8(ret, output) else ret
 }

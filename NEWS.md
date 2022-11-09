@@ -1,3 +1,7 @@
+# CHANGES IN markdown VERSION 1.4
+
+- Empty `\title{}` in LaTeX output will be removed (along with `\maketitle`).
+
 # CHANGES IN markdown VERSION 1.3
 
 - Switched the underlying Markdown rendering engine from the C library **sundown** (which has been deprecated for a decade) to the R package **commonmark** (thanks, @jeroen, yihui/knitr#1329).
