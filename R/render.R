@@ -285,9 +285,9 @@ mark_html = function(..., options = NULL, template = TRUE, meta = list()) {
 
   mark(
     ..., format = 'html', options = options, template = template,
-    meta = merge_list(meta, list(
+    meta = merge_list(meta, drop_null(list(
       css = css, title = title, `header-includes` = header
-    ))
+    )))
   )
 }
 
