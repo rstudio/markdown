@@ -107,8 +107,9 @@
 #' mark(text = 'This is *not* a file.md')
 mark = function(
   file = NULL, output = NULL, text = NULL, format = c('html', 'latex'),
-  options = NULL, template = FALSE, meta = list()
+  options = NULL, template = FALSE, meta = list(), ...
 ) {
+  # TODO: remove the ... argument
   if (is.null(text)) {
     if (!is.character(file)) stop("Either 'file' or 'text' must be provided.")
     text = if (is_file(file)) xfun::read_utf8(file) else file

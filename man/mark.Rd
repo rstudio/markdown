@@ -13,7 +13,8 @@ mark(
   format = c("html", "latex"),
   options = NULL,
   template = FALSE,
-  meta = list()
+  meta = list(),
+  ...
 )
 
 mark_html(..., options = NULL, template = TRUE, meta = list())
