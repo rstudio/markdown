@@ -248,7 +248,28 @@ option2list = function(x) {
   c(namedBool(sub('^[-]', '', x[i]), FALSE), namedBool(sub('^[+]', '', x[!i])))
 }
 
-pkg_file = function(...) system.file(..., package = 'markdown', mustWork = TRUE)
+pkg_file = function(...) {
+  res = system.file(..., package = 'markdown', mustWork = TRUE)
+  # TODO: remove this hack after the next release of polmineR
+  if (!xfun::check_old_package('polmineR', '0.8.7')) return(res)
+  x = basename(file.path(...))
+  if (x == 'highlight.html') x = 'r_highlight.html'
+  if (!x %in% c('markdown.css', 'markdown.html', 'r_highlight.html')) return(res)
+  download_old(x)
+}
+
+# cache downloaded file
+download_old = local({
+  db = list()
+  function(file) {
+    if (!is.null(db[[file]])) return(db[[file]])
+    u = sprintf('https://cdn.jsdelivr.net/gh/rstudio/markdown@v1.3/inst/resources/%s', file)
+    f = tempfile()
+    xfun::download_file(u, f, quiet = TRUE)
+    db[[file]] <<- f
+    f
+  }
+})
 
 # partition the YAML metadata from the document body and parse it
 split_yaml = function(x) {
