@@ -300,7 +300,7 @@ yaml_value = function(x) {
     v = suppressWarnings(as.numeric(v))
     if (!is.na(v)) return(v)
   }
-  x
+  gsub('^["\']|["\']$', '', x)  # remove optional quotes for strings
 }
 
 # TODO: remove this function when revdeps have been fixed
