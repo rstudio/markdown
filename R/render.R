@@ -313,7 +313,7 @@ build_output = function(format, options, template, meta) {
   if (format == 'html') {
     b = meta$body
     if (is.null(meta[['title']])) meta$title = first_header(b)
-    if (is.null(length(meta[['math']])))
+    if (is.null(meta[['math']]))
       meta$math = if (isTRUE(options[['mathjax']]) && .requiresMathJax(b)) {
         .mathJax(embed = isTRUE(options[['mathjax_embed']]))
       }

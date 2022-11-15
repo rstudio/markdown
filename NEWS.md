@@ -4,6 +4,8 @@
 
 - highlight.js is loaded from https://www.jsdelivr.com/package/gh/highlightjs/cdn-release by default now. This means more languages are supported (not only R), but also means syntax-highlighting will not work offline at the moment (it will be improved in future).
 
+- MathJax failed to load in the previous version. The bug has been fixed now.
+
 - Removed the function `markdownExtensions()`.
 
 # CHANGES IN markdown VERSION 1.3
