@@ -124,7 +124,25 @@ first_header = function(html) {
   FALSE
 }
 
-.requiresHighlight = function(x) any(grepl('<pre><code class="(language-)?[^"]+"', x))
+highlight_js = function(opts, html) {
+  if (isTRUE(opts)) opts = list()
+  if (!is.list(opts) || !any(grepl('<code class="(language-)?[^"]+"', html)))
+    return()
+  # TODO: we could automatically detect <code> languages in html and load the
+  # necessary highlight.js language component (e.g., languages/latex.min.js)
+  opts = merge_list(
+    list(version = '11.6.0', style = 'github', languages = NULL), opts
+  )
+  tpl = one_string(pkg_file('resources', 'highlight.html'))
+  js = paste0(
+    sprintf('gh/highlightjs/cdn-release@%s/build/', opts$version),
+    c('highlight', sprintf('languages/%s', opts$languages)),
+    '.min.js', collapse = ','
+  )
+  tpl = sub_var(tpl, '$style$', opts$style)
+  tpl = sub_var(tpl, '$js$', js)
+  tpl
+}
 
 # get an option using a case-insensitive name
 get_option = function(name, default = NULL) {

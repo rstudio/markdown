@@ -303,7 +303,6 @@ mark_latex = function(..., template = TRUE) {
 build_output = function(format, options, template, meta) {
   if (!isTRUE(options[['standalone']]) || !format %in% c('html', 'latex') ||
       xfun::isFALSE(template)) return(meta$body)
-  # TODO: clean up the default HTML template (e.g., use highlight.js from CDN)
   if (is.null(template) || isTRUE(template)) template = get_option(
     sprintf('markdown.%s.template', format),
     pkg_file('resources', sprintf('markdown.%s', format))
@@ -318,9 +317,7 @@ build_output = function(format, options, template, meta) {
         .mathJax(embed = isTRUE(options[['mathjax_embed']]))
       }
     if (is.null(meta[['highlight']]))
-      meta$highlight = if (isTRUE(options[['highlight_code']]) && .requiresHighlight(b)) {
-        pkg_file('resources', 'r_highlight.html')
-      }
+      meta$highlight = highlight_js(options[['highlight_code']], b)
     tpl = tpl_html(tpl)
   }
   # find all variables in the template
