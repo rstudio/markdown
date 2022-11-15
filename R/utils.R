@@ -301,16 +301,6 @@ yaml_value = function(x) {
 # TODO: remove this function when revdeps have been fixed
 .b64EncodeFile = function(...) xfun::base64_uri(...)
 
-#' Deprecated
-#'
-#' Please specify extensions via the \code{options} argument instead.
-#' @export
-#' @keywords internal
-markdownExtensions = function(...) {
-  # TODO: remove this function in future
-  NULL
-}
-
 # TODO: remove this after https://github.com/PolMine/polmineR/pull/232 is fixed
 .onLoad = function(lib, pkg) {
   if (is.null(getOption('markdown.HTML.stylesheet')) && 'polmineR' %in% loadedNamespaces()) {
