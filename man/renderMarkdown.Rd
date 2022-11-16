@@ -7,10 +7,27 @@
 \usage{
 renderMarkdown(...)
 
-markdownToHTML(...)
+markdownToHTML(
+  ...,
+  options = getOption("markdown.HTML.options"),
+  title = NULL,
+  stylesheet = getOption("markdown.HTML.stylesheet"),
+  header = getOption("markdown.HTML.header"),
+  template = getOption("markdown.HTML.template", TRUE),
+  fragment.only = FALSE,
+  encoding = "UTF-8"
+)
 }
 \arguments{
-\item{...}{Arguments to be passed to new functions.}
+\item{..., options, template}{Arguments to be passed to new functions.}
+
+\item{title, stylesheet, header}{Arguments to be passed to \code{meta =
+list(title = , css = , `header-includes` = )}, which is passed to
+\code{mark_html()}.}
+
+\item{fragment.only}{Whether to generate a fragment or a full HTML document.}
+
+\item{encoding}{Ignored.}
 }
 \description{
 These functions are kept in this package for backward-compatibility. They

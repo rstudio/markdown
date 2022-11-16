@@ -5,11 +5,28 @@
 #' use their new names instead: \code{renderMarkdown()} has become
 #' \code{\link{mark}()}, and \code{markdownToHTML()} has become
 #' \code{\link{mark_html}()}.
-#' @param ... Arguments to be passed to new functions.
+#' @param ...,options,template Arguments to be passed to new functions.
+#' @param title,stylesheet,header Arguments to be passed to \code{meta =
+#'   list(title = , css = , `header-includes` = )}, which is passed to
+#'   \code{mark_html()}.
+#' @param fragment.only Whether to generate a fragment or a full HTML document.
+#' @param encoding Ignored.
 #' @export
 #' @keywords internal
 renderMarkdown = function(...) mark(...)
 
 #' @rdname renderMarkdown
 #' @export
-markdownToHTML = function(...) mark_html(...)
+markdownToHTML = function(
+  ..., options = getOption('markdown.HTML.options'),
+  title = NULL, stylesheet = getOption('markdown.HTML.stylesheet'),
+  header = getOption('markdown.HTML.header'),
+  template = getOption('markdown.HTML.template', TRUE),
+  fragment.only = FALSE, encoding = 'UTF-8'
+) {
+  if (fragment.only || 'fragment_only' %in% options) template = FALSE
+  meta = list(css = stylesheet %||% pkg_file('resources', 'markdown.css'))
+  meta$title = title
+  meta$`header-includes` = header
+  mark_html(..., options = options, template = template, meta = meta)
+}

@@ -1,7 +1,7 @@
 Package: markdown
 Type: Package
 Title: Render Markdown with 'commonmark'
-Version: 1.4.1
+Version: 1.4.2
 Authors@R: c(
    person("JJ", "Allaire", role = "aut"),
    person("Jeffrey", "Horner", role = "aut"),
@@ -37,5 +37,5 @@ License: GPL-2
 URL: https://github.com/rstudio/markdown
 BugReports: https://github.com/rstudio/markdown/issues
 VignetteBuilder: knitr
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.2
 Encoding: UTF-8

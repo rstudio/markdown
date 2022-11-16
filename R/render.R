@@ -107,9 +107,8 @@
 #' mark(text = 'This is *not* a file.md')
 mark = function(
   file = NULL, output = NULL, text = NULL, format = c('html', 'latex'),
-  options = NULL, template = FALSE, meta = list(), ...
+  options = NULL, template = FALSE, meta = list()
 ) {
-  # TODO: remove the ... argument
   if (is.null(text)) {
     if (!is.character(file)) stop("Either 'file' or 'text' must be provided.")
     text = if (is_file(file)) xfun::read_utf8(file) else file
@@ -279,39 +278,15 @@ mark = function(
 }
 
 #' @rdname mark
-#' @param ... Arguments to be passed to \code{mark()}. For \code{mark_html()},
-#'   also additional arguments for backward-compatibility with previous versions
-#'   of \pkg{markdown}. These are no longer recommended. For example, the
-#'   \code{stylesheet} argument should be replaced by the \code{css} variable in
-#'   \code{meta}, and the \code{fragment.only = TRUE} argument should be
-#'   specified via \code{options = '-standalone'} instead.
+#' @param ... Arguments to be passed to \code{mark()}.
 #' @export
 #' @examples
 #'
 #' mark_html('Hello _World_!', options = '-standalone')
 #' # write HTML to an output file
 #' mark_html('_Hello_, **World**!', output = tempfile())
-mark_html = function(..., options = NULL, template = TRUE, meta = list()) {
-  # for backward-compatibility of arguments `stylesheet`, `title`, `header`, etc.
-  extra = list(...)
-  # fragment_only -> !standalone (TODO: may drop fragment_only in future)
-  if (isTRUE(extra[['fragment.only']]) ||
-      (is.character(options) && 'fragment_only' %in% options)) template = FALSE
-  css = meta[['css']] %||% extra[['stylesheet']] %||% get_option(
-    c('markdown.html.css', 'markdown.html.stylesheet'),
-    pkg_file('resources', 'markdown.css')
-  )
-  meta = normalize_meta(meta)
-  title = meta[['title']] %||% extra[['title']]
-  header = meta[['header-includes']] %||% extra[['header']] %||%
-    get_option('markdown.html.header')
-
-  mark(
-    ..., format = 'html', options = options, template = template,
-    meta = merge_list(meta, drop_null(list(
-      css = css, title = title, `header-includes` = header
-    )))
-  )
+mark_html = function(..., template = TRUE) {
+  mark(..., format = 'html', template = template)
 }
 
 #' @export

@@ -13,11 +13,10 @@ mark(
   format = c("html", "latex"),
   options = NULL,
   template = FALSE,
-  meta = list(),
-  ...
+  meta = list()
 )
 
-mark_html(..., options = NULL, template = TRUE, meta = list())
+mark_html(..., template = TRUE)
 
 mark_latex(..., template = TRUE)
 }
@@ -63,12 +62,7 @@ to fill out the template by their names and values, e.g., \code{list(title
 = ...)} will replace the \code{$title$} variable in the template. See the
 \sQuote{Details} section for supported variables.}
 
-\item{...}{Arguments to be passed to \code{mark()}. For \code{mark_html()},
-also additional arguments for backward-compatibility with previous versions
-of \pkg{markdown}. These are no longer recommended. For example, the
-\code{stylesheet} argument should be replaced by the \code{css} variable in
-\code{meta}, and the \code{fragment.only = TRUE} argument should be
-specified via \code{options = '-standalone'} instead.}
+\item{...}{Arguments to be passed to \code{mark()}.}
 }
 \value{
 Invisible \code{NULL} when output is to a file, otherwise a character
