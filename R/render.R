@@ -219,11 +219,14 @@ mark = function(
       ret = gsub(sprintf('!%s(.+?)%s!', id2, id2), '<sup>\\1</sup>', ret)
     if (has_sub)
       ret = gsub(sprintf('!%s(.+?)%s!', id3, id3), '<sub>\\1</sub>', ret)
-    # restore raw html content from ```{=html}
-    r4 = '<pre><code class="language-\\{=html}">((.|\n)+?)</code></pre>'
-    ret = match_replace(ret, r4, perl = TRUE, function(x) {
-      x = gsub(r4, '\\1', x, perl = TRUE)
-      restore_html(x)
+    r4 = '<pre><code class="language-\\{=([^}]+)}">(.+?)</code></pre>\n'
+    ret = match_replace(ret, r4, function(x) {
+      # restore raw html content from ```{=html}
+      i = gsub(r4, '\\1', x) == 'html'
+      x[i] = restore_html(gsub(r4, '\\2', x[i]))
+      # discard other types of raw content blocks
+      x[!i] = ''
+      x
     })
     if (isTRUE(options[['toc']])) ret = paste(
       c(build_toc(ret, options[['toc_depth']]), ret), collapse = '\n'
