@@ -1,7 +1,7 @@
 Package: markdown
 Type: Package
 Title: Render Markdown with 'commonmark'
-Version: 1.4
+Version: 1.4.1
 Authors@R: c(
    person("JJ", "Allaire", role = "aut"),
    person("Jeffrey", "Horner", role = "aut"),
@@ -27,8 +27,7 @@ Depends:
 Imports:
     utils,
     commonmark,
-    xfun,
-    mime (>= 0.3)
+    xfun (>= 0.35)
 Suggests:
     knitr,
     rmarkdown (>= 2.18),

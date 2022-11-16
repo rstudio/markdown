@@ -200,9 +200,8 @@ redefine_level = function(x, top) {
     src = sub(reg, '\\1', z)
     # skip images already base64 encoded
     for (i in grep('^data:.+;base64,.+', src, invert = TRUE)) {
-      # TODO: perhaps can remove the hard dependency on mime
       if (file.exists(f <- URLdecode(src[i]))) z[i] = sub(
-        src[i], xfun::base64_uri(f, mime::guess_type(f)), z[i], fixed = TRUE
+        src[i], xfun::base64_uri(f), z[i], fixed = TRUE
       )
     }
     z

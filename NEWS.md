@@ -1,3 +1,7 @@
+# CHANGES IN markdown VERSION 1.5
+
+- Removed dependency on the **mime** package.
+
 # CHANGES IN markdown VERSION 1.4
 
 - Empty `\title{}` in LaTeX output will be removed (along with `\maketitle`).
