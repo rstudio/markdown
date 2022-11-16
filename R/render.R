@@ -148,7 +148,7 @@ mark = function(
   # protect $ $ and $$ $$ math expressions for html/latex output
   if (has_math <- test_feature('latex_math', '[$]')) {
     id = id_string(text); maths = NULL
-    text = protect_math(text, id)
+    text = xfun::protect_math(text, id)
     # temporarily replace math expressions with tokens and restore them later;
     # no need to do this for html output because we need special HTML characters
     # like &<> in math expressions to be converted to entities, but shouldn't
