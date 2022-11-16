@@ -310,14 +310,15 @@ build_output = function(format, options, template, meta) {
   meta = normalize_meta(meta)
   if (format == 'html') {
     b = meta$body
-    if (is.null(meta[['title']])) meta$title = first_header(b)
-    if (!'css' %in% names(meta)) meta$css = pkg_file('resources', 'markdown.css')
-    if (is.null(meta[['math']]))
-      meta$math = if (isTRUE(options[['mathjax']]) && .requiresMathJax(b)) {
-        .mathJax(embed = isTRUE(options[['mathjax_embed']]))
-      }
-    if (is.null(meta[['highlight']]))
-      meta$highlight = highlight_js(options[['highlight_code']], b)
+    set_meta = function(name, value) {
+      if (!name %in% names(meta)) meta[[name]] <<- value
+    }
+    set_meta('title', first_header(b))
+    set_meta('css', pkg_file('resources', 'markdown.css'))
+    set_meta('math', if (isTRUE(options[['mathjax']]) && .requiresMathJax(b)) {
+      .mathJax(embed = isTRUE(options[['mathjax_embed']]))
+    })
+    set_meta('highlight', highlight_js(options[['highlight_code']], b))
     tpl = tpl_html(tpl)
   }
   # find all variables in the template
