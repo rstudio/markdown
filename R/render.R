@@ -194,18 +194,13 @@ mark = function(
     gsub('^~|~$', '\\\\~', x)
   })
 
-  # protect raw ```{=latex} content
+  # put info string inside code blocks so the info won't be lost, e.g., ```r -> ```\nr
   if (format == 'latex') {
-    id4 = id_string(text); raws = NULL
-    r4 = '(^|\n)([> ]*```+)(\\{=latex})\n(.*?)\n(\\2)(\n|$)'
-    text = paste(text, collapse = '\n')
-    text = match_replace(text, r4, perl = TRUE, function(x) {
-      raws <<- c(raws, gsub(r4, '\\4', x))
-      gsub(r4, sprintf('\\1%s\\6', id4), x, perl = TRUE)
-    })
-    text = xfun::split_lines(text)
+    id4 = id_string(text)
+    text = gsub(
+      '^([> ]*)(```+)([^`].*)$', sprintf('\\1\\2\n\\1%s\\3%s', id4, id4), text
+    )
   }
-  # TODO: support code highlighting for latex
 
   ret = do.call(render, c(
     list(text = text),
@@ -251,12 +246,19 @@ mark = function(
       ret = gsub(sprintf('!%s(.+?)%s!', id2, id2), '\\\\textsuperscript{\\1}', ret)
     if (has_sub)
       ret = gsub(sprintf('!%s(.+?)%s!', id3, id3), '\\\\textsubscript{\\1}', ret)
-    if (length(raws)) ret = match_replace(ret, id4, function(x) {
-      if (length(x) != length(raws)) warning(
-        'Raw LaTeX blocks cannot be restored correctly (expected ',
-        length(raws), ' block(s) but found ', length(x), ' in the output.'
-      )
-      raws
+    r4 = sprintf(
+      '(\\\\begin\\{verbatim}\n)%s(.+?)%s\n(.*?\n)(\\\\end\\{verbatim}\n)', id4, id4
+    )
+    ret = match_replace(ret, r4, function(x) {
+      info = gsub(r4, '\\2', x)
+      info = gsub('^\\{|}$', '', info)
+      i = info == '=latex'
+      x[i] = gsub(r4, '\\3', x[i])  # restore raw ```{=latex} content
+      i = !i & grepl('^=', info)
+      x[i] = ''  # discard other raw content
+      # TODO: support code highlighting for latex (listings or highr::hi_latex)
+      x = gsub(r4, '\\1\\3\\4', x)
+      x
     })
     # fix horizontal rules from --- (\linethickness doesn't work)
     ret = gsub('{\\linethickness}', '{1pt}', ret, fixed = TRUE)
