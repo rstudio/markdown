@@ -311,6 +311,7 @@ build_output = function(format, options, template, meta) {
   if (format == 'html') {
     b = meta$body
     if (is.null(meta[['title']])) meta$title = first_header(b)
+    if (!'css' %in% names(meta)) meta$css = pkg_file('resources', 'markdown.css')
     if (is.null(meta[['math']]))
       meta$math = if (isTRUE(options[['mathjax']]) && .requiresMathJax(b)) {
         .mathJax(embed = isTRUE(options[['mathjax_embed']]))

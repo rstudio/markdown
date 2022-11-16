@@ -25,7 +25,8 @@ markdownToHTML = function(
   fragment.only = FALSE, encoding = 'UTF-8'
 ) {
   if (fragment.only || 'fragment_only' %in% options) template = FALSE
-  meta = list(css = stylesheet %||% pkg_file('resources', 'markdown.css'))
+  meta = list()
+  meta$css = stylesheet
   meta$title = title
   meta$`header-includes` = header
   mark_html(..., options = options, template = template, meta = meta)

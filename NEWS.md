@@ -1,5 +1,7 @@
 # CHANGES IN markdown VERSION 1.5
 
+- Fixed the bug that the default CSS was not added to HTML output.
+
 - Removed dependency on the **mime** package.
 
 # CHANGES IN markdown VERSION 1.4
