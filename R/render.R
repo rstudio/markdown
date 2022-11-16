@@ -187,14 +187,25 @@ mark = function(
       sprintf('!%s!', x)
     })
   }
-  # disallow single tilde for <del> (I think it is an aweful idea in GFM's
+  # disallow single tilde for <del> (I think it is an awful idea in GFM's
   # strikethrough extension to allow both single and double tilde for <del>)
   if (is.null(p)) p = xfun::prose_index(text)
   text[p] = match_replace(text[p], r3, perl = TRUE, function(x) {
     gsub('^~|~$', '\\\\~', x)
   })
 
-  # TODO: protect ```{=latex} content, and support code highlighting for latex
+  # protect raw ```{=latex} content
+  if (format == 'latex') {
+    id4 = id_string(text); raws = NULL
+    r4 = '(^|\n)([> ]*```+)(\\{=latex})\n(.*?)\n(\\2)(\n|$)'
+    text = paste(text, collapse = '\n')
+    text = match_replace(text, r4, perl = TRUE, function(x) {
+      raws <<- c(raws, gsub(r4, '\\4', x))
+      gsub(r4, sprintf('\\1%s\\6', id4), x, perl = TRUE)
+    })
+    text = xfun::split_lines(text)
+  }
+  # TODO: support code highlighting for latex
 
   ret = do.call(render, c(
     list(text = text),
@@ -240,6 +251,13 @@ mark = function(
       ret = gsub(sprintf('!%s(.+?)%s!', id2, id2), '\\\\textsuperscript{\\1}', ret)
     if (has_sub)
       ret = gsub(sprintf('!%s(.+?)%s!', id3, id3), '\\\\textsubscript{\\1}', ret)
+    if (length(raws)) ret = match_replace(ret, id4, function(x) {
+      if (length(x) != length(raws)) warning(
+        'Raw LaTeX blocks cannot be restored correctly (expected ',
+        length(raws), ' block(s) but found ', length(x), ' in the output.'
+      )
+      raws
+    })
     # fix horizontal rules from --- (\linethickness doesn't work)
     ret = gsub('{\\linethickness}', '{1pt}', ret, fixed = TRUE)
     ret = redefine_level(ret, options[['top_level']])
