@@ -1,5 +1,7 @@
 # CHANGES IN markdown VERSION 1.5
 
+- Values of meta variables `title`, `author`, and `date` (if provided) will be transformed to the target output format before they are passed into templates.
+
 - Fixed the bug that the default CSS was not added to HTML output.
 
 - Removed dependency on the **mime** package.

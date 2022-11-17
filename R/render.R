@@ -124,7 +124,7 @@ mark = function(
     meta
   )
 
-  render = tryCatch(
+  render_fun = tryCatch(
     getFromNamespace(paste0('markdown_', tolower(format)), 'commonmark'),
     error = function(e) {
       stop("Output format '", format, "' is not supported in commonmark.")
@@ -135,6 +135,14 @@ mark = function(
   options$extensions = intersect(
     names(Filter(isTRUE, options)), commonmark::list_extensions()
   )
+
+  render_args = options[intersect(names(formals(render_fun)), names(options))]
+  render = function(x, clean = FALSE) {
+    if (length(x) == 0) return(x)
+    res = do.call(render_fun, c(list(text = x), render_args))
+    if (clean) res = gsub('^<p>|(</p>)?\n$', '', res)
+    res
+  }
 
   if (isTRUE(options[['smartypants']])) text = smartypants(text)
 
@@ -201,10 +209,7 @@ mark = function(
     )
   }
 
-  ret = do.call(render, c(
-    list(text = text),
-    options[intersect(names(formals(render)), names(options))]
-  ))
+  ret = render(text)
 
   if (format == 'html') {
     ret = tweak_html(ret, text)
@@ -268,6 +273,8 @@ mark = function(
   }
 
   meta$body = ret
+  # convert some meta variables in case they use Markdown syntax
+  for (i in c('title', 'author', 'date')) meta[[i]] = render(meta[[i]], clean = TRUE)
   # use the template (if provided) to create a standalone document
   ret = build_output(format, options, template, meta)
   # remove \title and \maketitle if title is empty
