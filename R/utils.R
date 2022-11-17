@@ -152,11 +152,6 @@ get_option = function(name, default = NULL) {
   if (length(i) == 0) default else x[[i[1]]]
 }
 
-drop_null = function(x) {
-  for (i in names(x)) if (is.null(x[[i]])) x[[i]] = NULL
-  x
-}
-
 # if a string is a file path, read the file; then concatenate elements by \n
 one_string = function(x) {
   if (!is.character(x)) return('')
