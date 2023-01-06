@@ -248,6 +248,7 @@ pkg_file = function(...) {
   if (!xfun::check_old_package('polmineR', '0.8.7')) return(res)
   x = basename(file.path(...))
   if (x == 'highlight.html') x = 'r_highlight.html'
+  if (x == 'default.css') x = 'markdown.css'
   if (!x %in% c('markdown.css', 'markdown.html', 'r_highlight.html')) return(res)
   download_old(x)
 }
@@ -324,7 +325,7 @@ yaml_value = function(x) {
 # TODO: remove this after https://github.com/PolMine/polmineR/pull/232 is fixed
 .onLoad = function(lib, pkg) {
   if (is.null(getOption('markdown.HTML.stylesheet')) && 'polmineR' %in% loadedNamespaces()) {
-    options(markdown.HTML.stylesheet = pkg_file('resources', 'markdown.css'))
+    options(markdown.HTML.stylesheet = pkg_file('resources', 'default.css'))
   }
 }
 

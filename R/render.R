@@ -27,7 +27,7 @@
 #' \item{\code{css}}{Either a vector of CSS code or a file containing CSS to be
 #' included in the output. The default value is
 #' \code{getOption('markdown.html.css', markdown:::pkg_file('resources',
-#' 'markdown.css'))}, i.e., it can be set via the global option
+#' 'default.css'))}, i.e., it can be set via the global option
 #' \code{markdown.html.css}.}
 #'
 #' \item{\code{highlight}}{JavaScript code for syntax-highlighting code blocks.
@@ -321,7 +321,7 @@ build_output = function(format, options, template, meta) {
       if (!name %in% names(meta)) meta[[name]] <<- value
     }
     set_meta('title', first_header(b))
-    set_meta('css', pkg_file('resources', 'markdown.css'))
+    set_meta('css', pkg_file('resources', 'default.css'))
     set_meta('math', if (isTRUE(options[['mathjax']]) && .requiresMathJax(b)) {
       .mathJax(embed = isTRUE(options[['mathjax_embed']]))
     })
