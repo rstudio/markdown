@@ -322,10 +322,14 @@ yaml_value = function(x) {
 # TODO: remove this function when revdeps have been fixed
 .b64EncodeFile = function(...) xfun::base64_uri(...)
 
-# TODO: remove this after https://github.com/PolMine/polmineR/pull/232 is fixed
+# TODO: remove this after https://github.com/PolMine/polmineR/issues/235 is fixed
 .onLoad = function(lib, pkg) {
   if (is.null(getOption('markdown.HTML.stylesheet')) && 'polmineR' %in% loadedNamespaces()) {
-    options(markdown.HTML.stylesheet = pkg_file('resources', 'default.css'))
+    if (xfun::check_old_package('polmineR', '0.8.7')) {
+      options(markdown.HTML.stylesheet = pkg_file('resources', 'default.css'))
+    } else if (packageVersion('polmineR') == '0.8.7') {
+      warning("Sorry, but the 'markdown' does not work with 'polmineR' 0.8.7: https://github.com/PolMine/polmineR/issues/235")
+    }
   }
 }
 
