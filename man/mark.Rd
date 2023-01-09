@@ -94,14 +94,16 @@ Variables for the HTML template:
 
 \describe{
 
-\item{\code{css}}{Either a vector of CSS code or a file containing CSS to be
-included in the output. The default value is
-\code{getOption('markdown.html.css', markdown:::pkg_file('resources',
-'default.css'))}, i.e., it can be set via the global option
-\code{markdown.html.css}.}
+\item{\code{css}}{A vector of CSS code or files to be included in the output.
+The default value is \code{getOption('markdown.html.css',
+markdown:::pkg_file('resources', 'default.css'))}, i.e., it can be set via
+the global option \code{markdown.html.css}.}
 
 \item{\code{highlight}}{JavaScript code for syntax-highlighting code blocks.
 By default, the highlight.js library is used.}
+
+\item{\code{js}}{A vector of JavaScript code or JavaScript files to be
+included in the output.}
 
 \item{\code{math}}{JavaScript code for rendering LaTeX math. By default,
 MathJax is used.}

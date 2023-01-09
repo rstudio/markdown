@@ -266,16 +266,17 @@ download_old = local({
   }
 })
 
-# resolve CSS shorthand filenames (e.g., 'default') to actual paths
-resolve_css = function(x) {
+# resolve CSS/JS shorthand filenames to actual paths (e.g., 'default' to 'default.css')
+resolve_files = function(x, ext = 'css') {
+  if (length(x) == 0) return(x)
   i = dirname(x) == '.' & xfun::file_ext(x) == '' & !xfun::file_exists(x)
-  css = list.files(pkg_file('resources'), '[.]css$', full.names = TRUE)
-  b = xfun::sans_ext(basename(css))
+  files = list.files(pkg_file('resources'), sprintf('[.]%s$', ext), full.names = TRUE)
+  b = xfun::sans_ext(basename(files))
   if (any(!x[i] %in% b)) stop(
-    "Invalid 'css' option: ", paste0("'", setdiff(x[i], b), "'", collapse = ', '),
+    "Invalid '", ext, "' option: ", paste0("'", setdiff(x[i], b), "'", collapse = ', '),
     " (possible values are: ", paste0("'", b, "'", collapse = ','), ")"
   )
-  x[i] = css[match(x[i], b)]
+  x[i] = files[match(x[i], b)]
   xfun::read_all(x)
 }
 

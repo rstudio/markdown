@@ -24,14 +24,16 @@
 #'
 #' \describe{
 #'
-#' \item{\code{css}}{Either a vector of CSS code or a file containing CSS to be
-#' included in the output. The default value is
-#' \code{getOption('markdown.html.css', markdown:::pkg_file('resources',
-#' 'default.css'))}, i.e., it can be set via the global option
-#' \code{markdown.html.css}.}
+#' \item{\code{css}}{A vector of CSS code or files to be included in the output.
+#' The default value is \code{getOption('markdown.html.css',
+#' markdown:::pkg_file('resources', 'default.css'))}, i.e., it can be set via
+#' the global option \code{markdown.html.css}.}
 #'
 #' \item{\code{highlight}}{JavaScript code for syntax-highlighting code blocks.
 #' By default, the highlight.js library is used.}
+#'
+#' \item{\code{js}}{A vector of JavaScript code or JavaScript files to be
+#' included in the output.}
 #'
 #' \item{\code{math}}{JavaScript code for rendering LaTeX math. By default,
 #' MathJax is used.}
@@ -319,8 +321,6 @@ build_output = function(format, options, template, meta) {
     b = meta$body
     set_meta = function(name, value) {
       if (!name %in% names(meta)) meta[[name]] <<- value
-      # special handling for css "files" that have no extensions
-      if (name == 'css') meta[[name]] <<- resolve_css(meta[[name]])
     }
     set_meta('title', first_header(b))
     set_meta('css', pkg_file('resources', 'default.css'))
@@ -328,6 +328,8 @@ build_output = function(format, options, template, meta) {
       .mathJax(embed = isTRUE(options[['mathjax_embed']]))
     })
     set_meta('highlight', highlight_js(options[['highlight_code']], b))
+    # special handling for css/js "files" that have no extensions
+    for (i in c('css', 'js')) meta[[i]] = resolve_files(meta[[i]], i)
     tpl = tpl_html(tpl)
   }
   # find all variables in the template
