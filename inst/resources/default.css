@@ -35,6 +35,7 @@ blockquote {
   border-left: 0.5em #eee solid;
 }
 hr { border: 1px #ddd dashed; }
+.frontmatter { text-align: center; }
 
 @media print {
   * {

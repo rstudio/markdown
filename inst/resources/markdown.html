@@ -18,9 +18,23 @@ $header-includes$
 </head>
 
 <body>
+<div class="include-before">
 $include-before$
+</div>
+
+<div class="frontmatter">
+<div class="title"><h1>$title$</h1></div>
+<div class="author"><h2>$author$</h2></div>
+<div class="date"><h3>$date$</h3></div>
+</div>
+
+<div class="body">
 $body$
+</div>
+
+<div class="include-after">
 $include-after$
+</div>
 
 <script src="https://cdn.jsdelivr.net/combine/npm/@xiee/utils/js/center-img.min.js" async></script>
 </body>
