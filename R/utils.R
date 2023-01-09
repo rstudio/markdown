@@ -266,6 +266,19 @@ download_old = local({
   }
 })
 
+# resolve CSS shorthand filenames (e.g., 'default') to actual paths
+resolve_css = function(x) {
+  i = dirname(x) == '.' & xfun::file_ext(x) == '' & !xfun::file_exists(x)
+  css = list.files(pkg_file('resources'), '[.]css$', full.names = TRUE)
+  b = xfun::sans_ext(basename(css))
+  if (any(!x[i] %in% b)) stop(
+    "Invalid 'css' option: ", paste0("'", setdiff(x[i], b), "'", collapse = ', '),
+    " (possible values are: ", paste0("'", b, "'", collapse = ','), ")"
+  )
+  x[i] = css[match(x[i], b)]
+  xfun::read_all(x)
+}
+
 # partition the YAML metadata from the document body and parse it
 split_yaml = function(x) {
   i = grep('^---\\s*$', x)

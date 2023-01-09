@@ -319,6 +319,8 @@ build_output = function(format, options, template, meta) {
     b = meta$body
     set_meta = function(name, value) {
       if (!name %in% names(meta)) meta[[name]] <<- value
+      # special handling for css "files" that have no extensions
+      if (name == 'css') meta[[name]] <<- resolve_css(meta[[name]])
     }
     set_meta('title', first_header(b))
     set_meta('css', pkg_file('resources', 'default.css'))
