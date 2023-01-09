@@ -168,7 +168,7 @@ build_toc = function(html, n = 3) {
   if (length(items) == 0) return()
   x = gsub(r, '<toc>\\2</toc>', items)  # use a tag <toc> to protect header text
   h = as.integer(gsub('^h', '', gsub(r, '\\1', items)))  # header level
-  s = sapply(seq_len(n), function(i) paste(rep('  ', i), collapse = ''))  # indent
+  s = strrep('  ', seq_len(n) - 1)  # indent
   x = paste0(s[h], '- ', x)  # create an unordered list
   x = commonmark::markdown_html(x)
   x = gsub('</?toc>', '', x)
