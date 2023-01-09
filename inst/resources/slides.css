@@ -1,0 +1,23 @@
+html {
+  scroll-snap-type: y mandatory;
+}
+.slide {
+  min-height: 100vh;
+  scroll-snap-align: start;
+}
+body {
+  font-size: 2em;
+  max-width: fit-content;
+}
+.frontmatter {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.overview {
+  font-size: .8em;
+}
+.overview .slide {
+  min-height: unset;
+  scroll-snap-align: unset;
+}
