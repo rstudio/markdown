@@ -4,6 +4,10 @@ html {
 .slide {
   min-height: 100vh;
   scroll-snap-align: start;
+  padding: 1em;
+}
+.slide > h2:first-child {
+  margin-top: unset;
 }
 body {
   font-size: 2em;
@@ -20,4 +24,5 @@ body {
 .overview .slide {
   min-height: unset;
   scroll-snap-align: unset;
+  padding: unset;
 }
