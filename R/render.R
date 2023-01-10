@@ -234,6 +234,8 @@ mark = function(
       x[!i] = ''
       x
     })
+    # commonmark doesn't support ```{.class}, which should be treated as ```class
+    ret = gsub('(<pre><code class="language-)\\{[.]([^}]+)}(">)', '\\1\\2\\3', ret)
     if (isTRUE(options[['toc']])) ret = paste(
       c(build_toc(ret, options[['toc_depth']]), ret), collapse = '\n'
     )
