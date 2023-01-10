@@ -75,4 +75,9 @@
     e.key === 'o' && d.body.classList.toggle('overview');
     e.key === 'm' && d.body.classList.toggle('mirrored');
   });
+  d.querySelectorAll('a').forEach((a) => {
+    if (a.childElementCount === 0) {
+      a.innerText = a.innerText.replace(/^https:\/\//, '');
+    }
+  })
 })(document);
