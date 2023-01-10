@@ -23,10 +23,9 @@
     if (p.tagName === 'BODY') {
       // not enough h2 found, this page is not appropriate for slides
       if (!findContainer(s2) && p.tagName === 'BODY') return;
-      const h2s = p.querySelectorAll(s2);
-      for (let i = 0; i < h2s.length; i++) {
-        h2s[i].before(d.createElement('hr'));
-      }
+      p.querySelectorAll(s2).forEach((h2) => {
+        h2.before(d.createElement('hr'));
+      });
     }
   }
 
@@ -63,8 +62,15 @@
       s.append(el);
     }
   }
+  const slides = d.querySelectorAll('div.slide'), N = slides.length;
+  slides.forEach((s, i) => {
+    let n = d.createElement('span');
+    n.innerText = i + 1 + '/' + N
+    n.className = 'page-number';
+    s.append(n);
+  });
   // press f for fullscreen mode
-  document.addEventListener('keyup', (e) => {
+  d.addEventListener('keyup', (e) => {
     e.key === 'f' && d.documentElement.requestFullscreen();
     e.key === 'o' && d.body.classList.toggle('overview');
   });

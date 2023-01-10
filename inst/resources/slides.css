@@ -5,6 +5,7 @@ html {
   min-height: 100vh;
   scroll-snap-align: start;
   padding: 1em;
+  position: relative;
 }
 .slide > h2:first-child {
   margin-top: unset;
@@ -18,6 +19,13 @@ body {
   justify-content: center;
   flex-direction: column;
 }
+.page-number {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: .7em;
+  opacity: .5;
+}
 .overview {
   font-size: .8em;
 }
@@ -25,4 +33,7 @@ body {
   min-height: unset;
   scroll-snap-align: unset;
   padding: unset;
+}
+.overview .page-number {
+  display: none;
 }
