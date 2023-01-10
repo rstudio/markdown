@@ -37,3 +37,6 @@ body {
 .overview .page-number {
   display: none;
 }
+.mirrored {
+  transform: scale(-1, 1);
+}

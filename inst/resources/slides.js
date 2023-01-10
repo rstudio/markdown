@@ -73,5 +73,6 @@
   d.addEventListener('keyup', (e) => {
     e.key === 'f' && d.documentElement.requestFullscreen();
     e.key === 'o' && d.body.classList.toggle('overview');
+    e.key === 'm' && d.body.classList.toggle('mirrored');
   });
 })(document);
