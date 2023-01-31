@@ -22,7 +22,7 @@
 
 - The functions `renderMarkdown()` and `markdownToHTML()` have been renamed to `mark()` and `mark_html()`, respectively. The old names are still kept in this package for backward-compatibility.
 
-- Removed the arguments `stylesheet` and `fragment.only` in `mark_html()`. For `stylesheet`, please use the argument `meta = list(css = ...)` to provide the CSS stylesheet. For `fragment.only`, please use `mark_html(options = '-standalone')` instead of `fragment.only = TRUE`. Currently these old arguments are still accepted internally, but may be deprecated and dropped in the long run.
+- Removed the arguments `stylesheet` and `fragment.only` in `mark_html()`. For `stylesheet`, please use the argument `meta = list(css = ...)` to provide the CSS stylesheet. For `fragment.only`, please use `mark_html(template = FALSE)` or `mark_html(options = '-standalone')` instead of `fragment.only = TRUE`. Currently these old arguments are still accepted internally, but may be deprecated and dropped in the long run.
 
 - The `file` argument of `mark()` and `mark_html()` can also take a character vector of Markdown text now.
 
