@@ -1,3 +1,6 @@
+# CHANGES IN markdown VERSION 1.6
+
+
 # CHANGES IN markdown VERSION 1.5
 
 - Values of meta variables `title`, `author`, and `date` (if provided) will be transformed to the target output format before they are passed into templates.
