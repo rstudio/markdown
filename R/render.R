@@ -312,7 +312,7 @@ mark_latex = function(..., template = TRUE) {
 # insert body and meta variables into a template
 build_output = function(format, options, template, meta) {
   if (!isTRUE(options[['standalone']]) || !format %in% c('html', 'latex') ||
-      xfun::isFALSE(template)) return(meta$body)
+      isFALSE(template)) return(meta$body)
   if (is.null(template) || isTRUE(template)) template = get_option(
     sprintf('markdown.%s.template', format),
     pkg_file('resources', sprintf('markdown.%s', format))
