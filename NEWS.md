@@ -6,6 +6,18 @@
 
 - Removed dependency on the **mime** package.
 
+- Added experimental support for HTML slides: `markdown::mark_html(..., meta = list(css = c('default', 'slides'), js = 'slides'))`. If you prefer knitting `Rmd` documents in RStudio, you may use the output format:
+
+  ```yaml
+  output:
+    markdown::html_format:
+      meta:
+        css: [default, slides]
+        js: [slides]
+  ```
+
+  See https://yihui.org/en/2023/01/minimal-r-markdown/ for a demo.
+
 # CHANGES IN markdown VERSION 1.4
 
 - Empty `\title{}` in LaTeX output will be removed (along with `\maketitle`).
