@@ -297,14 +297,9 @@ mark = function(
 #' # write HTML to an output file
 #' mark_html('_Hello_, **World**!', output = tempfile())
 mark_html = function(..., template = TRUE) {
-  # TODO: remove these special treatments to arguments after PRs
-  # https://github.com/ajrgodfrey/BrailleR/pull/89 and
-  # https://github.com/renozao/pkgmaker/pull/6 are merged
+  # TODO: remove these special treatments to arguments
+  # https://github.com/ajrgodfrey/BrailleR/pull/89
   args = list(...)
-  if (isTRUE(args$fragment.only)) {
-    template = FALSE
-    args$fragment.only = NULL
-  }
   if ('stylesheet' %in% names(args)) {
     args$meta = list(css = args$stylesheet)
     args$stylesheet = NULL
