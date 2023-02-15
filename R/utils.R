@@ -333,7 +333,7 @@ yaml_value = function(x) {
   gsub('^["\']|["\']$', '', x)  # remove optional quotes for strings
 }
 
-# TODO: remove this function when revdeps have been fixed
+# TODO: remove this after new release of https://github.com/rstudio/leaflet
 .b64EncodeFile = function(...) xfun::base64_uri(...)
 
 # TODO: remove this after https://github.com/PolMine/polmineR/issues/235 is fixed
