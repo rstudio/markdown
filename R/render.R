@@ -303,8 +303,9 @@ mark_html = function(..., template = TRUE) {
   if ('stylesheet' %in% names(args)) {
     args$meta = list(css = args$stylesheet)
     args$stylesheet = NULL
+    return(do.call(mark, c(args, list(format = 'html', template = template))))
   }
-  do.call(mark, c(args, list(format = 'html', template = template)))
+  mark(..., format = 'html', template = template)
 }
 
 #' @export
