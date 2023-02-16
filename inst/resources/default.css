@@ -18,6 +18,10 @@ tt, code, pre {
 }
 a:visited { color: #80007f; }
 pre, img { max-width: 100%; }
+pre:hover {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
 code {
   font-size: 92%;
   border: 1px solid #ccc;
