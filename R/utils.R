@@ -270,6 +270,7 @@ download_old = local({
 resolve_files = function(x, ext = 'css') {
   if (length(x) == 0) return(x)
   i = dirname(x) == '.' & xfun::file_ext(x) == '' & !xfun::file_exists(x)
+  x[i & (x == 'slides')] = 'snap'  # backward compatibility (slides.css -> snap.css)
   files = list.files(pkg_file('resources'), sprintf('[.]%s$', ext), full.names = TRUE)
   b = xfun::sans_ext(basename(files))
   if (any(!x[i] %in% b)) stop(
