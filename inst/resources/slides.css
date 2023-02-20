@@ -1,42 +1,94 @@
-html {
-  scroll-snap-type: y mandatory;
-}
+:root { --slide-width: 100%; }
+html { scroll-snap-type: y mandatory; }
+th, td { padding: .2em .5em; }
 .slide {
-  min-height: 100vh;
-  scroll-snap-align: start;
   padding: 1em;
   position: relative;
 }
-.slide > h2:first-child {
-  margin-top: unset;
-}
+.slide > h2:first-child { margin-top: unset; }
 body {
-  font-size: 2em;
   max-width: fit-content;
+  padding: 0;
 }
-.frontmatter {
+#TOC { columns: 2; }
+#TOC::before {
+  font-size: 1.3em;
+  font-weight: bold;
+  display: block;
+}
+.frontmatter, .middle {
   display: flex;
   justify-content: center;
   flex-direction: column;
 }
-.page-number {
+.page-number, .timer {
   position: absolute;
   bottom: 0;
-  right: 0;
-  font-size: .7em;
+  font: .7em monospace;
   opacity: .5;
 }
+.page-number { right: 0; }
+.timer { left: 0; }
+.inverse {
+  background-color: #eee;
+  filter: invert(1);
+}
+.fade {
+  background: repeating-linear-gradient(135deg, white, white 30px, #ddd 32px, #ddd 32px);
+  opacity: 0.6;
+}
+.center { text-align: center; }
+.slide-container h2::before {
+  counter-increment: section-number;
+  content: counter(section-number) ". ";
+  display: inline-block;
+  background-color: #666;
+  color: white;
+  padding: 0 .1em;
+  margin-right: .3em;
+}
+.slide-container { counter-reset: section-number; }
+.slide-container h2, #TOC::before { border-bottom: 1px solid #666; }
 .overview {
   font-size: .8em;
+  max-width: none;
 }
 .overview .slide {
   min-height: unset;
   scroll-snap-align: unset;
-  padding: unset;
 }
-.overview .page-number {
-  display: none;
+.overview .slide-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
 }
-.mirrored {
-  transform: scale(-1, 1);
+.overview .slide-container .slide {
+  width: var(--slide-width);
+  border: 1px dotted #ccc;
+  margin-bottom: 0.5em;
+}
+.mirrored { transform: scale(-1, 1); }
+.spacer { height: 50vh; }
+.overview .timer, .overview .spacer { display: none; }
+html:fullscreen::-webkit-scrollbar { display: none; }
+html:fullscreen {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+@media (min-width: 992px) {
+ :root { --slide-width: 49%; }
+  body { font-size: 2em; }
+  .slide {
+    min-height: 100vh;
+    scroll-snap-align: start;
+  }
+}
+@media (min-width: 1400px) {
+ :root { --slide-width: 33%; }
+}
+@media (min-width: 1800px) {
+ :root { --slide-width: 24.67%; }
+}
+@media print {
+  .timer, .spacer { display: none; }
 }
