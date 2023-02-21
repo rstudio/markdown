@@ -16,7 +16,7 @@ tt, code {
   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
 }
 pre, img { max-width: 100%; }
-pre:hover {
+pre, pre:hover {
   white-space: pre-wrap;
   word-break: break-all;
 }
@@ -48,7 +48,8 @@ hr { border: 1px #ddd dashed; }
     font-size: 12pt;
     max-width: 100%;
   }
-  a, a:visited { text-decoration: underline; }
   tr, img { page-break-inside: avoid; }
-  p, h2, h3 { orphans: 3; widows: 3; }
+}
+@media only screen and (min-width: 992px) {
+  pre { white-space: pre; }
 }
