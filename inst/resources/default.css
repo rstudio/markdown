@@ -1,8 +1,6 @@
 body {
   font-family: sans-serif;
   font-size: 13px;
-}
-body {
   max-width: 800px;
   margin: auto;
   padding: 1em;
@@ -12,9 +10,6 @@ body {
 *, *:before, *:after {
   box-sizing: inherit;
 }
-tt, code {
-  font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
-}
 pre, img { max-width: 100%; }
 pre, pre:hover {
   white-space: pre-wrap;
@@ -23,6 +18,7 @@ pre, pre:hover {
 code {
   font-size: 92%;
   border: 1px solid #ccc;
+  font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
 }
 code[class] { background-color: #F8F8F8; }
 code.language-undefined { background-color: inherit; }
@@ -35,10 +31,10 @@ table thead th { border-bottom: 1px solid #ddd; }
 th, td { padding: 5px; }
 thead, tfoot, tr:nth-child(even) { background: #eee; }
 blockquote {
-  color:#666;
-  margin:0;
+  color: #666;
+  margin: 0;
   padding-left: 1em;
-  border-left: 0.5em #eee solid;
+  border-left: 0.5em solid #eee;
 }
 hr { border: 1px #ddd dashed; }
 .frontmatter { text-align: center; }
