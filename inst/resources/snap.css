@@ -89,6 +89,6 @@ html:fullscreen {
 @media (min-width: 1800px) {
  :root { --slide-width: 24.67%; }
 }
-@media print {
+@media print, (max-width: 991.98px) {
   .timer, .spacer { display: none; }
 }
