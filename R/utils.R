@@ -258,7 +258,7 @@ download_old = local({
   db = list()
   function(file) {
     if (!is.null(db[[file]])) return(db[[file]])
-    u = sprintf('https://cdn.jsdelivr.net/gh/rstudio/markdown@v1.3/inst/resources/%s', file)
+    u = jsdelivr(file, 'gh/rstudio/markdown@1.3/inst/resources/')
     f = tempfile()
     xfun::download_file(u, f, quiet = TRUE)
     db[[file]] <<- f
@@ -266,11 +266,38 @@ download_old = local({
   }
 })
 
+jsdelivr = function(file, dir = 'gh/rstudio/markdown/inst/resources/') {
+  sprintf('https://cdn.jsdelivr.net/%s%s', dir, file)
+}
+
 # resolve CSS/JS shorthand filenames to actual paths (e.g., 'default' to 'default.css')
 resolve_files = function(x, ext = 'css') {
   if (length(x) == 0) return(x)
+  # @foo -> jsdelivr.net/gh/rstudio/markdown
+  i0 = grepl('^@', x)
+  x[i0] = sub('^@', '', x[i0])
+  i = i0 & !grepl('/', x)
+  x[i] = jsdelivr(xfun::with_ext(x[i], ext))
+  # @foo/bar -> jsdelivr.net/foo/bar
+  i = i0 & !grepl(',', x)
+  x[i] = jsdelivr(x[i], '')
+  # @foo/bar,baz -> jsdelivr.net/combine/foo/bar,foo/baz
+  i = i0 & grepl(',', x)
+  if (any(i)) x[i] = sapply(strsplit(x[i], ','), function(z) {
+    d = dirname(z[1])
+    for (j in 2:length(z)) {
+      if (grepl('/', z[j])) {
+        d = dirname(z[j])
+      } else {
+        z[j] = paste(d, z[j], sep = '/')
+      }
+    }
+    paste0('combine/', paste(z, collapse = ','))
+  })
+  x[i] = jsdelivr(x[i], '')
+  # built-in resources in this package
   i = dirname(x) == '.' & xfun::file_ext(x) == '' & !xfun::file_exists(x)
-  x[i & (x == 'slides')] = 'snap'  # backward compatibility (slides.css -> snap.css)
+  x[i & (x == 'slides')] = 'snap'  # alias slides.css -> snap.css
   files = list.files(pkg_file('resources'), sprintf('[.]%s$', ext), full.names = TRUE)
   b = xfun::sans_ext(basename(files))
   if (any(!x[i] %in% b)) stop(
@@ -278,7 +305,18 @@ resolve_files = function(x, ext = 'css') {
     " (possible values are: ", paste0("'", b, "'", collapse = ','), ")"
   )
   x[i] = files[match(x[i], b)]
-  xfun::read_all(x)
+  switch (ext,
+    css = gen_tag(x, '<link href="%s" rel="stylesheet">', c('<style type="text/css">', '</style>')),
+    js = gen_tag(x, '<script src="%s" defer></script>', c('<script>', '</script>')),
+    xfun::read_all(x)
+  )
+}
+
+gen_tag = function(x, t1, t2) {
+  code = lapply(x, function(z) {
+    if (grepl('^https://', z)) sprintf(t1, z) else c(t2[1], xfun::read_utf8(z), t2[2])
+  })
+  paste(unlist(code), collapse = '\n')
 }
 
 # partition the YAML metadata from the document body and parse it
