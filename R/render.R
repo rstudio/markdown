@@ -275,6 +275,7 @@ mark = function(
     ret = gsub('{\\linethickness}', '{1pt}', ret, fixed = TRUE)
     ret = redefine_level(ret, options[['top_level']])
   }
+  ret = move_attrs(ret, format)  # apply attributes of the form {attr="value"}
 
   meta$body = ret
   # convert some meta variables in case they use Markdown syntax

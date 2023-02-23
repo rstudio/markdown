@@ -186,6 +186,73 @@ redefine_level = function(x, top) {
   x
 }
 
+# move image attributes like `![](){#id .class width="20%"}` and header
+# attributes `# foo {#id .class}` into HTML tags and LaTeX commands
+move_attrs = function(x, format = 'html') {
+  if (format == 'html') {
+    x = convert_attrs(x, '(<img src="[^>]+ )/>\\{([^}]+)\\}', '\\2', function(r, i, z, z2) {
+      z1 = sub(r, '\\1', z)
+      paste0(z1[i], z2[i], ' />')
+    })
+    x = convert_attrs(x, '(<h[1-6])(>.+?) \\{([^}]+)\\}(</h[1-6]>)', '\\3', function(r, i, z, z3) {
+      z1 = sub(r, '\\1 ', z)
+      z2 = sub(r, '\\2', z)
+      z4 = sub(r, '\\4', z)
+      paste0(z1[i], z3[i], z2[i], z4[i])
+    })
+  } else if (format == 'latex') {
+    # only support image width
+    x = convert_attrs(x, '(\\\\includegraphics)(\\{[^}]+\\})\\\\\\{([^}]+)\\\\\\}', '\\3', function(r, i, z, z3) {
+      r2 = '(^|.* )width="([^"]+)"( .*|$)'
+      j = grepl(r2, z3)
+      w = gsub(r2, '\\2', z3[j])
+      w = gsub('\\\\', '\\', w, fixed = TRUE)
+      k = grep('%$', w)
+      w[k] = paste0(as.numeric(sub('%$', '', w[k])) / 100, '\\linewidth')
+      z3[j] = paste0('[width=', w, ']')
+      z3[!j] = ''
+      z1 = sub(r, '\\1', z)
+      z2 = sub(r, '\\2', z)
+      paste0(z1[i], z3[i], z2[i])
+    }, format)
+    # discard attributes for headers
+    r = sprintf('(\\\\(%s)\\{.+?) \\\\\\{([^}]+)\\\\\\}(\\})', paste(sec_levels, collapse = '|'))
+    x = convert_attrs(x, r, '\\3', function(r, i, z, z3) {
+      gsub(r, '\\1\\4', z[i])
+    }, format)
+  } else {
+    # TODO: remove attributes for other formats
+  }
+  x
+}
+
+convert_attrs = function(x, r, s, f, format = 'html') {
+  r2 = '(?<=^| )[.#]([[:alnum:]-]+)(?= |$)'
+  match_replace(x, r, function(y) {
+    if (length(y) == 0) return(y)
+    if (format == 'html') {
+      z = gsub('[\U201c\U201d]', '"', y)
+    } else {
+      z = gsub('=``', '="', y, fixed = TRUE)
+      z = gsub("''( |\\\\})", '"\\1', z)
+      z = gsub('\\\\([#%])', '\\1', z)
+    }
+    z2 = sub(r, s, z)
+    z2 = match_replace(z2, r2, perl = TRUE, function(a) {
+      if (length(a) == 0) return(a)
+      i = grep('^#', a)
+      a[i] = gsub(r2, 'id="\\1"', a[i], perl = TRUE)
+      i = grep('^[.]', a)
+      a[i] = gsub(r2, 'class="\\1"', a[i], perl = TRUE)
+      a
+    })
+    # all attributes must be of the form attr="value"
+    i = grep('^( ([a-z-]+="[^"]+"))+$', paste0(' ', z2))
+    y[i] = f(r, i, z, z2)
+    y
+  })
+}
+
 #' @importFrom utils URLdecode
 .b64EncodeImages = function(x) {
   if (length(x) == 0) return(x)
