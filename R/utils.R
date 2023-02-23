@@ -163,7 +163,7 @@ one_string = function(x) {
 build_toc = function(html, n = 3) {
   if (n <= 0) return()
   if (n > 6) n = 6
-  r = sprintf('<(h[1-%d])>([^<]+)</\\1>', n)
+  r = sprintf('<(h[1-%d])>(.+?)</\\1>', n)
   items = unlist(regmatches(html, gregexpr(r, html, perl = TRUE)))
   if (length(items) == 0) return()
   x = gsub(r, '<toc>\\2</toc>', items)  # use a tag <toc> to protect header text
