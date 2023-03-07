@@ -227,11 +227,17 @@ mark = function(
       ret = gsub(sprintf('!%s(.+?)%s!', id3, id3), '<sub>\\1</sub>', ret)
     r4 = '<pre><code class="language-\\{=([^}]+)}">(.+?)</code></pre>\n'
     ret = match_replace(ret, r4, function(x) {
+      lang = gsub(r4, '\\1', x)
+      code = gsub(r4, '\\2', x)
       # restore raw html content from ```{=html}
-      i = gsub(r4, '\\1', x) == 'html'
-      x[i] = restore_html(gsub(r4, '\\2', x[i]))
+      i1 = lang == 'html'
+      x[i1] = restore_html(code[i1])
+      # possible math environments
+      i2 = (lang %in% c('tex', 'latex')) &
+        grepl('^\\\\begin\\{(equation|align|eqnarray|gather)\\}.+?\\\\end\\{\\1\\}\n$', code)
+      x[i2] = sprintf('<p>\n%s</p>\n', code[i2])
       # discard other types of raw content blocks
-      x[!i] = ''
+      x[!(i1 | i2)] = ''
       x
     })
     # commonmark doesn't support ```{.class}, which should be treated as ```class
