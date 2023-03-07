@@ -263,7 +263,7 @@ mark = function(
     ret = match_replace(ret, r4, function(x) {
       info = gsub(r4, '\\2', x)
       info = gsub('^\\{|}$', '', info)
-      i = info == '=latex'
+      i = info %in% c('=latex', '=tex')
       x[i] = gsub(r4, '\\3', x[i])  # restore raw ```{=latex} content
       i = !i & grepl('^=', info)
       x[i] = ''  # discard other raw content
