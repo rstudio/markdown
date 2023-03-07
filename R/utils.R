@@ -66,7 +66,9 @@ id_string = function(text, lens = c(2:10, 20), times = 20) {
 # a shorthand for gregexpr() and regmatches()
 match_replace = function(x, pattern, replace = identity, ...) {
   m = gregexpr(pattern, x, ...)
-  regmatches(x, m) = lapply(regmatches(x, m), replace)
+  regmatches(x, m) = lapply(regmatches(x, m), function(z) {
+    if (length(z)) replace(z) else z
+  })
   x
 }
 
@@ -229,7 +231,6 @@ move_attrs = function(x, format = 'html') {
 convert_attrs = function(x, r, s, f, format = 'html') {
   r2 = '(?<=^| )[.#]([[:alnum:]-]+)(?= |$)'
   match_replace(x, r, function(y) {
-    if (length(y) == 0) return(y)
     if (format == 'html') {
       z = gsub('[\U201c\U201d]', '"', y)
     } else {
@@ -239,7 +240,6 @@ convert_attrs = function(x, r, s, f, format = 'html') {
     }
     z2 = sub(r, s, z)
     z2 = match_replace(z2, r2, perl = TRUE, function(a) {
-      if (length(a) == 0) return(a)
       i = grep('^#', a)
       a[i] = gsub(r2, 'id="\\1"', a[i], perl = TRUE)
       i = grep('^[.]', a)
