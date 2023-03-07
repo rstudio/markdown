@@ -176,7 +176,7 @@ mark = function(
   p = NULL  # indices of prose
   # superscript and subscript; for now, we allow only characters alnum|*|(|) for
   # script text but can consider changing this rule upon users' request
-  r2 = '(?<=[[:graph:]])\\^([[:alnum:]*()]+?)\\^'
+  r2 = '(?<!`)\\^([[:alnum:]*()]+?)\\^(?!`)'
   if (has_sup <- test_feature('superscript', r2)) {
     id2 = id_string(text)
     p = xfun::prose_index(text)
@@ -186,7 +186,7 @@ mark = function(
       sprintf('!%s!', x)
     })
   }
-  r3 = '(?<![~[:space:]])~([[:alnum:]*()]+?)~'
+  r3 = '(?<![~`[:space:]])~([[:alnum:]*()]+?)~(?!`)'
   if (has_sub <- test_feature('subscript', r3)) {
     id3 = id_string(text)
     if (is.null(p)) p = xfun::prose_index(text)
