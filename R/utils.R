@@ -141,6 +141,7 @@ highlight_js = function(opts, html) {
     c('highlight', sprintf('languages/%s', opts$languages)),
     '.min.js', collapse = ','
   )
+  tpl = sub_var(tpl, '$version$', opts$version)
   tpl = sub_var(tpl, '$style$', opts$style)
   tpl = sub_var(tpl, '$js$', js)
   tpl
