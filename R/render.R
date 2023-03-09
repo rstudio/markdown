@@ -65,7 +65,11 @@
 #'   have a \dQuote{file extension} and should be treated as Markdown text
 #'   instead, wrap it in \code{I()}.
 #' @param output Output file path. If not character, the results will be
-#'   returned as a character vector.
+#'   returned as a character vector. If not specified and the input is a file
+#'   path, the output file path will have the same base name as the input file,
+#'   with an extension corresponding to the \code{format} argument, e.g.,
+#'   \code{mark('foo.md', format = 'latex')} will generate an output file
+#'   \file{foo.tex} by default.
 #' @param text A character vector of the Markdown text. By default, it is read
 #'   from \code{file}.
 #' @param format An output format supported by \pkg{commonmark}, e.g.,
@@ -125,6 +129,13 @@ mark = function(
     format_meta(yaml, format),
     meta
   )
+
+  if (missing(output) && is_file(file)) {
+    ext = switch(format, commonmark = 'markdown', latex = 'tex', text = 'txt', format)
+    output = xfun::with_ext(file, ext)
+    if (xfun::same_path(file, output))
+      stop('The output file path is the same as input: ', file)
+  }
 
   render_fun = tryCatch(
     getFromNamespace(paste0('markdown_', tolower(format)), 'commonmark'),

@@ -30,7 +30,11 @@ have a \dQuote{file extension} and should be treated as Markdown text
 instead, wrap it in \code{I()}.}
 
 \item{output}{Output file path. If not character, the results will be
-returned as a character vector.}
+returned as a character vector. If not specified and the input is a file
+path, the output file path will have the same base name as the input file,
+with an extension corresponding to the \code{format} argument, e.g.,
+\code{mark('foo.md', format = 'latex')} will generate an output file
+\file{foo.tex} by default.}
 
 \item{text}{A character vector of the Markdown text. By default, it is read
 from \code{file}.}

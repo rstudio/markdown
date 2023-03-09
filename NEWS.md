@@ -1,5 +1,6 @@
 # CHANGES IN markdown VERSION 1.6
 
+- If the input to `mark()` is a file, the output will also be a file by default. Previously the output would be text.
 
 # CHANGES IN markdown VERSION 1.5
 
