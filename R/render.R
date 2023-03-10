@@ -126,7 +126,7 @@ mark = function(
   # title/author/date can be provided as top-level YAML options
   meta = merge_list(
     yaml[intersect(names(yaml), c('title', 'author', 'date'))],
-    format_meta(yaml, format),
+    yaml_field(yaml, format),
     meta
   )
 
