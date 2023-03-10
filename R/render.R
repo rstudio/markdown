@@ -294,6 +294,7 @@ mark = function(
     # fix horizontal rules from --- (\linethickness doesn't work)
     ret = gsub('{\\linethickness}', '{1pt}', ret, fixed = TRUE)
     ret = redefine_level(ret, options[['top_level']])
+    if (isTRUE(options[['toc']])) ret = paste0('\\tableofcontents\n', ret)
   }
   ret = move_attrs(ret, format)  # apply attributes of the form {attr="value"}
 
