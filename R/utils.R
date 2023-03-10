@@ -278,6 +278,7 @@ normalize_options = function(x, format = 'html') {
   n = names(x)
   n[n == 'hard_wrap'] = 'hardbreaks'
   n[n == 'tables'] = 'table'
+  n[n == 'base64_images'] = 'embed_images'
   names(x) = n
   # default options
   d = option2list(markdown_options())

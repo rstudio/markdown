@@ -2,6 +2,8 @@
 
 - If the input to `mark()` is a file, the output will also be a file by default. Previously the output would be text.
 
+- The Markdown option `base64_images` has been renamed to `embed_images`.
+
 # CHANGES IN markdown VERSION 1.5
 
 - Values of meta variables `title`, `author`, and `date` (if provided) will be transformed to the target output format before they are passed into templates.

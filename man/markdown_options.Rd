@@ -19,7 +19,7 @@ Description of all options:
 
 \describe{
 
-\item{\code{base64_images}}{Embed local images in the HTML output with base64
+\item{\code{embed_images}}{Embed local images in the HTML output with base64
 encoding.}
 
 \item{\code{highlight_code}}{Includes JavaScript libraries to syntax

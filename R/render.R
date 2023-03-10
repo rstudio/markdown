@@ -259,7 +259,7 @@ mark = function(
     if (isTRUE(options[['toc']])) ret = paste(
       c(build_toc(ret, options[['toc_depth']]), ret), collapse = '\n'
     )
-    if (isTRUE(options[['base64_images']])) ret = xfun::in_dir(
+    if (isTRUE(options[['embed_images']])) ret = xfun::in_dir(
       if (is_file(file, TRUE)) dirname(file) else '.', .b64EncodeImages(ret)
     )
   } else if (format == 'latex') {
@@ -394,7 +394,7 @@ tpl_html = function(x) {
 #'
 #' \describe{
 #'
-#' \item{\code{base64_images}}{Embed local images in the HTML output with base64
+#' \item{\code{embed_images}}{Embed local images in the HTML output with base64
 #' encoding.}
 #'
 #' \item{\code{highlight_code}}{Includes JavaScript libraries to syntax
@@ -452,7 +452,7 @@ tpl_html = function(x) {
 markdown_options = function() {
   # options enabled by default
   x1 = c(
-    'smart', 'smartypants', 'base64_images', 'mathjax', 'highlight_code',
+    'smart', 'smartypants', 'embed_images', 'mathjax', 'highlight_code',
     'superscript', 'subscript', 'latex_math', 'standalone',
     setdiff(commonmark::list_extensions(), 'tagfilter')
   )

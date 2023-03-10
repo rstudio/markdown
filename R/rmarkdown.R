@@ -14,7 +14,7 @@ output_format = function(to = 'html') {
     }
     rmarkdown::output_format(
       NULL, opts, keep_md = keep_md,
-      clean_supporting = isTRUE(normalize_options(options)[['base64_images']])
+      clean_supporting = isTRUE(normalize_options(options)[['embed_images']])
     )
   }
 }
