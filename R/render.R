@@ -245,6 +245,7 @@ mark = function(
     if (isTRUE(options[['toc']])) ret = paste0('\\tableofcontents\n', ret)
   }
   ret = move_attrs(ret, format)  # apply attributes of the form {attr="value"}
+  ret = render_footnotes(ret, format)  # render [^n] footnotes
 
   meta$body = ret
   # convert some meta variables in case they use Markdown syntax

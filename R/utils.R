@@ -254,6 +254,59 @@ convert_attrs = function(x, r, s, f, format = 'html') {
   })
 }
 
+# find and render footnotes
+render_footnotes = function(x, format = 'html') {
+  f1 = f2 = NULL
+  if (format == 'html') {
+    r = '<p>(\\[\\^[0-9]+\\]): (.*?)</p>'
+    x = match_replace(x, r, function(z) {
+      f1 <<- c(f1, sub(r, '\\1', z))
+      f2 <<- c(f2, sub(r, '\\2', z))
+      sprintf('<!--!footnote:%s!-->', f1)
+    })
+    if ((n <- length(f1)) == 0) return(x)
+    y = xfun::split_lines(x)
+    for (j in seq_len(n)) {
+      i = which(sprintf('<!--!footnote:%s!-->', f1[j]) == y)
+      if (length(i) != 1) next  # this shouldn't be possible
+      if (i <= 1) next  # a footnote shouldn't appear on the first line
+      k = grep(f1[j], y[1:(i - 1)], fixed = TRUE)
+      if (length(k) == 0) {
+        warning('The footnote number ', f1[j], ' is not found.')
+        next
+      }
+      k = max(k)  # the [^n] closest to the footnote
+      fn = sprintf(
+        '<a href="#fn%d" class="footnote-ref" id="fnref%d"><sup>[%d]</sup></a>',
+        j, j, j
+      )
+      y[k] = sub(f1[j], fn, y[k], fixed = TRUE)
+      y = y[-i]
+    }
+    x = c(
+      y,
+      '<div class="footnotes">\n<hr />\n<ol>',
+      sprintf(
+        '<li id="fn%d"><p>%s<a href="#fnref%d" class="footnote-back">︎&#8617;</a></p></li>',
+        1:n, f2, 1:n
+      ),
+      '</ol>\n</div>'
+    )
+  } else if (format == 'latex') {
+    # [^1] is converted to {[}\^{}1{]} in LaTeX output
+    r = '(\n\n)(\\{\\[}\\\\\\^\\{}[0-9]+\\{\\]}): (.*?)\n(\n|$)'
+    x = match_replace(x, r, function(z) {
+      f1 <<- c(f1, sub(r, '\\2', z))
+      f2 <<- c(f2, sub(r, '\\3', z))
+      gsub(r, '\\1', z)
+    })
+    for (i in seq_along(f1)) {
+      x = sub(f1[i], sprintf('\\footnote{%s}', f2[i]), x, fixed = TRUE)
+    }
+  }
+  paste(x, collapse = '\n')
+}
+
 #' @importFrom utils URLdecode
 .b64EncodeImages = function(x) {
   if (length(x) == 0) return(x)
