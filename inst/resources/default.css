@@ -17,10 +17,9 @@ pre, pre:hover {
 }
 code {
   font-size: 92%;
-  border: 1px solid #ccc;
   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
 }
-code[class] { background-color: #F8F8F8; }
+:not(pre) > code, code[class] { background-color: #F8F8F8; }
 code.language-undefined { background-color: inherit; }
 table {
   margin: auto;
