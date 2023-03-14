@@ -24,7 +24,6 @@ code.language-undefined { background-color: inherit; }
 table {
   margin: auto;
   border-top: 1px solid #666;
-  border-bottom: 1px solid #666;
 }
 table thead th { border-bottom: 1px solid #ddd; }
 th, td { padding: 5px; }
@@ -41,6 +40,9 @@ hr { border: 1px #ddd dashed; }
   margin-left: 0;
 }
 .frontmatter { text-align: center; }
+#TOC .numbered li { list-style: none; }
+#TOC .numbered, #TOC .numbered ul { padding-left: 1em; }
+table, .body h2 { border-bottom: 1px solid #666; }
 
 @media print {
   body {

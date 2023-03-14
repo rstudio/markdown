@@ -174,6 +174,8 @@ mark = function(
   }
 
   ret = render(text)
+  ret = move_attrs(ret, format)  # apply attributes of the form {attr="value"}
+  ret = render_footnotes(ret, format)  # render [^n] footnotes
 
   if (format == 'html') {
     ret = tweak_html(ret, text)
@@ -204,6 +206,9 @@ mark = function(
     })
     # commonmark doesn't support ```{.class}, which should be treated as ```class
     ret = gsub('(<pre><code class="language-)\\{[.]([^}]+)}(">)', '\\1\\2\\3', ret)
+    # number sections
+    if (isTRUE(options[['number_sections']])) ret = number_sections(ret)
+    # build table of contents
     if (isTRUE(options[['toc']])) ret = paste(
       c(build_toc(ret, options[['toc_depth']]), ret), collapse = '\n'
     )
@@ -244,8 +249,7 @@ mark = function(
     ret = redefine_level(ret, options[['top_level']])
     if (isTRUE(options[['toc']])) ret = paste0('\\tableofcontents\n', ret)
   }
-  ret = move_attrs(ret, format)  # apply attributes of the form {attr="value"}
-  ret = render_footnotes(ret, format)  # render [^n] footnotes
+  # TODO: support fenced Div's
 
   meta$body = ret
   # convert some meta variables in case they use Markdown syntax
@@ -359,6 +363,9 @@ tpl_html = function(x) {
 #' \item{\code{mathjax_embed}}{Whether to download and embed the MathJax library
 #' in HTML output.}
 #'
+#' \item{\code{number_sections}}{Whether to number section headers. To skip
+#' numbering a specific header, add an attribute \samp{.unnumbered} to it.}
+#'
 #' \item{\code{smartypants}}{Translate certain ASCII strings into smart
 #' typographic characters (see \code{\link{smartypants}()}.}
 #'
@@ -403,7 +410,7 @@ markdown_options = function() {
   # options enabled by default
   x1 = c(
     'smart', 'smartypants', 'embed_images', 'mathjax', 'highlight_code',
-    'superscript', 'subscript', 'latex_math', 'standalone',
+    'number_sections', 'superscript', 'subscript', 'latex_math', 'standalone',
     setdiff(commonmark::list_extensions(), 'tagfilter')
   )
   # options disabled by default

@@ -166,7 +166,7 @@ one_string = function(x) {
 build_toc = function(html, n = 3) {
   if (n <= 0) return()
   if (n > 6) n = 6
-  r = sprintf('<(h[1-%d])>(.+?)</\\1>', n)
+  r = sprintf('<(h[1-%d])[^>]*>(.+?)</\\1>', n)
   items = unlist(regmatches(html, gregexpr(r, html, perl = TRUE)))
   if (length(items) == 0) return()
   x = gsub(r, '<toc>\\2</toc>', items)  # use a tag <toc> to protect header text
@@ -175,6 +175,9 @@ build_toc = function(html, n = 3) {
   x = paste0(s[h], '- ', x)  # create an unordered list
   x = commonmark::markdown_html(x)
   x = gsub('</?toc>', '', x)
+  # add class 'numbered' to the first <ul> if any header is numbered
+  if (length(grep('<span class="section-number">', x)))
+    x = sub('<ul>', '<ul class="numbered">', x)
   paste0('<div id="TOC">\n', x, '</div>')
 }
 
@@ -305,6 +308,32 @@ render_footnotes = function(x, format = 'html') {
     }
   }
   paste(x, collapse = '\n')
+}
+
+# number sections in HTML output
+number_sections = function(x) {
+  m = gregexpr('</h[1-6]>', x)
+  h = sub('</h([1-6])>', '\\1', unlist(regmatches(x, m)))
+  if (length(h) == 0) return(x)  # no headers
+  h = min(as.integer(h))  # highest level of headers
+  r = '<h([1-6])([^>]*)>'
+  n = rep(0, 6)  # counters for all levels of headers
+  match_replace(x, r, function(z) {
+    z1 = as.integer(sub(r, '\\1', z))
+    z2 = sub(r, '\\2', z)
+    for (i in seq_along(z)) {
+      k = z1[i]
+      if (k < 6) n[(k + 1):6] <<- 0
+      if (grepl('unnumbered', z2[i])) next  # an unnumbered section
+      n[k] <<- n[k] + 1
+      # remove leading 0's
+      s = paste(if (h > 1) n[-(1:(h - 1))] else n, collapse = '.')
+      s = gsub('([.]0)+$', '', s)  # remove trailing 0's
+      if (!grepl('[.]', s)) s = paste0(s, '.')  # '1. section' instead of '1 section'
+      z[i] = paste0(z[i], sprintf('<span class="section-number">%s</span> ', s))
+    }
+    z
+  })
 }
 
 #' @importFrom utils URLdecode

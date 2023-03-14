@@ -34,6 +34,9 @@ rendered by MathJax (HTML output) or LaTeX.}
 \item{\code{mathjax_embed}}{Whether to download and embed the MathJax library
 in HTML output.}
 
+\item{\code{number_sections}}{Whether to number section headers. To skip
+numbering a specific header, add an attribute \samp{.unnumbered} to it.}
+
 \item{\code{smartypants}}{Translate certain ASCII strings into smart
 typographic characters (see \code{\link{smartypants}()}.}
 
