@@ -1,11 +1,6 @@
 (function(d) {
   const n = 3; // find a container that has at least n "slides"
   let p = d.body;  // container of slides; assume <body> for now
-  // add 'slide' class to the frontmatter div and toc
-  ['.frontmatter', '#TOC'].forEach(s => {
-    const fm = p.querySelector(s);
-    fm && fm.classList.add('slide');
-  });
   const s1 = ':scope > hr:not([class])', s2 = ':scope > h2';
   function findContainer(s) {
     if (p.querySelectorAll(s).length >= n) return true;
@@ -26,13 +21,15 @@
     // if not enough <hr>s found in children; look for <h2> instead
     if (p.tagName === 'BODY') {
       // not enough h2 found, this page is not appropriate for slides
-      if (!findContainer(s2) && p.tagName === 'BODY') {
-        return d.querySelectorAll('.slide').forEach(el => el.classList.remove('slide'));
-      }
+      if (!findContainer(s2) && p.tagName === 'BODY') return;
       p.querySelectorAll(s2).forEach(h2 => h2.before(newEl('hr')));
     }
   }
   p.classList.add('slide-container');
+  // add 'slide' class to the frontmatter div and toc
+  ['.frontmatter', '#TOC'].forEach(s => {
+    d.body.querySelector(s)?.classList.add('slide');
+  });
 
   function newSlide() {
     return newEl('div', 'slide');
@@ -67,8 +64,18 @@
     m.remove();
   }
   const slides = d.querySelectorAll('div.slide'), N = slides.length,
-        tm = d.querySelector('span.timer');
+        tm = d.querySelector('span.timer'), fn = d.querySelector('.footnotes');
   slides.forEach((s, i) => {
+    // append footnotes
+    if (fn) s.querySelectorAll('a.footnote-ref[href^="#fn"]').forEach(a => {
+      const li = fn.querySelector('li' + a.getAttribute('href'));
+      if (!li) return;
+      s.append(li);
+      let h = (li.childNodes.length === 1 && li.firstChild.tagName === 'P') ?
+        li.firstChild.innerHTML : li.innerHTML;
+      h = a.innerHTML + ' ' + h;
+      li.outerHTML = '<div class="footnote">' + h + '</div>';
+    });
     // add a timer
     s.append(tm ? tm.cloneNode() : newEl('span', 'timer'));
     // add page numbers
@@ -99,7 +106,7 @@
       setTimeout(() => e.target.scrollIntoView(), 100);
     });
   });
-  if (tm) tm.remove();
+  [...d.querySelectorAll('a.footnote-back'), fn, tm].forEach(el => el?.remove());
   const tms = d.querySelectorAll('span.timer'), t1 = 1000 * tms[0].dataset.total;
   let t0;
   function startTimers() {

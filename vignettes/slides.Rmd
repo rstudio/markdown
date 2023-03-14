@@ -124,10 +124,12 @@ Content.
 
 -   <kbd>m</kbd>: Mirror mode
 
-    -   Slides are mirrored ([why this odd
-        feature?](https://yihui.org/en/2020/04/xaringan-mirror/)).
+    -   Slides are mirrored.[^1]
 
     -   Press <kbd>m</kbd> again to resume.
+
+[^1]: See [this post](https://yihui.org/en/2020/04/xaringan-mirror/) for a
+    possible application of this odd feature.
 
 --------------------------------------------------------------------------------
 
@@ -373,7 +375,8 @@ can learn more about the `background-image` property
 ```
 
 Believe it or not, this slide is editable because we have enabled the
-`contenteditable` attribute. Click on this page and try to edit any text.
+`contenteditable` attribute. If you find any mistake on your slide during your
+presentation, you can click on it and edit any text.
 
 Note that your edits *will not* be saved, though.
 
@@ -571,17 +574,19 @@ when uncompressed) and have no dependencies. They were written from scratch.
 <!--# style="background-image: url(https://upload.wikimedia.org/wikipedia/commons/7/7e/Mudra-Naruto-KageBunshin.svg); background-position: bottom right; background-repeat: no-repeat; background-size: 25%;" -->
 
 -   I developed the [xaringan](https://github.com/yihui/xaringan) in package
-    2016 (based on the JS library `remark.js`) and have used it since then. It
-    still works perfectly, but now I prefer more lightweight frameworks.
+    2016 and have used it since then. It still works perfectly, but now I prefer
+    more lightweight frameworks.
 
 -   Most of presentation features that I need are included in
     `r length(xfun::read_all(pres_files))` lines of JS/CSS code
     (`snap.js`/`.css`).
 
--   This simple presentation framework is highly customizable.
+-   This simple presentation framework is highly customizable. Customizing
+    slides can be addictive if you know HTML/CSS/JS.
 
--   If you know HTML/CSS/JS, you can be addicted to customizing your slides.
+-   Learn more about the Markdown syntax in
+    [`vignette('intro', package = 'markdown')`](intro.html).
 
 -   Github repo: <https://github.com/rstudio/markdown> (you can find the [Rmd
     source](https://github.com/rstudio/markdown/blob/master/vignettes/slides.Rmd)
-    of this presentation)
+    of this presentation in the repo)

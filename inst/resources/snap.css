@@ -10,6 +10,7 @@ body {
   max-width: fit-content;
   padding: 0;
 }
+a { color: #eb4a47; }
 :not(pre) > code { background-color: #fdfded; }
 #TOC { columns: 2; }
 #TOC::before {
@@ -23,14 +24,15 @@ body {
   justify-content: center;
   flex-direction: column;
 }
-.page-number, .timer {
+.page-number, .timer, .footnote {
   position: absolute;
   bottom: 0;
-  font: .7em monospace;
   opacity: .5;
 }
+.page-number, .timer { font: .7em monospace; }
 .page-number { right: 0; }
 .timer { left: 0; }
+.footnote { bottom: 1em; font-size: .8em; }
 .inverse {
   background-color: #eee;
   filter: invert(1);
