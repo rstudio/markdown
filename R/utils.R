@@ -224,7 +224,10 @@ move_attrs = function(x, format = 'html') {
     # discard attributes for headers
     r = sprintf('(\\\\(%s)\\{.+?) \\\\\\{([^}]+)\\\\\\}(\\})', paste(sec_levels, collapse = '|'))
     x = convert_attrs(x, r, '\\3', function(r, i, z, z3) {
-      gsub(r, '\\1\\4', z[i])
+      z[i] = gsub(r, '\\1\\4', z[i])
+      k = grepl('unnumbered', z3[i])
+      z[i][k] = sub('{', '*{', z[i][k], fixed = TRUE)
+      z[i]
     }, format)
   } else {
     # TODO: remove attributes for other formats
