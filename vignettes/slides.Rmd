@@ -133,7 +133,7 @@ Content.
 
 --------------------------------------------------------------------------------
 
-## CSS and Styling
+## CSS and styling
 
 You can pass more CSS files to the `css` option, e.g., if you have `extra.css`
 under the same directory as the Markdown input file:

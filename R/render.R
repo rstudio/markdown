@@ -92,10 +92,8 @@ mark = function(
     }
   )
 
-  options = merge_list(
-    yaml_field(yaml, format, 'options'),
-    normalize_options(options, format)
-  )
+  options = merge_list(yaml_field(yaml, format, 'options'), option2list(options))
+  options = normalize_options(options, format)
   options$extensions = intersect(
     names(Filter(isTRUE, options)), commonmark::list_extensions()
   )
