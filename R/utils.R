@@ -290,7 +290,7 @@ render_footnotes = function(x, format = 'html') {
       y,
       '<div class="footnotes">\n<hr />\n<ol>',
       sprintf(
-        '<li id="fn%d"><p>%s<a href="#fnref%d" class="footnote-back">︎&#8617;</a></p></li>',
+        '<li id="fn%d"><p>%s<a href="#fnref%d" class="footnote-back">&#8617;</a></p></li>',
         1:n, f2, 1:n
       ),
       '</ol>\n</div>'
