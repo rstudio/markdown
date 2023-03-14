@@ -22,7 +22,7 @@ To learn more about Markdown syntax see: <https://github.github.com/gfm/>
 
 This package is referred to as *R Markdown v1* when combined with **knitr**. The
 primary output format is HTML. In 2014, we introduced [*R Markdown
-v2*](https://www.rstudio.com/blog/r-markdown-v2/), which is based on Pandoc and
+v2*](https://posit.co/blog/r-markdown-v2/), which is based on Pandoc and
 **knitr**, and supports many more types of output formats. Please see
 <https://rmarkdown.rstudio.com> for details.
 
