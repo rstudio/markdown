@@ -179,13 +179,19 @@ code {
 
 ### Example: section numbers
 
-By default, sections (`<h2>`) are numbered via a [CSS
-counter](https://www.w3schools.com/css/css_counters.asp). If you do not want the
-numbers, you can hide them via CSS:
+By default, all sections are numbered. If you do not want the numbers, you can
+hide them via CSS:
 
-``` css
-.slide-container h2::before {
-  display: none;
+```{css}
+.section-number { display: none; }
+```
+
+For this presentation, section numbers for second-level headers are displayed:
+
+```{css}
+#TOC > ul > li > .section-number,
+h2 > .section-number {
+  display: inline-block;
 }
 ```
 
@@ -202,10 +208,32 @@ can use three columns:
 #TOC { columns: 3; }
 ```
 
+--------------------------------------------------------------------------------
+
 Or define the TOC title by:
 
 ```{css}
 #TOC::before { content: "Outline"; }
+```
+
+Or shorten TOC (hide lower-level headers):
+
+``` css
+#TOC li ul { display: none; }
+```
+
+--------------------------------------------------------------------------------
+
+For this presentation, we don't hide lower-level headers in TOC but just make
+them more compact (`display: inline;`):
+
+```{css}
+#TOC li ul li {
+  display: inline;
+  border-left: 0.2em dotted #ccc;
+  padding-left: 0.2em;
+  color: #666;
+}
 ```
 
 --------------------------------------------------------------------------------
@@ -273,8 +301,8 @@ The syntax is just HTML. These attributes will be added to the slide container:
 -   `fade`: Fade a slide (50% opacity) and apply grid lines to the background
     (can be useful for de-emphasizing a slide).
 
-You can define your own arbitrary class names and corresponding CSS rules, e.g.,
-`<!--# class="large" -->` and `.large { font-size: 150%; }`.
+You can define your own arbitrary class names (e.g., `<!--# class="large" -->`)
+and corresponding CSS rules (e.g., `.large { font-size: 150%; }`).
 
 --------------------------------------------------------------------------------
 
@@ -322,7 +350,7 @@ take a nap, since the speaker is boring.
 
 ### Example: a background image
 
-<!--# style="background-image: url(https://user-images.githubusercontent.com/163582/219277796-6d2dd826-fb11-4970-b07c-dd920a694e3b.jpg); background-size: cover; color: white;" -->
+<!--# style="background-image: url(https://user-images.githubusercontent.com/163582/219277796-6d2dd826-fb11-4970-b07c-dd920a694e3b.jpg); background-size: cover; color: lightgreen;" -->
 
 ``` html
 <!--#

@@ -6,7 +6,7 @@ body {
   line-height: 1.5;
   box-sizing: border-box;
 }
-body, .footnotes { font-size: .9em; }
+body, .footnotes, code, li li { font-size: .9em; }
 *, *:before, *:after {
   box-sizing: inherit;
 }
@@ -16,10 +16,7 @@ pre, pre:hover {
   word-break: break-all;
 }
 pre code { display: block; }
-code {
-  font-size: 92%;
-  font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
-}
+code { font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace; }
 :not(pre) > code, code[class] { background-color: #F8F8F8; }
 code.language-undefined, pre > code:not([class]) {
   background-color: inherit;

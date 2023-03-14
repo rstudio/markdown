@@ -10,6 +10,7 @@ body {
   max-width: fit-content;
   padding: 0;
 }
+:not(pre) > code { background-color: #fdfded; }
 #TOC { columns: 2; }
 #TOC::before {
   font-size: 1.3em;
@@ -39,16 +40,13 @@ body {
   opacity: 0.6;
 }
 .center { text-align: center; }
-.slide-container h2::before {
-  counter-increment: section-number;
-  content: counter(section-number) ". ";
+.slide-container h2 .section-number {
   display: inline-block;
   background-color: #666;
   color: white;
   padding: 0 .1em;
   margin-right: .3em;
 }
-.slide-container { counter-reset: section-number; }
 .overview {
   font-size: .8em;
   max-width: none;
