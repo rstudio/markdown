@@ -1,12 +1,12 @@
 body {
   font-family: sans-serif;
-  font-size: 13px;
   max-width: 800px;
   margin: auto;
   padding: 1em;
   line-height: 1.5;
   box-sizing: border-box;
 }
+body, .footnotes { font-size: .9em; }
 *, *:before, *:after {
   box-sizing: inherit;
 }
