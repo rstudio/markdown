@@ -36,6 +36,10 @@ blockquote {
   border-left: 0.5em solid #eee;
 }
 hr { border: 1px #ddd dashed; }
+.footnotes > hr {
+  max-width: 20em;
+  margin-left: 0;
+}
 .frontmatter { text-align: center; }
 
 @media print {
