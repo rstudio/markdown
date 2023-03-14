@@ -319,11 +319,11 @@ number_sections = function(x) {
   h = sub('</h([1-6])>', '\\1', unlist(regmatches(x, m)))
   if (length(h) == 0) return(x)  # no headers
   h = min(as.integer(h))  # highest level of headers
-  r = '<h([1-6])([^>]*)>'
+  r = '<h([1-6])([^>]*)>(?!<span class="section-number">)'
   n = rep(0, 6)  # counters for all levels of headers
-  match_replace(x, r, function(z) {
-    z1 = as.integer(sub(r, '\\1', z))
-    z2 = sub(r, '\\2', z)
+  match_replace(x, r, perl = TRUE, function(z) {
+    z1 = as.integer(sub(r, '\\1', z, perl = TRUE))
+    z2 = sub(r, '\\2', z, perl = TRUE)
     for (i in seq_along(z)) {
       k = z1[i]
       if (k < 6) n[(k + 1):6] <<- 0
