@@ -5,8 +5,8 @@ date: "`r Sys.Date()`"
 output:
   markdown::html_format:
     meta:
-      css: [default, snap, "@npm/@xiee/utils/css/key-buttons.css"]
-      js: [snap, "@npm/@xiee/utils/js/key-buttons.js,external-link.js"]
+      css: [default, snap, "@npm/@xiee/utils/css/key-buttons.min.css"]
+      js: [snap, "@npm/@xiee/utils/js/key-buttons.min.js,external-link.min.js,center-img.min.js"]
     options:
       toc: true
       highlight_code:
