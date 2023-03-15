@@ -124,6 +124,7 @@
   }
   // press f for fullscreen mode
   d.addEventListener('keyup', (e) => {
+    if (e.target !== d.body) return;
     e.key === 'f' && d.documentElement.requestFullscreen();
     e.key === 'o' && d.body.classList.toggle('overview');
     e.key === 'm' && d.body.classList.toggle('mirrored');
