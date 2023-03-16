@@ -70,10 +70,14 @@
     if (fn) s.querySelectorAll('a.footnote-ref[href^="#fn"]').forEach(a => {
       const li = fn.querySelector('li' + a.getAttribute('href'));
       if (!li) return;
-      s.append(li);
+      let f = s.querySelector('div.footnote');
+      if (!f) {
+        f = newEl('div', 'footnote'); s.append(f);
+      }
+      f.append(li);
       let h = (li.childNodes.length === 1 && li.firstChild.tagName === 'P') ?
         li.firstChild.innerHTML : li.innerHTML;
-      li.outerHTML = `<div class="footnote">${a.innerHTML} ${h}</div>`;
+      li.outerHTML = `<div>${a.innerHTML} ${h}</div>`;
     });
     // add a timer
     s.append(tm ? tm.cloneNode() : newEl('span', 'timer'));
