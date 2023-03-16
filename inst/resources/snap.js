@@ -55,7 +55,7 @@
   }
   function setAttr(el, attr) {
     const m = newEl('div');
-    m.innerHTML = '<div ' + attr + '></div>';
+    m.innerHTML = `<div ${attr}></div>`;
     const attrs = m.firstElementChild.attributes;
     for (let i = 0; i < attrs.length; i++) {
       let a = attrs[i];
@@ -73,8 +73,7 @@
       s.append(li);
       let h = (li.childNodes.length === 1 && li.firstChild.tagName === 'P') ?
         li.firstChild.innerHTML : li.innerHTML;
-      h = a.innerHTML + ' ' + h;
-      li.outerHTML = '<div class="footnote">' + h + '</div>';
+      li.outerHTML = `<div class="footnote">${a.innerHTML} ${h}</div>`;
     });
     // add a timer
     s.append(tm ? tm.cloneNode() : newEl('span', 'timer'));
