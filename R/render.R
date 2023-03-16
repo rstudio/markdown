@@ -163,6 +163,8 @@ mark = function(
   text[p] = match_replace(text[p], r3, perl = TRUE, function(x) {
     gsub('^~|~$', '\\\\~', x)
   })
+  # add line breaks before/after fenced Div's to make ::: tokens separate paragraphs
+  text[p] = sub('^([\t >]*)(:::+( ([^ ]+|\\{.+\\}))?)$', '\\1\n\\1\\2\n\\1', text[p])
 
   # put info string inside code blocks so the info won't be lost, e.g., ```r -> ```\nr
   if (format == 'latex') {

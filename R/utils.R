@@ -192,20 +192,29 @@ redefine_level = function(x, top) {
   x
 }
 
-# move image attributes like `![](){#id .class width="20%"}` and header
-# attributes `# foo {#id .class}` into HTML tags and LaTeX commands
+# move image attributes like `![](){#id .class width="20%"}`, header attributes
+# `# foo {#id .class}`, and fenced Div's `::: {#id .class}` into HTML tags and
+# LaTeX commands
 move_attrs = function(x, format = 'html') {
   if (format == 'html') {
+    # images
     x = convert_attrs(x, '(<img src="[^>]+ )/>\\{([^}]+)\\}', '\\2', function(r, i, z, z2) {
       z1 = sub(r, '\\1', z)
       paste0(z1[i], z2[i], ' />')
     })
+    # headers
     x = convert_attrs(x, '(<h[1-6])(>.+?) \\{([^}]+)\\}(</h[1-6]>)', '\\3', function(r, i, z, z3) {
       z1 = sub(r, '\\1 ', z)
       z2 = sub(r, '\\2', z)
       z4 = sub(r, '\\4', z)
       paste0(z1[i], z3[i], z2[i], z4[i])
     })
+    # fenced Div's
+    x = gsub('(<p>:::+ )([^ {]+)(</p>)', '\\1{.\\2}\\3', x)  # foo -> {.foo}
+    x = convert_attrs(x, '<p>:::+ \\{(.+?)\\}</p>', '\\1', function(r, i, z, z1) {
+      sprintf('<div %s>', z1[i])
+    })
+    x = gsub('<p>:::+</p>', '</div>', x)
   } else if (format == 'latex') {
     # only support image width
     x = convert_attrs(x, '(\\\\includegraphics)(\\{[^}]+\\})\\\\\\{([^}]+)\\\\\\}', '\\3', function(r, i, z, z3) {
@@ -250,11 +259,16 @@ convert_attrs = function(x, r, s, f, format = 'html') {
       i = grep('^#', a)
       a[i] = gsub(r2, 'id="\\1"', a[i], perl = TRUE)
       i = grep('^[.]', a)
-      a[i] = gsub(r2, 'class="\\1"', a[i], perl = TRUE)
+      if (length(i)) {
+        a[i][1] = sprintf('class="%s"', paste(sub('^[.]', '', a[i]), collapse = ' '))
+        a[i][-1] = ''
+      }
       a
     })
+    z2 = gsub('^\\s+|\\s+$', '', z2)
     # all attributes must be of the form attr="value"
-    i = grep('^( ([a-z-]+="[^"]+"))+$', paste0(' ', z2))
+    i = grep('^( +([a-z-]+="[^"]+"))+$', paste0(' ', z2))
+    z2[i] = gsub('( {2,})([a-z-]+="[^"]+")', ' \\2', z2[i])  # reduce to one space
     y[i] = f(r, i, z, z2)
     y
   })
