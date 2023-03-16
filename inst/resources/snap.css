@@ -70,6 +70,7 @@ a { color: #eb4a47; }
 .mirrored { transform: scale(-1, 1); }
 .spacer { height: 50vh; }
 .overview .timer, .overview .spacer { display: none; }
+.overview .footnote { position: unset; }
 html:fullscreen::-webkit-scrollbar { display: none; }
 html:fullscreen {
   -ms-overflow-style: none;
@@ -91,4 +92,5 @@ html:fullscreen {
 }
 @media print, (max-width: 991.98px) {
   .timer, .spacer { display: none; }
+  .footnote { position: unset; }
 }
