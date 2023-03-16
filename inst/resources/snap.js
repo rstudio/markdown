@@ -75,9 +75,8 @@
         f = newEl('div', 'footnote'); s.append(f);
       }
       f.append(li);
-      let h = (li.childNodes.length === 1 && li.firstChild.tagName === 'P') ?
-        li.firstChild.innerHTML : li.innerHTML;
-      li.outerHTML = `<div>${a.innerHTML} ${h}</div>`;
+      li.outerHTML = li.innerHTML.replace('>', `>${a.innerHTML} `)
+        .replace(/^<p>([\s\S]*)<\/p>$/, '<div>$1</div>');
     });
     // add a timer
     s.append(tm ? tm.cloneNode() : newEl('span', 'timer'));
