@@ -210,7 +210,6 @@ move_attrs = function(x, format = 'html') {
       paste0(z1[i], z3[i], z2[i], z4[i])
     })
     # fenced Div's
-    x = gsub('(<p>:::+ )([^ {]+)(</p>)', '\\1{.\\2}\\3', x)  # foo -> {.foo}
     x = convert_attrs(x, '<p>:::+ \\{(.+?)\\}</p>', '\\1', function(r, i, z, z1) {
       sprintf('<div %s>', z1[i])
     })
