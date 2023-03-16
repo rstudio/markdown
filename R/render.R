@@ -134,12 +134,13 @@ mark = function(
   }
 
   p = NULL  # indices of prose
+  find_prose = function() if (is.null(p)) p <<- xfun::prose_index(text)
   # superscript and subscript; for now, we allow only characters alnum|*|(|) for
   # script text but can consider changing this rule upon users' request
   r2 = '(?<!`)\\^([[:alnum:]*()]+?)\\^(?!`)'
   if (has_sup <- test_feature('superscript', r2)) {
     id2 = id_string(text)
-    p = xfun::prose_index(text)
+    find_prose()
     text[p] = match_replace(text[p], r2, perl = TRUE, function(x) {
       # place superscripts inside !id...id!
       x = gsub('^\\^|\\^$', id2, x)
@@ -149,7 +150,7 @@ mark = function(
   r3 = '(?<![~`[:space:]])~([[:alnum:]*()]+?)~(?!`)'
   if (has_sub <- test_feature('subscript', r3)) {
     id3 = id_string(text)
-    if (is.null(p)) p = xfun::prose_index(text)
+    find_prose()
     text[p]= match_replace(text[p], r3, perl = TRUE, function(x) {
       # place subscripts inside !id...id!
       x = gsub('^~|~$', id3, x)
@@ -158,7 +159,7 @@ mark = function(
   }
   # disallow single tilde for <del> (I think it is an awful idea in GFM's
   # strikethrough extension to allow both single and double tilde for <del>)
-  if (is.null(p)) p = xfun::prose_index(text)
+  find_prose()
   text[p] = match_replace(text[p], r3, perl = TRUE, function(x) {
     gsub('^~|~$', '\\\\~', x)
   })
