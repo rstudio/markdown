@@ -247,6 +247,10 @@ move_attrs = function(x, format = 'html') {
       )
       z3 = latex_envir(gsub('\\\\', '\\', z3, fixed = TRUE))
       z3[z3 %in% c('\\begin{@}', '\\end{@}')] = ''
+      i = grep('^\\\\begin', z3)
+      z3[i] = paste0('\n', z3[i])
+      i = grep('^\\\\end', z3)
+      z3[i] = paste0(z3[i], '\n')
       z3
     }, format)
   } else {
