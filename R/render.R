@@ -98,6 +98,12 @@ mark = function(
     names(Filter(isTRUE, options)), commonmark::list_extensions()
   )
 
+  # if `template` was specified in YAML, try to override `template = TRUE/NULL`
+  if (isTRUE(template)) template = NULL
+  if (is.null(template)) template = yaml_field(yaml, format, 'template')
+  # backward-compatibility (the standalone option may be dropped someday)
+  if (isFALSE(options[['standalone']])) template = FALSE
+
   render_args = options[intersect(names(formals(render_fun)), names(options))]
   render = function(x, clean = FALSE) {
     if (length(x) == 0) return(x)
@@ -274,7 +280,7 @@ mark = function(
 #' @export
 #' @examples
 #'
-#' mark_html('Hello _World_!', options = '-standalone')
+#' mark_html('Hello _World_!', template = FALSE)
 #' # write HTML to an output file
 #' mark_html('_Hello_, **World**!', output = tempfile())
 mark_html = function(..., template = TRUE) {
@@ -300,9 +306,8 @@ mark_latex = function(..., template = TRUE) {
 
 # insert body and meta variables into a template
 build_output = function(format, options, template, meta) {
-  if (!isTRUE(options[['standalone']]) || !format %in% c('html', 'latex') ||
-      isFALSE(template)) return(meta$body)
-  if (is.null(template) || isTRUE(template)) template = get_option(
+  if (!format %in% c('html', 'latex') || isFALSE(template)) return(meta$body)
+  if (is.null(template)) template = get_option(
     sprintf('markdown.%s.template', format),
     pkg_file('resources', sprintf('markdown.%s', format))
   )
@@ -375,9 +380,6 @@ tpl_html = function(x) {
 #' \item{\code{smartypants}}{Translate certain ASCII strings into smart
 #' typographic characters (see \code{\link{smartypants}()}.}
 #'
-#' \item{\code{standalone}}{Generate a full (HTML/LaTeX) document or only a
-#' fragment of the body.}
-#'
 #' \item{\code{superscript}}{Translate strings between two carets into
 #' superscripts, e.g., \verb{text^foo^} to \verb{text<sup>foo</sup>}.}
 #'
@@ -409,14 +411,14 @@ tpl_html = function(x) {
 #' markdown::markdown_options()
 #'
 #' # Turn on/off some options globally for HTML output
-#' options(markdown.html.options = '+toc-smartypants-standalone')
+#' options(markdown.html.options = '+toc-smartypants')
 #'
 #' @example inst/examples/render-options.R
 markdown_options = function() {
   # options enabled by default
   x1 = c(
     'smart', 'smartypants', 'embed_images', 'mathjax', 'highlight_code',
-    'number_sections', 'superscript', 'subscript', 'latex_math', 'standalone',
+    'number_sections', 'superscript', 'subscript', 'latex_math',
     setdiff(commonmark::list_extensions(), 'tagfilter')
   )
   # options disabled by default

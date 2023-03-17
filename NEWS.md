@@ -4,6 +4,8 @@
 
 - The Markdown option `base64_images` has been renamed to `embed_images`.
 
+- Removed the option `standalone` from the list of Markdown options. Please use the argument `template = TRUE/FALSE` of `mark()` instead. The option `standalone = TRUE` was equivalent to `template = TRUE`.
+
 # CHANGES IN markdown VERSION 1.5
 
 - Values of meta variables `title`, `author`, and `date` (if provided) will be transformed to the target output format before they are passed into templates.

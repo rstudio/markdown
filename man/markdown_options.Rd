@@ -40,9 +40,6 @@ numbering a specific header, add an attribute \samp{.unnumbered} to it.}
 \item{\code{smartypants}}{Translate certain ASCII strings into smart
 typographic characters (see \code{\link{smartypants}()}.}
 
-\item{\code{standalone}}{Generate a full (HTML/LaTeX) document or only a
-fragment of the body.}
-
 \item{\code{superscript}}{Translate strings between two carets into
 superscripts, e.g., \verb{text^foo^} to \verb{text<sup>foo</sup>}.}
 
@@ -73,7 +70,7 @@ extensions (\code{commonmark::\link[commonmark]{list_extensions}()}).
 markdown::markdown_options()
 
 # Turn on/off some options globally for HTML output
-options(markdown.html.options = '+toc-smartypants-standalone')
+options(markdown.html.options = '+toc-smartypants')
 
 library(markdown)
 

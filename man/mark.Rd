@@ -90,7 +90,7 @@ mark(I("This is *not* a file.md"))
 # that's equivalent to
 mark(text = "This is *not* a file.md")
 
-mark_html("Hello _World_!", options = "-standalone")
+mark_html("Hello _World_!", template = FALSE)
 # write HTML to an output file
 mark_html("_Hello_, **World**!", output = tempfile())
 
