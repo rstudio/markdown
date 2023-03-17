@@ -270,14 +270,15 @@ convert_attrs = function(x, r, s, f, format = 'html') {
       i = grep('^#', a)
       a[i] = gsub(r2, 'id="\\1"', a[i], perl = TRUE)
       i = grep('^[.]', a)
-      if (length(i)) {
-        a[i][1] = sprintf('class="%s"', paste(sub('^[.]', '', a[i]), collapse = ' '))
-        a[i][-1] = ''
+      if ((n <- length(i))) {
+        # merge multiple classes into one class attribute
+        a[i] = sub('^[.]', '', a[i])
+        a[i] = c(rep('', n - 1), sprintf('class="%s"', paste(a[i], collapse = ' ')))
+        a = c(a[i], a[-i])
       }
       a
     })
-    z2 = str_trim(z2)
-    f(r, z, z2)
+    f(r, z, str_trim(z2))
   })
 }
 
