@@ -24,15 +24,14 @@ a { color: #eb4a47; }
   justify-content: center;
   flex-direction: column;
 }
-.page-number, .timer, .footnote {
+.page-number, .timer {
   position: absolute;
   bottom: 0;
   opacity: .5;
+  font: .7em monospace;
 }
-.page-number, .timer { font: .7em monospace; }
 .page-number { right: 0; }
 .timer { left: 0; }
-.footnote { bottom: 1em; font-size: .8em; }
 .inverse {
   background-color: #eee;
   filter: invert(1);
@@ -70,7 +69,7 @@ a { color: #eb4a47; }
 .mirrored { transform: scale(-1, 1); }
 .spacer { height: 50vh; }
 .overview .timer, .overview .spacer { display: none; }
-.overview .footnote { position: unset; }
+.overview .footnotes { position: unset; }
 html:fullscreen::-webkit-scrollbar { display: none; }
 html:fullscreen {
   -ms-overflow-style: none;
@@ -83,6 +82,11 @@ html:fullscreen {
     min-height: 100vh;
     scroll-snap-align: start;
   }
+  .footnotes {
+    position: absolute;
+    bottom: 1em;
+    font-size: .8em;
+  }
 }
 @media (min-width: 1400px) {
  :root { --slide-width: 33%; }
@@ -92,5 +96,4 @@ html:fullscreen {
 }
 @media print, (max-width: 991.98px) {
   .timer, .spacer { display: none; }
-  .footnote { position: unset; }
 }

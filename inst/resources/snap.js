@@ -68,16 +68,16 @@
         tm = d.querySelector('span.timer'), fn = d.querySelector('.footnotes');
   slides.forEach((s, i) => {
     // append footnotes
-    if (fn) s.querySelectorAll('a.footnote-ref[href^="#fn"]').forEach(a => {
+    if (fn) s.querySelectorAll('.footnote-ref > a[href^="#fn"]').forEach(a => {
       const li = fn.querySelector('li' + a.getAttribute('href'));
       if (!li) return;
-      let f = s.querySelector('div.footnote');
+      let f = s.querySelector('div.footnotes');
       if (!f) {
-        f = newEl('div', 'footnote'); s.append(f);
+        f = newEl('div', 'footnotes'); s.append(f);
       }
       f.append(li);
-      li.outerHTML = li.innerHTML.replace('>', `>${a.innerHTML} `)
-        .replace(/^<p>([\s\S]*)<\/p>$/, '<div>$1</div>');
+      li.firstElementChild?.insertAdjacentHTML('afterbegin', `[${a.innerHTML}] `);
+      li.outerHTML = li.innerHTML;
     });
     // add a timer
     s.append(tm ? tm.cloneNode() : newEl('span', 'timer'));
@@ -109,7 +109,7 @@
       setTimeout(() => e.target.scrollIntoView(), 100);
     });
   });
-  [...d.querySelectorAll('a.footnote-back'), fn, tm].forEach(el => el?.remove());
+  [...d.querySelectorAll('a.footnote-backref'), fn, tm].forEach(el => el?.remove());
   const tms = d.querySelectorAll('span.timer'), t1 = 1000 * tms[0].dataset.total;
   let t0;
   function startTimers() {

@@ -104,9 +104,9 @@ these features:
     replaced by the feature of subscripts in **markdown**. To strike out text,
     you must use a pair of *double* tildes.
 
--   Footnotes via `[^n]`, where `n` is an integer identifier. The footnote
-    content should be written in a separate paragraph starting with `[^n]:`, and
-    it must be a single paragraph. For example:
+-   Footnotes via `[^n]`, where `n` is a footnote number (a unique identifier).
+    The footnote content should be defined in a separate block starting with
+    `[^n]:`. For example:
 
     ``` markdown
     Insert a footnote here.[^1]
@@ -114,8 +114,16 @@ these features:
     [^1]: This is the footnote.
     ```
 
-    Note that only numbers[^1] are supported as identifiers, and other types of
-    identifiers will not be recognized.
+    The support is limited for LaTeX output,[^1] and there are two caveats if
+    the document is intended to be converted to LaTeX:
+
+    -   The footnote content must be a single paragraph.
+
+    -   Only numbers[^2] are supported as identifiers, and other types of
+        identifiers are not recognized.
+
+    The two limitations do not apply to HTML output, e.g., you can write
+    arbitrary elements in footnotes and not necessarily one paragraph.
 
 -   Attributes on images and section headers. For example,
     `![text](path){.foo #bar width="50%"}` will generate an `<img>` tag with
@@ -207,7 +215,10 @@ these features:
     knitr::kable(t(as.matrix(p)), col.names = sprintf('`%s`', names(p)))
     ```
 
-[^1]: The specific number doesn't matter, as long as it's a unique footnote
+[^1]: If you know C, I'll truly appreciate it if you could help with the LaTeX
+    implementation in GFM: <https://github.com/github/cmark-gfm/issues/314>
+
+[^2]: The specific number doesn't matter, as long as it's a unique footnote
     number in the document. For example, the first footnote can be `[^100]` and
     the second can be `[^64]`. Eventually they will appear as `[1]` and `[2]`.
     If you use the RStudio visual editor to edit Markdown documents, the

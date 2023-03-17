@@ -188,7 +188,6 @@ mark = function(
 
   ret = render(text)
   ret = move_attrs(ret, format)  # apply attributes of the form {attr="value"}
-  ret = render_footnotes(ret, format)  # render [^n] footnotes
 
   if (format == 'html') {
     ret = tweak_html(ret, text)
@@ -229,6 +228,7 @@ mark = function(
       if (is_file(file, TRUE)) dirname(file) else '.', .b64EncodeImages(ret)
     )
   } else if (format == 'latex') {
+    ret = render_footnotes(ret)  # render [^n] footnotes
     if (has_math) {
       m = gregexpr(sprintf('!%s-(\\d+)-%s!', id, id), ret)
       regmatches(ret, m) = lapply(regmatches(ret, m), function(x) {

@@ -35,15 +35,18 @@ blockquote {
   padding-left: 1em;
   border-left: 0.5em solid #eee;
 }
-hr { border: 1px #ddd dashed; }
-.footnotes > hr {
-  max-width: 20em;
-  margin-left: 0;
-}
+hr, .footnotes::before { border: 1px dashed #ddd; }
 .frontmatter { text-align: center; }
 #TOC .numbered li { list-style: none; }
 #TOC .numbered, #TOC .numbered ul { padding-left: 1em; }
 table, .body h2 { border-bottom: 1px solid #666; }
+.footnote-ref a::before { content: "["; }
+.footnote-ref a::after { content: "]"; }
+.footnotes::before {
+  content: "";
+  display: block;
+  max-width: 20em;
+}
 
 @media print {
   body {
