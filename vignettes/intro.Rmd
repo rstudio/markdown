@@ -134,6 +134,71 @@ these features:
     All attributes in `{}` are ignored for LaTeX output except for the `width`
     attribute for images.
 
+-   Fenced `Div`s via `:::`. Note that the opening fence must have at least one
+    attribute, such as the class name. For example:
+
+    ``` markdown
+    ::: foo
+    This is a fenced Div.
+    :::
+
+    ::: {.foo}
+    The syntax `::: foo` is equivalent to `::: {.foo}`.
+    :::
+
+    ::: {.foo #bar style="color: red;"}
+    This div has more attributes.
+
+    It will be red in HTML output.
+    :::
+    ```
+
+    A fenced Div will be converted to `<div>` with attributes in HTML output,
+    e.g.,
+
+    ``` html
+    <div class="foo" id="bar" style="color: red;">
+    </div>
+    ```
+
+    For LaTeX output, it can be converted to a LaTeX environment if both the
+    class name and an attribute `data-latex` are present. For example,
+
+    ``` markdown
+    ::: {.tiny data-latex=""}
+    This is _tiny_ text.
+    :::
+    ```
+
+    will be converted to:
+
+    ``` latex
+    \begin{tiny}
+    This is \emph{tiny} text.
+    \end{tiny}
+    ```
+
+    The `data-latex` attribute can be used to specify arguments to the
+    environment (which can be an empty string if the environment doesn't need an
+    argument). For example,
+
+    ``` markdown
+    ::: {.minipage data-latex="{.5\linewidth}"}
+    ```
+
+    will be converted to:
+
+    ``` latex
+    \begin{minipage}{.5\linewidth}
+    ```
+
+    If a fenced Div doesn't have the `data-latex` attribute, the fence will be
+    ignored, and its content will be written out normally without a surrounding
+    environment. If a fenced Div has multiple class names (e.g., `{.a .b .c}`),
+    only the first class name will be used as the LaTeX environment name.
+    However, all class names will be used if the output format is HTML (e.g.,
+    `<div class="a b c">`).
+
 -   "Smart" HTML entities via ASCII characters, e.g., fractions can be written
     in the form `n/m`. Below are some example entities:
 

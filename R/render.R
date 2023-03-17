@@ -256,7 +256,6 @@ mark = function(
     ret = redefine_level(ret, options[['top_level']])
     if (isTRUE(options[['toc']])) ret = paste0('\\tableofcontents\n', ret)
   }
-  # TODO: support fenced Div's
 
   meta$body = ret
   # convert some meta variables in case they use Markdown syntax

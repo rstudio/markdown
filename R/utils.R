@@ -239,6 +239,17 @@ move_attrs = function(x, format = 'html') {
       z[i][k] = sub('{', '*{', z[i][k], fixed = TRUE)
       z[i]
     }, format)
+    # fenced Div's
+    r = '\n\\\\begin\\{verbatim\\}\n(:::+)( \\{([^\n]+?)\\})? \\1\n\\\\end\\{verbatim\\}\n'
+    x = convert_attrs(x, r, '\\3', function(r, i, z, z3) {
+      r3 = '(^|.*? )class="([^" ]+)[" ].*? data-latex="([^"]*)".*$'
+      z3[i] = ifelse(
+        grepl(r3, z3[i]), gsub(r3, '{\\2}\\3', z3[i]), ifelse(z3[i] == '', '', '{@}')
+      )
+      z3[i] = latex_envir(gsub('\\\\', '\\', z3[i], fixed = TRUE))
+      z3[i][z3[i] %in% c('\\begin{@}', '\\end{@}')] = ''
+      z3[i]
+    }, format)
   } else {
     # TODO: remove attributes for other formats
   }
@@ -266,13 +277,26 @@ convert_attrs = function(x, r, s, f, format = 'html') {
       }
       a
     })
-    z2 = gsub('^\\s+|\\s+$', '', z2)
+    z2 = str_trim(z2)
     # all attributes must be of the form attr="value"
-    i = grep('^( +([a-z-]+="[^"]+"))+$', paste0(' ', z2))
+    i = grepl('^( +([a-z-]+="[^"]*"))+$', paste0(' ', z2))
     z2[i] = gsub('( {2,})([a-z-]+="[^"]+")', ' \\2', z2[i])  # reduce to one space
+    i = i | (z2 == '')
     y[i] = f(r, i, z, z2)
     y
   })
+}
+
+str_trim = function(x) gsub('^\\s+|\\s+$', '', x)
+
+# {A}, '', {B}, {C}, '', '' -> \begin{A}\end{A}\begin{B}\begin{C}\end{C}\end{B}
+latex_envir = function(x, env = NULL) {
+  n = length(x)
+  if (n == 0) return()
+  x1 = x[1]
+  env2 = tail(env, 1)  # the most recent env is in the end
+  env = if (x1 == '') head(env, -1) else c(env, sub('^(\\{[^}]+}).*$', '\\1', x1))
+  c(if (x1 == '') paste0('\\end', env2) else paste0('\\begin', x1), latex_envir(x[-1], env))
 }
 
 # find and render footnotes
