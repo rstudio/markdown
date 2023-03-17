@@ -12,6 +12,7 @@ output:
 <!--
 %\VignetteEngine{knitr::knitr}
 %\VignetteIndexEntry{An Introduction to the markdown package}
+%\VignetteEncoding{UTF-8}
 -->
 <style type="text/css">
 #TOC {

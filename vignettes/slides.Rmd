@@ -17,6 +17,7 @@ output:
 <!--
 %\VignetteEngine{knitr::knitr}
 %\VignetteIndexEntry{Making HTML Slides with the markdown Package}
+%\VignetteEncoding{UTF-8}
 -->
 ```
 ## Get started
@@ -578,8 +579,8 @@ when uncompressed) and have no dependencies. They were written from scratch.
     more lightweight frameworks.
 
 -   Most of presentation features that I need are included in
-    `r length(xfun::read_all(pres_files))` lines of JS/CSS code
-    (`snap.js`/`.css`).
+    `r length(xfun::read_all(pres_files))` lines of JS/CSS code (`default.css` /
+    `snap.js` / `snap.css`).
 
 -   This simple presentation framework is highly customizable. Customizing
     slides can be addictive if you know HTML/CSS/JS.
