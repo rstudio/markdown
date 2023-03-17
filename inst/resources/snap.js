@@ -31,8 +31,8 @@
     d.body.querySelector(s)?.classList.add('slide');
   });
 
-  function newSlide() {
-    return newEl('div', 'slide');
+  function newSlide(s) {
+    return (s?.innerText === '') ? s : newEl('div', 'slide');
   }
   function isSep(el) {
     return el.tagName === 'HR' && el.attributes.length === 0;
@@ -45,9 +45,10 @@
     if (!el) break;
     // remove slide separators (<hr>) and create new slide
     if (isSep(el)) {
-      s = newSlide(); el.before(s); el.remove();
+      s = newSlide(s);
+      el.before(s); el.remove();
     } else if (el.classList?.contains('slide')) {
-      if (s.innerText !== '') s = newSlide();
+      s = newSlide(s);
       el.after(s);
     } else {
       s.append(el);
