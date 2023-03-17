@@ -198,27 +198,26 @@ redefine_level = function(x, top) {
 move_attrs = function(x, format = 'html') {
   if (format == 'html') {
     # images
-    x = convert_attrs(x, '(<img src="[^>]+ )/>\\{([^}]+)\\}', '\\2', function(r, i, z, z2) {
+    x = convert_attrs(x, '(<img src="[^>]+ )/>\\{([^}]+)\\}', '\\2', function(r, z, z2) {
       z1 = sub(r, '\\1', z)
-      paste0(z1[i], z2[i], ' />')
+      paste0(z1, z2, ' />')
     })
     # headers
-    x = convert_attrs(x, '(<h[1-6])(>.+?) \\{([^}]+)\\}(</h[1-6]>)', '\\3', function(r, i, z, z3) {
+    x = convert_attrs(x, '(<h[1-6])(>.+?) \\{([^}]+)\\}(</h[1-6]>)', '\\3', function(r, z, z3) {
       z1 = sub(r, '\\1 ', z)
-      z2 = sub(r, '\\2', z)
-      z4 = sub(r, '\\4', z)
-      paste0(z1[i], z3[i], z2[i], z4[i])
+      z24 = sub(r, '\\2\\4', z)
+      paste0(z1, z3, z24)
     })
     # fenced Div's
-    x = convert_attrs(x, '<p>:::+ \\{(.+?)\\}</p>', '\\1', function(r, i, z, z1) {
+    x = convert_attrs(x, '<p>:::+ \\{(.+?)\\}</p>', '\\1', function(r, z, z1) {
       # add attributes to the div but remove the data-latex attribute
-      z1[i] = str_trim(gsub('(^| )data-latex="[^"]*"( |$)', ' ', z1[i]))
-      sprintf('<div %s>', z1[i])
+      z1 = str_trim(gsub('(^| )data-latex="[^"]*"( |$)', ' ', z1))
+      sprintf('<div %s>', z1)
     })
     x = gsub('<p>:::+</p>', '</div>', x)
   } else if (format == 'latex') {
     # only support image width
-    x = convert_attrs(x, '(\\\\includegraphics)(\\{[^}]+\\})\\\\\\{([^}]+)\\\\\\}', '\\3', function(r, i, z, z3) {
+    x = convert_attrs(x, '(\\\\includegraphics)(\\{[^}]+\\})\\\\\\{([^}]+)\\\\\\}', '\\3', function(r, z, z3) {
       r2 = '(^|.* )width="([^"]+)"( .*|$)'
       j = grepl(r2, z3)
       w = gsub(r2, '\\2', z3[j])
@@ -229,26 +228,26 @@ move_attrs = function(x, format = 'html') {
       z3[!j] = ''
       z1 = sub(r, '\\1', z)
       z2 = sub(r, '\\2', z)
-      paste0(z1[i], z3[i], z2[i])
+      paste0(z1, z3, z2)
     }, format)
     # discard attributes for headers
     r = sprintf('(\\\\(%s)\\{.+?) \\\\\\{([^}]+)\\\\\\}(\\})', paste(sec_levels, collapse = '|'))
-    x = convert_attrs(x, r, '\\3', function(r, i, z, z3) {
-      z[i] = gsub(r, '\\1\\4', z[i])
-      k = grepl('unnumbered', z3[i])
-      z[i][k] = sub('{', '*{', z[i][k], fixed = TRUE)
-      z[i]
+    x = convert_attrs(x, r, '\\3', function(r, z, z3) {
+      z = gsub(r, '\\1\\4', z)
+      k = grepl('unnumbered', z3)
+      z[k] = sub('{', '*{', z[k], fixed = TRUE)
+      z
     }, format)
     # fenced Div's
     r = '\n\\\\begin\\{verbatim\\}\n(:::+)( \\{([^\n]+?)\\})? \\1\n\\\\end\\{verbatim\\}\n'
-    x = convert_attrs(x, r, '\\3', function(r, i, z, z3) {
+    x = convert_attrs(x, r, '\\3', function(r, z, z3) {
       r3 = '(^|.*? )class="([^" ]+)[" ].*? data-latex="([^"]*)".*$'
-      z3[i] = ifelse(
-        grepl(r3, z3[i]), gsub(r3, '{\\2}\\3', z3[i]), ifelse(z3[i] == '', '', '{@}')
+      z3 = ifelse(
+        grepl(r3, z3), gsub(r3, '{\\2}\\3', z3), ifelse(z3 == '', '', '{@}')
       )
-      z3[i] = latex_envir(gsub('\\\\', '\\', z3[i], fixed = TRUE))
-      z3[i][z3[i] %in% c('\\begin{@}', '\\end{@}')] = ''
-      z3[i]
+      z3 = latex_envir(gsub('\\\\', '\\', z3, fixed = TRUE))
+      z3[z3 %in% c('\\begin{@}', '\\end{@}')] = ''
+      z3
     }, format)
   } else {
     # TODO: remove attributes for other formats
@@ -278,12 +277,7 @@ convert_attrs = function(x, r, s, f, format = 'html') {
       a
     })
     z2 = str_trim(z2)
-    # all attributes must be of the form attr="value"
-    i = grepl('^( +([a-z-]+="[^"]*"))+$', paste0(' ', z2))
-    z2[i] = gsub('( {2,})([a-z-]+="[^"]+")', ' \\2', z2[i])  # reduce to one space
-    i = i | (z2 == '')
-    y[i] = f(r, i, z, z2)
-    y
+    f(r, z, z2)
   })
 }
 
