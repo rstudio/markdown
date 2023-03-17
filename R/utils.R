@@ -211,6 +211,8 @@ move_attrs = function(x, format = 'html') {
     })
     # fenced Div's
     x = convert_attrs(x, '<p>:::+ \\{(.+?)\\}</p>', '\\1', function(r, i, z, z1) {
+      # add attributes to the div but remove the data-latex attribute
+      z1[i] = str_trim(gsub('(^| )data-latex="[^"]*"( |$)', ' ', z1[i]))
       sprintf('<div %s>', z1[i])
     })
     x = gsub('<p>:::+</p>', '</div>', x)
