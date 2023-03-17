@@ -242,12 +242,12 @@ them more compact (`display: inline;`):
 
 ### Responsive layout
 
-| Media               | Width    |   Mode   | Font size | Overview columns |
-|---------------------|----------|:--------:|:---------:|:----------------:|
-| Super large devices | ≥ 1800px |    ↓     |     ↓     |        4         |
-| Larger desktops     | ≥ 1400px |    ↓     |     ↓     |        3         |
-| Desktops            | ≥ 992px  |  Slide   |   200%    |        2         |
-| Phones and tablets  | \< 992px | Document |   100%    |       N/A        |
+| Media               | Width    |  Mode   | Font size | Overview columns |
+|---------------------|----------|:-------:|:---------:|:----------------:|
+| Super large devices | ≥ 1800px |    ↓    |     ↓     |        4         |
+| Larger desktops     | ≥ 1400px |    ↓    |     ↓     |        3         |
+| Desktops            | ≥ 992px  | Slides  |   200%    |        2         |
+| Phones and tablets  | \< 992px | Article |   100%    |       N/A        |
 
 You can resize your browser window to see the effect (also try to press
 <kbd>o</kbd> and test the overview mode). If you are on a mobile device, you
