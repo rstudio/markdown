@@ -1,8 +1,8 @@
 (function(d) {
-  const n = 3; // find a container that has at least n "slides"
   let p = d.body;  // container of slides; assume <body> for now
   const s1 = ':scope > hr:not([class])', s2 = ':scope > h2';
-  function findContainer(s) {
+  // find a container that has at least n "slides"
+  function findContainer(s, n = 1) {
     if (p.querySelectorAll(s).length >= n) return true;
     // if body doesn't contain headers or <hr>s, look into children
     for (let i = 0; i < p.children.length; i++) {
@@ -17,7 +17,7 @@
     if (cls) el.className = cls;
     return el;
   }
-  if (!findContainer(s1)) {
+  if (!findContainer(s1, 3)) {
     // if not enough <hr>s found in children; look for <h2> instead
     if (p.tagName === 'BODY') {
       // not enough h2 found, this page is not appropriate for slides
