@@ -6,6 +6,8 @@ output:
   markdown::html_format:
     options:
       toc: true
+      highlight_code:
+        languages: [latex]
 ---
 
 ```{=html}
@@ -477,3 +479,30 @@ You can learn more in [`vignette('slides', package = 'markdown')`](slides.html).
 ### HTML article
 
 TODO.
+
+## Using RStudio
+
+If you use the RStudio IDE, the `Knit` button can render your Markdown or R
+Markdown document to the `output` format specified in YAML (e.g.,
+`markdown::html_format` or `markdown::latex_format`). This requires the
+**\*r\*markdown** package (\>= v2.18), although the **markdown** package itself
+doesn't really require **rmarkdown**.
+
+If you only need to render a document to the HTML format, you can bypass
+RStudio's requirement for **rmarkdown**:
+
+-   Insert an HTML comment `<!-- rmarkdown v1 -->` to your document (anywhere in
+    the body after YAML).
+
+-   Set an option in your `.Rprofile`:
+
+    ``` r
+    file.edit('~/.Rprofile')
+    options(rstudio.markdownToHTML = function(...) {
+      markdown::mark_html(...)
+    })
+    ```
+
+Then restart R, and you will be able to use the `Knit` button to render your (R)
+Markdown document with the **markdown** package alone.
+
