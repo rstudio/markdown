@@ -82,6 +82,7 @@ html:fullscreen {
     min-height: 100vh;
     scroll-snap-align: start;
   }
+  li li { font-size: .9em; }
   .footnotes {
     position: absolute;
     bottom: 1em;

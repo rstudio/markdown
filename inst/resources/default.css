@@ -6,7 +6,8 @@ body {
   line-height: 1.5;
   box-sizing: border-box;
 }
-body, .footnotes, code, li li { font-size: .9em; }
+body, .footnotes, code { font-size: .9em; }
+li li { font-size: .95em; }
 *, *:before, *:after {
   box-sizing: inherit;
 }
