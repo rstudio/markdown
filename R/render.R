@@ -418,10 +418,10 @@ markdown_options = function() {
   # options enabled by default
   x1 = c(
     'smart', 'smartypants', 'embed_images', 'mathjax', 'highlight_code',
-    'number_sections', 'superscript', 'subscript', 'latex_math',
+    'superscript', 'subscript', 'latex_math',
     setdiff(commonmark::list_extensions(), 'tagfilter')
   )
   # options disabled by default
-  x2 = c('toc', 'hardbreaks', 'tagfilter', 'mathjax_embed')
+  x2 = c('toc', 'hardbreaks', 'tagfilter', 'mathjax_embed', 'number_sections')
   sort(c(paste0('+', x1), paste0('-', x2)))
 }

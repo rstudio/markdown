@@ -9,6 +9,7 @@ output:
       js: [snap, "@npm/@xiee/utils/js/key-buttons.min.js,external-link.min.js,center-img.min.js"]
     options:
       toc: true
+      number_sections: true
       highlight_code:
         style: xcode
 ---
@@ -182,14 +183,15 @@ code {
 
 ### Example: section numbers
 
-By default, all sections are numbered. If you do not want the numbers, you can
-hide them via CSS:
+When the Markdown option `number_sections` is enabled, all sections are
+numbered. You can hide all numbers via CSS:
 
 ```{css}
 .section-number { display: none; }
 ```
 
-For this presentation, section numbers for second-level headers are displayed:
+For this presentation, only section numbers for second-level headers are
+displayed:
 
 ```{css}
 #TOC > ul > li > .section-number,

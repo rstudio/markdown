@@ -6,6 +6,7 @@ output:
   markdown::html_format:
     options:
       toc: true
+      number_sections: true
       highlight_code:
         languages: [latex]
 ---
@@ -505,4 +506,3 @@ RStudio's requirement for **rmarkdown**:
 
 Then restart R, and you will be able to use the `Knit` button to render your (R)
 Markdown document with the **markdown** package alone.
-
