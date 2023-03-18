@@ -5,9 +5,11 @@
 \alias{markdownToHTML}
 \title{Functions in \pkg{markdown} before \code{v1.3}.}
 \usage{
-renderMarkdown(...)
+renderMarkdown(file, output = NULL, ...)
 
 markdownToHTML(
+  file,
+  output = NULL,
   ...,
   options = getOption("markdown.HTML.options"),
   title = NULL,
@@ -19,7 +21,7 @@ markdownToHTML(
 )
 }
 \arguments{
-\item{..., options, template}{Arguments to be passed to new functions.}
+\item{file, output, ..., options, template}{Arguments to be passed to new functions.}
 
 \item{title, stylesheet, header}{Arguments to be passed to \code{meta =
 list(title = , css = , `header-includes` = )}, which is passed to

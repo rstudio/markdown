@@ -5,7 +5,7 @@
 #' use their new names instead: \code{renderMarkdown()} has become
 #' \code{\link{mark}()}, and \code{markdownToHTML()} has become
 #' \code{\link{mark_html}()}.
-#' @param ...,options,template Arguments to be passed to new functions.
+#' @param file,output,...,options,template Arguments to be passed to new functions.
 #' @param title,stylesheet,header Arguments to be passed to \code{meta =
 #'   list(title = , css = , `header-includes` = )}, which is passed to
 #'   \code{mark_html()}.
@@ -13,12 +13,12 @@
 #' @param encoding Ignored.
 #' @export
 #' @keywords internal
-renderMarkdown = function(...) mark(...)
+renderMarkdown = function(file, output = NULL, ...) mark(file, output = output, ...)
 
 #' @rdname renderMarkdown
 #' @export
 markdownToHTML = function(
-  ..., options = getOption('markdown.HTML.options'),
+  file, output = NULL, ..., options = getOption('markdown.HTML.options'),
   title = NULL, stylesheet = getOption('markdown.HTML.stylesheet'),
   header = getOption('markdown.HTML.header'),
   template = getOption('markdown.HTML.template', TRUE),
@@ -29,5 +29,5 @@ markdownToHTML = function(
   meta$css = stylesheet
   meta$title = title
   meta$`header-includes` = header
-  mark_html(..., options = options, template = template, meta = meta)
+  mark_html(file, output = output, ..., options = options, template = template, meta = meta)
 }
