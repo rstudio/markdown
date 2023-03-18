@@ -481,6 +481,10 @@ You can learn more in [`vignette('slides', package = 'markdown')`](slides.html).
 
 TODO.
 
+### External JS/CSS
+
+TODO.
+
 ## Using RStudio
 
 If you use the RStudio IDE, the `Knit` button can render your Markdown or R

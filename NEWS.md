@@ -1,5 +1,9 @@
 # CHANGES IN markdown VERSION 1.6
 
+- Added support for footnotes, fenced `Div`s, section numbers, and `{}` attributes for images/headers/fenced `Div`s. See `vignette('intro', package = 'markdown')` for details.
+
+- A lot of enhancements to the HTML slides format. See `vignette('slides', package = 'markdown')` for details.
+
 - If the input to `mark()` is a file, the output will also be a file by default. Previously the output would be text.
 
 - The Markdown option `base64_images` has been renamed to `embed_images`.
