@@ -3,8 +3,8 @@ library(markdown)
 # toc example
 mkd <- c("# Header 1", "p1", "## Header 2", "p2")
 
-cat(mark(mkd))
-cat(mark(mkd, options = "toc"))
+cat(mark(mkd, options = "+number_sections"))
+cat(mark(mkd, options = "+number_sections+toc"))
 
 # hard_wrap example
 cat(mark("foo\nbar\n"))
