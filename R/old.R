@@ -13,12 +13,12 @@
 #' @param encoding Ignored.
 #' @export
 #' @keywords internal
-renderMarkdown = function(file, output = NULL, ...) mark(file, output = output, ...)
+renderMarkdown = function(file = NULL, output = NULL, ...) mark(file, output = output, ...)
 
 #' @rdname renderMarkdown
 #' @export
 markdownToHTML = function(
-  file, output = NULL, ..., options = getOption('markdown.HTML.options'),
+  file = NULL, output = NULL, ..., options = getOption('markdown.HTML.options'),
   title = NULL, stylesheet = getOption('markdown.HTML.stylesheet'),
   header = getOption('markdown.HTML.header'),
   template = getOption('markdown.HTML.template', TRUE),

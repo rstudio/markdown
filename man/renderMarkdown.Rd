@@ -5,10 +5,10 @@
 \alias{markdownToHTML}
 \title{Functions in \pkg{markdown} before \code{v1.3}.}
 \usage{
-renderMarkdown(file, output = NULL, ...)
+renderMarkdown(file = NULL, output = NULL, ...)
 
 markdownToHTML(
-  file,
+  file = NULL,
   output = NULL,
   ...,
   options = getOption("markdown.HTML.options"),
