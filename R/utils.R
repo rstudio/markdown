@@ -343,15 +343,16 @@ number_sections = function(x) {
 #' @importFrom utils URLdecode
 .b64EncodeResources = function(x) {
   if (length(x) == 0) return(x)
-  reg = '<img\\s+src\\s*=\\s*"([^"]+)"'
-  m = gregexpr(reg, x, ignore.case = TRUE)
-  regmatches(x, m) = lapply(regmatches(x, m), function(z) {
-    src = sub(reg, '\\1', z)
+  r = '(<img[^>]* src="|<!--#[^>]*? style="background-image: url\\("?)([^"]+?)("|"?\\);)'
+  x = match_replace(x, r, function(z) {
+    z1 = sub(r, '\\1', z)
+    z2 = sub(r, '\\2', z)
+    z3 = sub(r, '\\3', z)
     # skip images already base64 encoded
-    for (i in grep('^data:.+;base64,.+', src, invert = TRUE)) {
-      if (file.exists(f <- URLdecode(src[i]))) z[i] = sub(
-        src[i], xfun::base64_uri(f), z[i], fixed = TRUE
-      )
+    for (i in grep('^data:.+;base64,.+', z2, invert = TRUE)) {
+      if (file.exists(f <- URLdecode(z2[i]))) {
+        z[i] = paste0(z1[i], xfun::base64_uri(f), z3[i])
+      }
     }
     z
   })
