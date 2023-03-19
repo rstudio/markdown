@@ -115,7 +115,7 @@ first_heading = function(html) {
       if (force || is.null(js)) js <<- xfun::read_utf8(url)
       c('<script>', js)
     } else {
-      sprintf('<script src="%s" async>', url)
+      sprintf('<script src="%s" defer>', url)
     }, '</script>')
   }
 })
