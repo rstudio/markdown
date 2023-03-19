@@ -34,8 +34,8 @@ rendered by MathJax (HTML output) or LaTeX.}
 \item{\code{mathjax_embed}}{Whether to download and embed the MathJax library
 in HTML output.}
 
-\item{\code{number_sections}}{Whether to number section headers. To skip
-numbering a specific header, add an attribute \samp{.unnumbered} to it.}
+\item{\code{number_sections}}{Whether to number section headings. To skip
+numbering a specific heading, add an attribute \samp{.unnumbered} to it.}
 
 \item{\code{smartypants}}{Translate certain ASCII strings into smart
 typographic characters (see \code{\link{smartypants}()}.}
@@ -46,15 +46,15 @@ superscripts, e.g., \verb{text^foo^} to \verb{text<sup>foo</sup>}.}
 \item{\code{subscript}}{Translate strings between two tildes into subscripts,
 e.g., \verb{text~foo~} to \verb{text<sub>foo</sub>}.}
 
-\item{\code{toc}}{Generate a table of contents from section headers.}
+\item{\code{toc}}{Generate a table of contents from section headings.}
 
 \item{\code{toc_depth}}{The number of section levels to include in the table
 of contents (\code{3} by default).}
 
 \item{\code{top_level}}{The desired type of the top-level headings in LaTeX
 output. Possible values are \code{'chapter'} and \code{'part'}. For example,
-if \code{top_level = 'chapter'}, \code{# header} will be rendered to
-\verb{\chapter{header}} instead of the default \verb{\section{header}}.}
+if \code{top_level = 'chapter'}, \code{# heading} will be rendered to
+\verb{\chapter{heading}} instead of the default \verb{\section{heading}}.}
 
 }
 

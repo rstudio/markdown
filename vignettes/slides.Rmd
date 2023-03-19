@@ -61,13 +61,13 @@ but I recommend that you specify these options in YAML metadata instead.
 There are two ways to create a new slide:
 
 1.  Insert a horizontal rule (`---`).
-2.  Or use the second-level section header (`##`).
+2.  Or use the level-two section heading (`##`).
 
 You must choose only one way, i.e., either use horizontal rules to separate all
-slides, or avoid horizontal rules but only use section headers.
+slides, or avoid horizontal rules but only use section headings.
 
 The first way is more flexible---you don't have to start a slide with a section
-header.
+heading.
 
 --------------------------------------------------------------------------------
 
@@ -190,7 +190,7 @@ numbered. You can hide all numbers via CSS:
 .section-number { display: none; }
 ```
 
-For this presentation, only section numbers for second-level headers are
+For this presentation, only section numbers for level-two headings are
 displayed:
 
 ```{css}
@@ -221,7 +221,7 @@ Or define the TOC title by:
 #TOC::before { content: "Outline"; }
 ```
 
-Or shorten TOC (hide lower-level headers):
+Or shorten TOC (hide lower-level headings):
 
 ``` css
 #TOC li ul { display: none; }
@@ -229,7 +229,7 @@ Or shorten TOC (hide lower-level headers):
 
 --------------------------------------------------------------------------------
 
-For this presentation, we don't hide lower-level headers in TOC but just make
+For this presentation, we don't hide lower-level headings in TOC but just make
 them more compact (`display: inline;`):
 
 ```{css}

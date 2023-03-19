@@ -44,9 +44,9 @@ a lot of features.
 ## Markdown Syntax
 
 For the full list of supported document elements, please read the GFM spec.
-Below is a quick and incomplete summary:
+Below is a quick summary:
 
--   Headings start with a number of `#`'s, e.g., `## second-level heading`.
+-   Headings start with a number of `#`'s, e.g., `## level-two heading`.
 
 -   Inline elements: `**strong**`, `_emphasis_`, `~~strikethrough~~`,
     `[text](link)`, and `![alt](image/path)`.
@@ -129,7 +129,7 @@ these features:
     The two limitations do not apply to HTML output, e.g., you can write
     arbitrary elements in footnotes and not necessarily one paragraph.
 
--   Attributes on images and section headers. For example,
+-   Attributes on images and section headings. For example,
     `![text](path){.foo #bar width="50%"}` will generate an `<img>` tag with
     attributes in HTML output:
 
@@ -137,10 +137,10 @@ these features:
     <img src="path" alt="text" class="foo" id="bar" width="50%" />
     ```
 
-    and `## Header {#baz}` will generate:
+    and `## Heading {#baz}` will generate:
 
     ``` html
-    <h2 id="baz">Header</h2>
+    <h2 id="baz">Heading</h2>
     ```
 
     All attributes in `{}` are ignored for LaTeX output except for the `width`

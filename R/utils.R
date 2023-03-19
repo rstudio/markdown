@@ -99,8 +99,8 @@ restore_html = function(x) {
   x
 }
 
-# find the first header in html
-first_header = function(html) {
+# find the first heading in html
+first_heading = function(html) {
   m = regexpr(r <- '<(h[1-6])[^>]*?>(.+?)</\\1>', html, perl = TRUE)
   gsub(r, '\\2', regmatches(html, m))
 }
@@ -162,20 +162,20 @@ one_string = function(x) {
   paste(x, collapse = '\n')
 }
 
-# find headers and build a table of contents as an unordered list
+# find headings and build a table of contents as an unordered list
 build_toc = function(html, n = 3) {
   if (n <= 0) return()
   if (n > 6) n = 6
   r = sprintf('<(h[1-%d])[^>]*>(.+?)</\\1>', n)
   items = unlist(regmatches(html, gregexpr(r, html, perl = TRUE)))
   if (length(items) == 0) return()
-  x = gsub(r, '<toc>\\2</toc>', items)  # use a tag <toc> to protect header text
-  h = as.integer(gsub('^h', '', gsub(r, '\\1', items)))  # header level
+  x = gsub(r, '<toc>\\2</toc>', items)  # use a tag <toc> to protect heading text
+  h = as.integer(gsub('^h', '', gsub(r, '\\1', items)))  # heading level
   s = strrep('  ', seq_len(n) - 1)  # indent
   x = paste0(s[h], '- ', x)  # create an unordered list
   x = commonmark::markdown_html(x)
   x = gsub('</?toc>', '', x)
-  # add class 'numbered' to the first <ul> if any header is numbered
+  # add class 'numbered' to the first <ul> if any heading is numbered
   if (length(grep('<span class="section-number">', x)))
     x = sub('<ul>', '<ul class="numbered">', x)
   paste0('<div id="TOC">\n', x, '</div>')
@@ -192,7 +192,7 @@ redefine_level = function(x, top) {
   x
 }
 
-# move image attributes like `![](){#id .class width="20%"}`, header attributes
+# move image attributes like `![](){#id .class width="20%"}`, heading attributes
 # `# foo {#id .class}`, and fenced Div's `::: {#id .class}` into HTML tags and
 # LaTeX commands
 move_attrs = function(x, format = 'html') {
@@ -202,7 +202,7 @@ move_attrs = function(x, format = 'html') {
       z1 = sub(r, '\\1', z)
       paste0(z1, z2, ' />')
     })
-    # headers
+    # headings
     x = convert_attrs(x, '(<h[1-6])(>.+?) \\{([^}]+)\\}(</h[1-6]>)', '\\3', function(r, z, z3) {
       z1 = sub(r, '\\1 ', z)
       z24 = sub(r, '\\2\\4', z)
@@ -230,7 +230,7 @@ move_attrs = function(x, format = 'html') {
       z2 = sub(r, '\\2', z)
       paste0(z1, z3, z2)
     }, format)
-    # discard attributes for headers
+    # discard attributes for headings
     r = sprintf('(\\\\(%s)\\{.+?) \\\\\\{([^}]+)\\\\\\}(\\})', paste(sec_levels, collapse = '|'))
     x = convert_attrs(x, r, '\\3', function(r, z, z3) {
       z = gsub(r, '\\1\\4', z)
@@ -318,10 +318,10 @@ render_footnotes = function(x) {
 number_sections = function(x) {
   m = gregexpr('</h[1-6]>', x)
   h = sub('</h([1-6])>', '\\1', unlist(regmatches(x, m)))
-  if (length(h) == 0) return(x)  # no headers
-  h = min(as.integer(h))  # highest level of headers
+  if (length(h) == 0) return(x)  # no headings
+  h = min(as.integer(h))  # highest level of headings
   r = '<h([1-6])([^>]*)>(?!<span class="section-number">)'
-  n = rep(0, 6)  # counters for all levels of headers
+  n = rep(0, 6)  # counters for all levels of headings
   match_replace(x, r, perl = TRUE, function(z) {
     z1 = as.integer(sub(r, '\\1', z, perl = TRUE))
     z2 = sub(r, '\\2', z, perl = TRUE)
