@@ -341,7 +341,7 @@ number_sections = function(x) {
 }
 
 #' @importFrom utils URLdecode
-.b64EncodeImages = function(x) {
+.b64EncodeResources = function(x) {
   if (length(x) == 0) return(x)
   reg = '<img\\s+src\\s*=\\s*"([^"]+)"'
   m = gregexpr(reg, x, ignore.case = TRUE)
@@ -364,7 +364,7 @@ normalize_options = function(x, format = 'html') {
   n = names(x)
   n[n == 'hard_wrap'] = 'hardbreaks'
   n[n == 'tables'] = 'table'
-  n[n == 'base64_images'] = 'embed_images'
+  n[n == 'base64_images'] = 'embed_resources'
   names(x) = n
   # default options
   d = option2list(markdown_options())

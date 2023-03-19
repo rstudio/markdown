@@ -224,9 +224,6 @@ mark = function(
     if (isTRUE(options[['toc']])) ret = paste(
       c(build_toc(ret, options[['toc_depth']]), ret), collapse = '\n'
     )
-    if (isTRUE(options[['embed_images']])) ret = xfun::in_dir(
-      if (is_file(file, TRUE)) dirname(file) else '.', .b64EncodeImages(ret)
-    )
   } else if (format == 'latex') {
     ret = render_footnotes(ret)  # render [^n] footnotes
     if (has_math) {
@@ -268,9 +265,16 @@ mark = function(
   for (i in c('title', 'author', 'date')) meta[[i]] = render(meta[[i]], clean = TRUE)
   # use the template (if provided) to create a standalone document
   ret = build_output(format, options, template, meta)
-  # remove \title and \maketitle if title is empty
-  if (format == 'latex' && grepl('\n\\title{}\n', ret, fixed = TRUE))
-    ret = gsub('\n(\\\\title\\{}|\\\\maketitle)\n', '\n', ret)
+
+  if (format == 'html') {
+    if (isTRUE(options[['embed_resources']])) ret = xfun::in_dir(
+      if (is_file(file, TRUE)) dirname(file) else '.', .b64EncodeResources(ret)
+    )
+  } else if (format == 'latex') {
+    # remove \title and \maketitle if title is empty
+    if (grepl('\n\\title{}\n', ret, fixed = TRUE))
+      ret = gsub('\n(\\\\title\\{}|\\\\maketitle)\n', '\n', ret)
+  }
 
   if (is.character(output)) xfun::write_utf8(ret, output) else ret
 }
@@ -359,7 +363,7 @@ tpl_html = function(x) {
 #'
 #' \describe{
 #'
-#' \item{\code{embed_images}}{Embed local images in the HTML output with base64
+#' \item{\code{embed_resources}}{Embed local images in the HTML output with base64
 #' encoding.}
 #'
 #' \item{\code{highlight_code}}{Includes JavaScript libraries to syntax
@@ -417,7 +421,7 @@ tpl_html = function(x) {
 markdown_options = function() {
   # options enabled by default
   x1 = c(
-    'smart', 'smartypants', 'embed_images', 'mathjax', 'highlight_code',
+    'smart', 'smartypants', 'embed_resources', 'mathjax', 'highlight_code',
     'superscript', 'subscript', 'latex_math',
     setdiff(commonmark::list_extensions(), 'tagfilter')
   )

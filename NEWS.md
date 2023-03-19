@@ -6,7 +6,7 @@
 
 - If the input to `mark()` is a file, the output will also be a file by default. Previously the output would be text.
 
-- The Markdown option `base64_images` has been renamed to `embed_images`.
+- The Markdown option `base64_images` has been renamed to `embed_resources`.
 
 - Removed the option `standalone` from the list of Markdown options. Please use the argument `template = TRUE/FALSE` of `mark()` instead. The option `standalone = TRUE` was equivalent to `template = TRUE`.
 
