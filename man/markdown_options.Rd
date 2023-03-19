@@ -10,67 +10,17 @@ markdown_options()
 A character vector of all available options.
 }
 \description{
-A list of all available options to control Markdown rendering. Options that
-are enabled by default are marked by a \code{+} prefix, and those disabled by
-default are marked by \code{-}.
+A list of all options to control Markdown rendering. Options that are enabled
+by default are marked by a \code{+} prefix, and those disabled by default are
+marked by \code{-}.
 }
 \details{
-Description of all options:
-
-\describe{
-
-\item{\code{embed_images}}{Embed local images in the HTML output with base64
-encoding.}
-
-\item{\code{highlight_code}}{Includes JavaScript libraries to syntax
-highlight code blocks.}
-
-\item{\code{latex_math}}{Identify LaTeX math expressions in pairs of single
-or double dollar signs, and transform them so that they could be correctly
-rendered by MathJax (HTML output) or LaTeX.}
-
-\item{\code{mathjax}}{Include MathJax library in HTML output.}
-
-\item{\code{mathjax_embed}}{Whether to download and embed the MathJax library
-in HTML output.}
-
-\item{\code{number_sections}}{Whether to number section headings. To skip
-numbering a specific heading, add an attribute \samp{.unnumbered} to it.}
-
-\item{\code{smartypants}}{Translate certain ASCII strings into smart
-typographic characters (see \code{\link{smartypants}()}.}
-
-\item{\code{superscript}}{Translate strings between two carets into
-superscripts, e.g., \verb{text^foo^} to \verb{text<sup>foo</sup>}.}
-
-\item{\code{subscript}}{Translate strings between two tildes into subscripts,
-e.g., \verb{text~foo~} to \verb{text<sub>foo</sub>}.}
-
-\item{\code{toc}}{Generate a table of contents from section headings.}
-
-\item{\code{toc_depth}}{The number of section levels to include in the table
-of contents (\code{3} by default).}
-
-\item{\code{top_level}}{The desired type of the top-level headings in LaTeX
-output. Possible values are \code{'chapter'} and \code{'part'}. For example,
-if \code{top_level = 'chapter'}, \code{# heading} will be rendered to
-\verb{\chapter{heading}} instead of the default \verb{\section{heading}}.}
-
-}
-
-Options not described above can be found on the help pages of
-\pkg{commonmark}, e.g., the \code{hardbreaks} option is for the
-\code{hardbreaks} argument of
-\code{\link[commonmark:commonmark]{markdown_*}()} functions, and the
-\code{table} option is for the \code{table} extension in \pkg{commonmark}'s
-extensions (\code{commonmark::\link[commonmark]{list_extensions}()}).
+See \code{vignette('intro', package = 'markdown')} for the full list of
+options and their documentation.
 }
 \examples{
-# List all available options
+# all available options
 markdown::markdown_options()
-
-# Turn on/off some options globally for HTML output
-options(markdown.html.options = '+toc-smartypants')
 
 library(markdown)
 

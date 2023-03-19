@@ -24,14 +24,14 @@
 #'   \code{\link[commonmark:commonmark]{markdown_*}} renderers in
 #'   \pkg{commonmark}.
 #' @param options Options to be passed to the renderer. See
-#'   \code{\link{markdown_options}()} for all possible options. This argument
-#'   can take either a character vector of the form \code{"+option1
-#'   option2-option3"} (use \code{+} or a space to enable an option, and
-#'   \code{-} to disable an option), or a list of the form \code{list(option1 =
-#'   value1, option2 = value2, ...)}. A string \code{"+option1"} is equivalent
-#'   to \code{list(option1 = TRUE)}, and \code{"-option2"} means
-#'   \code{list(option2 = FALSE)}. Options that do not take logical values must
-#'   be specified via a list, e.g., \code{list(width = 30)}.
+#'   \code{\link{markdown_options}()} for details. This argument can take either
+#'   a character vector of the form \code{"+option1 option2-option3"} (use
+#'   \code{+} or a space to enable an option, and \code{-} to disable an
+#'   option), or a list of the form \code{list(option1 = value1, option2 =
+#'   value2, ...)}. A string \code{"+option1"} is equivalent to
+#'   \code{list(option1 = TRUE)}, and \code{"-option2"} means \code{list(option2
+#'   = FALSE)}. Options that do not take logical values must be specified via a
+#'   list, e.g., \code{list(width = 30)}.
 #' @param template Path to a template file. The default value is
 #'   \code{getOption('markdown.FORMAT.template',
 #'   markdown:::pkg_file('resources', 'markdown.FORMAT'))} where \code{FORMAT}
@@ -355,67 +355,17 @@ tpl_html = function(x) {
 
 #' Markdown rendering options
 #'
-#' A list of all available options to control Markdown rendering. Options that
-#' are enabled by default are marked by a \code{+} prefix, and those disabled by
-#' default are marked by \code{-}.
+#' A list of all options to control Markdown rendering. Options that are enabled
+#' by default are marked by a \code{+} prefix, and those disabled by default are
+#' marked by \code{-}.
 #'
-#' Description of all options:
-#'
-#' \describe{
-#'
-#' \item{\code{embed_resources}}{Embed local images in the HTML output with base64
-#' encoding.}
-#'
-#' \item{\code{highlight_code}}{Includes JavaScript libraries to syntax
-#' highlight code blocks.}
-#'
-#' \item{\code{latex_math}}{Identify LaTeX math expressions in pairs of single
-#' or double dollar signs, and transform them so that they could be correctly
-#' rendered by MathJax (HTML output) or LaTeX.}
-#'
-#' \item{\code{mathjax}}{Include MathJax library in HTML output.}
-#'
-#' \item{\code{mathjax_embed}}{Whether to download and embed the MathJax library
-#' in HTML output.}
-#'
-#' \item{\code{number_sections}}{Whether to number section headings. To skip
-#' numbering a specific heading, add an attribute \samp{.unnumbered} to it.}
-#'
-#' \item{\code{smartypants}}{Translate certain ASCII strings into smart
-#' typographic characters (see \code{\link{smartypants}()}.}
-#'
-#' \item{\code{superscript}}{Translate strings between two carets into
-#' superscripts, e.g., \verb{text^foo^} to \verb{text<sup>foo</sup>}.}
-#'
-#' \item{\code{subscript}}{Translate strings between two tildes into subscripts,
-#' e.g., \verb{text~foo~} to \verb{text<sub>foo</sub>}.}
-#'
-#' \item{\code{toc}}{Generate a table of contents from section headings.}
-#'
-#' \item{\code{toc_depth}}{The number of section levels to include in the table
-#' of contents (\code{3} by default).}
-#'
-#' \item{\code{top_level}}{The desired type of the top-level headings in LaTeX
-#' output. Possible values are \code{'chapter'} and \code{'part'}. For example,
-#' if \code{top_level = 'chapter'}, \code{# heading} will be rendered to
-#' \verb{\chapter{heading}} instead of the default \verb{\section{heading}}.}
-#'
-#' }
-#'
-#' Options not described above can be found on the help pages of
-#' \pkg{commonmark}, e.g., the \code{hardbreaks} option is for the
-#' \code{hardbreaks} argument of
-#' \code{\link[commonmark:commonmark]{markdown_*}()} functions, and the
-#' \code{table} option is for the \code{table} extension in \pkg{commonmark}'s
-#' extensions (\code{commonmark::\link[commonmark]{list_extensions}()}).
+#' See \code{vignette('intro', package = 'markdown')} for the full list of
+#' options and their documentation.
 #' @return A character vector of all available options.
 #' @export
 #' @examples
-#' # List all available options
+#' # all available options
 #' markdown::markdown_options()
-#'
-#' # Turn on/off some options globally for HTML output
-#' options(markdown.html.options = '+toc-smartypants')
 #'
 #' @example inst/examples/render-options.R
 markdown_options = function() {

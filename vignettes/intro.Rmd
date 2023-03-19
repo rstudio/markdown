@@ -26,6 +26,11 @@ output:
 #TOC ul { margin: 0; }
 </style>
 ```
+```{r, include=FALSE}
+options(width = 80)
+knitr::opts_chunk$set(comment = '#>')
+```
+
 The **markdown** package is built on top of **commonmark**. It renders Markdown
 to output formats supported by **commonmark**, and the primary output formats
 are HTML and LaTeX.
@@ -262,30 +267,76 @@ The `options` argument of `mark()` can be used to enable/disable/set options to
 control Markdown rendering. This argument can take either a list (e.g.,
 `list(toc = TRUE, smart = FALSE)`) or a character vector (e.g.,
 `c("+toc", "-smart")`, or equivalently, `+toc-smart`, where `+` means to enable
-an option, and `-` means to disable an option). You can find available options
-in `markdown::markdown_options()`, and their documentation on the help page of
-this function, i.e., `?markdown::markdown_options`.
+an option, and `-` means to disable an option). Available options are listed
+below:
 
-Most options take logical values (`TRUE` or `FALSE`), but a few of them take
-other types of values. For example, the `highlight_code` option can be used to
-set options for syntax highlighting code using the JavaScript library
-`highlight.js`. This option can take a list of three possible elements,
-`list(version, theme, languages)`, which specify:
+-   `embed_resources`: Embed resources (images, CSS, and JS) in the HTML output
+    with base64 encoding.
 
--   The [JS library
-    version](https://github.com/highlightjs/highlight.js/releases) (e.g.,
-    `11.6.0`);
+-   `highlight_code`: Includes the JavaScript library `highlight.js` to syntax
+    highlight code blocks. This option can also take a list of three possible
+    elements, `list(version, theme, languages)`, which specify:
 
--   The theme (e.g., `github`), and you can find demos of themes at
-    <https://highlightjs.org/static/demo/> and their names at
-    <https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/>;
+    -   The [JS library
+        version](https://github.com/highlightjs/highlight.js/releases) (e.g.,
+        `11.6.0`);
 
--   Additional languages to be supported. By default, `highlight.js` can syntax
-    highlight more than 30 common languages (including R). If any code block is
-    not syntax highlighted as expected, you may look up the JS filename for the
-    language at
-    <https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/languages/>
-    (e.g., `latex`).
+    -   The theme (e.g., `github`), and you can find demos of themes at
+        <https://highlightjs.org/static/demo/> and their names at
+        <https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/>;
+
+    -   Additional languages to be supported. By default, `highlight.js` can
+        syntax highlight more than 30 common languages (including R). If any
+        code block is not syntax highlighted as expected, you may look up the JS
+        filename for the language at
+        <https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/languages/>
+        (e.g., `latex`).
+
+-   `latex_math`: Identify LaTeX math expressions in pairs of single or double
+    dollar signs, and transform them so that they could be correctly rendered by
+    MathJax (HTML output) or LaTeX.
+
+-   `mathjax`: Include MathJax library in HTML output.
+
+    -   `mathjax_embed`: Whether to download and embed the MathJax library in
+        HTML output.
+
+-   `number_sections`: Whether to number section headings. To skip numbering a
+    specific heading, add an attribute `{.unnumbered}` to it.
+
+-   `smartypants`: Translate certain ASCII strings into smart typographic
+    characters (see `?markdown::smartypants`).
+
+-   `superscript`: Translate strings between two carets into superscripts, e.g.,
+    `text^foo^` to `text<sup>foo</sup>`.
+
+-   `subscript`: Translate strings between two tildes into subscripts, e.g.,
+    `text~foo~` to `text<sub>foo</sub>`.
+
+-   `toc`: Generate a table of contents from section headings.
+
+    -   `toc_depth`: The number of section levels to include in the table of
+        contents (`3` by default).
+
+-   `top_level`: The desired type of the top-level headings in LaTeX output.
+    Possible values are `'chapter'` and `'part'`. For example, if
+    `top_level = 'chapter'`, `# heading` will be rendered to `\chapter{heading}`
+    instead of the default `\section{heading}`.
+
+Options not described above can be found on the help pages of **commonmark**,
+e.g., the `hardbreaks` option is for the `hardbreaks` argument of
+`commonmark::markdown_*()` functions, and the `table` option is for the `table`
+extension in **commonmark**'s extensions.
+
+```{r, collapse=TRUE}
+markdown::markdown_options()
+# commonmark's arguments
+opts = formals(commonmark::markdown_html)
+opts = opts[setdiff(names(opts), c('text', 'extensions'))]
+unlist(opts)
+# commonmark's extensions
+commonmark::list_extensions()
+```
 
 ### Templates
 
