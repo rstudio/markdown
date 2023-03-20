@@ -16,7 +16,7 @@ Authors@R: c(
    person("Thomas", "Leeper", role = "ctb"),
    person("Joe", "Cheng", role = "ctb"),
    person("Andrzej", "Oles", role = "ctb"),
-   person(family = "RStudio", role = "cph")
+   person(given = "Posit Software, PBC", role = c("cph", "fnd"))
    )
 Description: Render Markdown to full HTML documents with the 'commonmark'
     package. Markdown is a plain-text formatting
