@@ -464,15 +464,19 @@ resolve_files = function(x, ext = 'css') {
   )
   x[i] = files[match(x[i], b)]
   switch (ext,
-    css = gen_tag(x, '<link href="%s" rel="stylesheet">', c('<style type="text/css">', '</style>')),
+    css = gen_tag(x, '<link rel="stylesheet" href="%s">', c('<style type="text/css">', '</style>')),
     js = gen_tag(x, '<script src="%s" defer></script>', c('<script>', '</script>')),
     xfun::read_all(x)
   )
 }
 
-gen_tag = function(x, t1, t2) {
+gen_tag = function(x, t1, t2, embed = NA) {
+  test = function(z) {
+    if (!is.na(embed)) return(embed)
+    grepl('^https://', z) || xfun::is_rel_path(z)
+  }
   code = lapply(x, function(z) {
-    if (grepl('^https://', z)) sprintf(t1, z) else c(t2[1], xfun::read_utf8(z), t2[2])
+    if (test(z)) c(t2[1], xfun::read_utf8(z), t2[2]) else sprintf(t1, z)
   })
   paste(unlist(code), collapse = '\n')
 }
