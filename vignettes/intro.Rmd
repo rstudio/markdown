@@ -271,7 +271,21 @@ an option, and `-` means to disable an option). Available options are listed
 below:
 
 -   `embed_resources`: Embed resources (images, CSS, and JS) in the HTML output
-    with base64 encoding.
+    using their base64-encoded data (images) or raw content (CSS/JS). Possible
+    values are:
+
+    -   `null`: Do not embed any resources.
+
+    -   `"local"`: Embed local image/CSS/JS files.
+
+    -   `"https"`: Embed web resources (links that start with `https://`).
+
+    -   `"all"`: An alias to the union of `"local"` and `"https"`.
+
+    The default is `"local"`, i.e., local resources are embedded, whereas
+    `https` resources are not. This means the output document may not work
+    offline. If you have to view the output offline, you need to use the option
+    value `"https"` (or `"all"`).
 
 -   `highlight_code`: Includes the JavaScript library `highlight.js` to syntax
     highlight code blocks. This option can also take a list of three possible
@@ -424,8 +438,8 @@ templates:
 
 Variables specific to the HTML template:
 
--   `css`: A vector of CSS code or files to be included in the output. The
-    default value is `markdown:::pkg_file('resources', 'default.css')`.
+-   `css`: A vector of CSS files to be included in the output. The default value
+    is `markdown:::pkg_file('resources', 'default.css')`.
 
     If you want to use built-in CSS files in this package, you can only specify
     the base name, e.g., `default` means `default.css` in this package.
@@ -433,41 +447,40 @@ Variables specific to the HTML template:
     You can also use web resources, e.g., `https://example.org/style.css`. One
     special case is [jsdelivr.com](https://www.jsdelivr.com) resources: if a
     `css` value starts with `@`, it will be recognized as a jsdelivr.com
-    resource. The shorthand syntax is as follows (if you are not familiar with
-    jsdelivr, you may read its documentation to understand the following example
-    URLs):
+    resource. if you are not familiar with jsdelivr, you may read its
+    documentation to understand the following example URLs. The shorthand syntax
+    is as follows (`...` stands for `https://cdn.jsdelivr.net`):
 
     -   `@foo` will be converted to
-        `https://cdn.jsdelivr.net/gh/rstudio/markdown/inst/resources/foo`, e.g.,
-        `@default` means
-        `https://cdn.jsdelivr.net/gh/rstudio/markdown/inst/resources/default.css`.
+        `.../gh/rstudio/markdown/inst/resources/foo`, e.g., `@default` means
+        `.../gh/rstudio/markdown/inst/resources/default.css`.
 
     -   `@path/to/file` (i.e., a value that contains slashes) will be converted
-        to `https://cdn.jsdelivr.net/path/to/file`, e.g.,
-        `@npm/@xiee/utils/js/center-img.js` will be converted to
-        `https://cdn.jsdelivr.net/npm/@xiee/utils/js/center-img.min.js`.
+        to `.../path/to/file`, e.g., `@npm/@xiee/utils/js/center-img.js` will be
+        converted to `.../npm/@xiee/utils/js/center-img.min.js`.
 
-    -   `@path/to/file1,file2` (comma-separated values and later values do not
+    -   `@path/to/file-1,file-2` (comma-separated values and later values do not
         contain slashes) will be converted to
-        `https://cdn.jsdelivr.net/combine/path/to/file1,path/to/file2` (this can
-        be useful to
+        `.../combine/path/to/file-1,path/to/file-2` (this can be useful to
         [combine](https://www.jsdelivr.com/documentation#id-combine-multiple-files)
         multiple resources and load all at once).
 
-    -   `@path1/to/file1,path2/to/file2` (comma-separated values and later
+    -   `@path-1/to/file-1,path-2/to/file-2` (comma-separated values and later
         values contain slashes) will be converted to
-        `https://cdn.jsdelivr.net/combine/path1/to/file1,path2/to/file2`.
+        `.../combine/path-1/to/file-1,path-2/to/file-2`.
 
     This provides a way to reduce the output HTML file size by loading CSS from
     the web instead of embedding inside HTML, at the cost of requiring Internet
-    connection when viewing the HTML file.
+    connection when viewing the HTML file. If you need the external web
+    resources to work after you go offline, you can enable `"https"` in the
+    Markdown option `embed_resources`.
 
 -   `highlight`: JavaScript code for syntax-highlighting code blocks. By
     default, the highlight.js library is used.
 
--   `js`: A vector of JavaScript code or JavaScript files to be included in the
-    output. The syntax is the same as the `css` variable, e.g., `snap` means
-    `snap.js` in this package, and `@snap` means a "jsdelivr" resource.
+-   `js`: A vector of JavaScript files to be included in the output. The syntax
+    is the same as the `css` variable, e.g., `snap` means `snap.js` in this
+    package, and `@snap` means a "jsdelivr" resource.
 
 -   `math`: JavaScript code for rendering LaTeX math. By default, MathJax is
     used.

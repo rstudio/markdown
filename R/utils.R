@@ -341,8 +341,11 @@ number_sections = function(x) {
 }
 
 #' @importFrom utils URLdecode
-.b64EncodeResources = function(x) {
+embed_resources = function(x, embed = 'local') {
   if (length(x) == 0) return(x)
+  embed = c('https', 'local') %in% embed
+  if (!any(embed)) return(x)
+
   r = '(<img[^>]* src="|<!--#[^>]*? style="background-image: url\\("?)([^"]+?)("|"?\\);)'
   x = match_replace(x, r, function(z) {
     z1 = sub(r, '\\1', z)
@@ -350,12 +353,45 @@ number_sections = function(x) {
     z3 = sub(r, '\\3', z)
     # skip images already base64 encoded
     for (i in grep('^data:.+;base64,.+', z2, invert = TRUE)) {
-      if (file.exists(f <- URLdecode(z2[i]))) {
-        z[i] = paste0(z1[i], xfun::base64_uri(f), z3[i])
+      if (xfun::file_exists(f <- URLdecode(z2[i]))) {
+        z2[i] = xfun::base64_uri(f)
+      } else if (embed[1] && grepl('^https://', f)) {
+        z2[i] = xfun::download_cache$get(f, 'base64')
       }
     }
-    z
+    paste0(z1, z2, z3)
   })
+
+  # CSS and JS
+  r = paste0(
+    '<link[^>]* rel="stylesheet" href="([^"]+)"[^>]*>|',
+    '<script[^>]* src="([^"]+)"[^>]*>\\s*</script>'
+  )
+  x2 = NULL  # to be appended to x
+  x = match_replace(x, r, function(z) {
+    z1 = sub(r, '\\1', z)  # css
+    z2 = sub(r, '\\2', z)  # js
+    js = z2 != ''
+    z3 = paste0(z1, z2)
+    # skip resources already base64 encoded
+    i1 = !grepl('^data:.+;base64,.+', z3)
+    z3[i1] = gen_tags(z3[i1], ifelse(js[i1], 'js', 'css'), embed[1], embed[2])
+    # for <script>s with defer/async, move them to the end of </body>
+    i2 = grepl(' (defer|async)(>| )', z) & js
+    x2 <<- c(x2, z3[i2])
+    z3[i2] = ''
+    z3
+  })
+  # move defer/async js to the end of <body>
+  if (length(x2)) {
+    x = if (length(grep('</body>', x)) != 1) {
+      one_string(I(c(x, x2)))
+    } else {
+      match_replace(x, '</body>', fixed = TRUE, function(z) {
+        one_string(I(c(x2, z)))
+      })
+    }
+  }
   x
 }
 
@@ -374,9 +410,21 @@ normalize_options = function(x, format = 'html') {
   d[n] = x  # then merge user-provided options
   if (!is.numeric(d[['toc_depth']])) d$toc_depth = 3L
   if (!is.character(d[['top_level']])) d$top_level = 'section'
+  x = normalize_embed(x)
   # TODO: fully enable footnotes https://github.com/github/cmark-gfm/issues/314
   if (format == 'html' && !is.logical(d[['footnotes']])) d$footnotes = TRUE
   d
+}
+
+normalize_embed = function(x) {
+  v = x[['embed_resources']]
+  if (is.logical(v)) {
+    v = if (v) 'local'
+  } else {
+    if (length(v) == 1 && v == 'all') v = c('local', 'https')
+  }
+  x[['embed_resources']] = v
+  x
 }
 
 #' @import stats
@@ -463,24 +511,38 @@ resolve_files = function(x, ext = 'css') {
     " (possible values are: ", paste0("'", b, "'", collapse = ','), ")"
   )
   x[i] = files[match(x[i], b)]
-  switch (ext,
-    css = gen_tag(x, '<link rel="stylesheet" href="%s">', c('<style type="text/css">', '</style>')),
-    js = gen_tag(x, '<script src="%s" defer></script>', c('<script>', '</script>')),
-    xfun::read_all(x)
-  )
+  if (ext %in% c('css', 'js')) gen_tags(x, ext) else xfun::read_all(x)
 }
 
-gen_tag = function(x, t1, t2, embed = NA) {
-  test = function(z) {
-    if (!is.na(embed)) return(embed)
-    grepl('^https://', z) || xfun::is_rel_path(z)
+# generate tags for css/js depending on whether they need to be embedded or offline
+gen_tag = function(x, ext = '', embed_https = FALSE, embed_local = FALSE) {
+  if (ext == 'css') {
+    t1 = '<link rel="stylesheet" href="%s">'
+    t2 = c('<style type="text/css">', '</style>')
+  } else if (ext == 'js') {
+    t1 = '<script src="%s" defer></script>'
+    t2 = c('<script>', '</script>')
+  } else stop("The file extension '", ext, "' is not supported.")
+  is_web = grepl('^https://', x)
+  is_rel = !is_web && xfun::is_rel_path(x)
+  if ((is_rel && !embed_local) || (is_web && !embed_https)) {
+    # linking for 1) local rel paths that don't need to be embedded, or 2) web
+    # resources that don't need to be accessed offline
+    sprintf(t1, x)
+  } else {
+    # embedding for other cases
+    one_string(I(c(t2[1], resolve_external(x, is_web, ext), t2[2])))
   }
-  code = lapply(x, function(z) {
-    if (test(z)) c(t2[1], xfun::read_utf8(z), t2[2]) else sprintf(t1, z)
-  })
-  paste(unlist(code), collapse = '\n')
 }
 
+# a vectorized version
+gen_tags = function(...) mapply(gen_tag, ...)
+
+# read CSS/JS and embed external fonts/background images, etc.
+resolve_external = function(x, web = TRUE, ext = '') {
+  # download and cache web resources
+  txt = if (web) xfun::download_cache$get(x, 'text') else xfun::read_utf8(x)
+}
 
 # TODO: remove this after new release of https://github.com/rstudio/leaflet
 .b64EncodeFile = function(...) xfun::base64_uri(...)

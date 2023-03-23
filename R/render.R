@@ -267,8 +267,9 @@ mark = function(
   ret = build_output(format, options, template, meta)
 
   if (format == 'html') {
-    if (isTRUE(options[['embed_resources']])) ret = xfun::in_dir(
-      if (is_file(file, TRUE)) dirname(file) else '.', .b64EncodeResources(ret)
+    ret = xfun::in_dir(
+      if (is_file(file, TRUE)) dirname(file) else '.',
+      embed_resources(ret, options[['embed_resources']])
     )
   } else if (format == 'latex') {
     # remove \title and \maketitle if title is empty
