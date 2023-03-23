@@ -485,7 +485,7 @@ gen_tag = function(x, t1, t2, embed = NA) {
 split_yaml = function(x) {
   i = grep('^---\\s*$', x)
   n = length(x)
-  res = if (n < 2 || length(i) < 2 || (i[1] > 1 && !all(is_blank(x[seq(i[1] - 1)])))) {
+  res = if (n < 2 || length(i) < 2 || (i[1] > 1 && !all(xfun::is_blank(x[seq(i[1] - 1)])))) {
     list(yaml = list(), body = x)
   } else list(
     yaml = x[i[1]:i[2]], body = c(rep('', i[2]), tail(x, n - i[2]))
@@ -515,12 +515,10 @@ yaml_load = function(x, use_yaml = xfun::loadable('yaml')) {
   keys = NULL
   for (i in seq_along(x)) {
     keys = c(head(keys, nchar(lvl[i])/2), key[i])
-    res[[keys]] = if (is_blank(val[i])) list() else yaml_value(val[i])
+    res[[keys]] = if (xfun::is_blank(val[i])) list() else yaml_value(val[i])
   }
   res
 }
-
-is_blank = function(x) grepl('^\\s*$', x)
 
 # only support scalar logical, numeric, and character values
 yaml_value = function(x) {
