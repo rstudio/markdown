@@ -129,7 +129,7 @@ mark = function(
     # like &<> in math expressions to be converted to entities, but shouldn't
     # convert them for latex output
     if (format == 'latex') {
-      text = paste(text, collapse = '\n')
+      text = one_string(I(text))
       text = match_replace(text, sprintf('`%s.{3,}?%s`', id, id), function(x) {
         maths <<- c(maths, gsub(sprintf('`%s|%s`', id, id), '', x))
         # replace math with !id-n-id! where n is the index of the math
@@ -221,9 +221,9 @@ mark = function(
     # number sections
     if (isTRUE(options[['number_sections']])) ret = number_sections(ret)
     # build table of contents
-    if (isTRUE(options[['toc']])) ret = paste(
-      c(build_toc(ret, options[['toc_depth']]), ret), collapse = '\n'
-    )
+    if (isTRUE(options[['toc']])) ret = one_string(I(c(
+      build_toc(ret, options[['toc_depth']]), ret)
+    ))
   } else if (format == 'latex') {
     ret = render_footnotes(ret)  # render [^n] footnotes
     if (has_math) {

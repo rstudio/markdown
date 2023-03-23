@@ -507,7 +507,7 @@ tweak_html = function(x, text) {
     # tweak language class names
     x = gsub('(<code class=")language-([^"]+)(">)', '\\1\\2\\3', x)
     # preserve trailing spaces
-    if (length(sp <- xfun::grep_sub('.*?( +)\n*?$', '\\1', tail(paste(text, collapse = '\n'), 1))))
+    if (length(sp <- xfun::grep_sub('.*?( +)\n*?$', '\\1', tail(one_string(I(text)), 1))))
       x = gsub('></p>(\n+)?$', paste0('>', sp, '</p>\\1'), x)
   }
   x
