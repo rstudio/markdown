@@ -27,7 +27,7 @@ Depends:
 Imports:
     utils,
     commonmark (>= 1.9.0),
-    xfun (>= 0.35)
+    xfun (>= 0.38)
 Suggests:
     knitr,
     rmarkdown (>= 2.18),

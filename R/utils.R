@@ -481,56 +481,6 @@ gen_tag = function(x, t1, t2, embed = NA) {
   paste(unlist(code), collapse = '\n')
 }
 
-# partition the YAML metadata from the document body and parse it
-split_yaml = function(x) {
-  i = grep('^---\\s*$', x)
-  n = length(x)
-  res = if (n < 2 || length(i) < 2 || (i[1] > 1 && !all(xfun::is_blank(x[seq(i[1] - 1)])))) {
-    list(yaml = list(), body = x)
-  } else list(
-    yaml = x[i[1]:i[2]], body = c(rep('', i[2]), tail(x, n - i[2]))
-  )
-  if ((n <- length(res$yaml)) >= 3) {
-    res$yaml = yaml_load(res$yaml[-c(1, n)])
-  }
-  res
-}
-
-yaml_load = function(x, use_yaml = xfun::loadable('yaml')) {
-  if (use_yaml) {
-    res = xfun::try_silent(yaml::yaml.load(x, eval.expr = TRUE))
-    if (!inherits(res, 'try-error')) return(res)
-    warning(paste(c(x, '\nThe above YAML metadata may be invalid:\n', res), collapse = '\n'))
-  }
-  # the below simple parser is quite limited
-  res = list()
-  r = '^( *)([^ ]+?):($|\\s+.*)'
-  x = xfun::split_lines(x)
-  x = x[grep(r, x)]
-  x = x[grep('^\\s*#', x, invert = TRUE)]  # comments
-  if (length(x) == 0) return(res)
-  lvl = gsub(r, '\\1', x)  # indentation level
-  key = gsub(r, '\\2', x)
-  val = gsub('^\\s*|\\s*$', '', gsub(r, '\\3', x))
-  keys = NULL
-  for (i in seq_along(x)) {
-    keys = c(head(keys, nchar(lvl[i])/2), key[i])
-    res[[keys]] = if (xfun::is_blank(val[i])) list() else yaml_value(val[i])
-  }
-  res
-}
-
-# only support scalar logical, numeric, and character values
-yaml_value = function(x) {
-  v = tolower(x)
-  if (v == 'null') return()
-  if (grepl('^true|false$', v)) return(as.logical(x))
-  if (grepl('^[0-9.e+-]', v)) {
-    v = suppressWarnings(as.numeric(v))
-    if (!is.na(v)) return(v)
-  }
-  gsub('^["\']|["\']$', '', x)  # remove optional quotes for strings
-}
 
 # TODO: remove this after new release of https://github.com/rstudio/leaflet
 .b64EncodeFile = function(...) xfun::base64_uri(...)

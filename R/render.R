@@ -69,7 +69,7 @@ mark = function(
   }
   text = xfun::split_lines(text)
 
-  part = split_yaml(text); yaml = part$yaml; text = part$body
+  part = xfun::yaml_body(text); yaml = part$yaml; text = part$body
   format = format[1]
   # title/author/date can be provided as top-level YAML options
   meta = merge_list(
