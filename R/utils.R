@@ -118,7 +118,7 @@ highlight_js = function(opts, html) {
   # TODO: we could automatically detect <code> languages in html and load the
   # necessary highlight.js language component (e.g., languages/latex.min.js)
   opts = merge_list(
-    list(version = '11.6.0', style = 'github', languages = NULL), opts
+    list(version = '11.7.0', style = 'github', languages = NULL), opts
   )
   tpl = one_string(pkg_file('resources', 'highlight.html'))
   js = paste0(
