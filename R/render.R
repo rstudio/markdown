@@ -271,6 +271,7 @@ mark = function(
       if (is_file(file, TRUE)) dirname(file) else '.',
       embed_resources(ret, options[['embed_resources']])
     )
+    ret = clean_html(ret)
   } else if (format == 'latex') {
     # remove \title and \maketitle if title is empty
     if (grepl('\n\\title{}\n', ret, fixed = TRUE))

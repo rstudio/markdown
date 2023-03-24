@@ -563,6 +563,13 @@ base64_url = function(url, code) {
   code
 }
 
+# compact HTML code
+clean_html = function(x) {
+  x = gsub('\n+(\n<[a-z1-6]+[^>]*>|\n</(body|div|head|html)>)', '\\1', x)
+  # can also merge <style>/<script> tags (<style type="text/css">).+?</style>\\s*\\1
+  x
+}
+
 # TODO: remove this after new release of https://github.com/rstudio/leaflet
 .b64EncodeFile = function(...) xfun::base64_uri(...)
 
