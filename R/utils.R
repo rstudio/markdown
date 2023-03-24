@@ -111,6 +111,18 @@ first_heading = function(html) {
   FALSE
 }
 
+set_math = function(meta, options, html) {
+  o = options[['js_math']]
+  if (isTRUE(o)) o = 'mathjax'
+  if (is.character(o)) o = switch(
+    o,
+    mathjax = list(package = o, version = '@3', path = 'es5/tex-mml-chtml.js')
+  )
+  if (is.null(o) || isFALSE(o) || !.requireMathJS(html)) return(meta)
+  meta[['js']] = c(sprintf('@npm/%s%s/%s', o$package, o$version, o$path), meta[['js']])
+  meta
+}
+
 highlight_js = function(opts, html) {
   if (isTRUE(opts)) opts = list()
   if (!is.list(opts) || !any(grepl('<code class="(language-)?[^"]+"', html)))
@@ -395,6 +407,9 @@ normalize_options = function(x, format = 'html') {
   d[n] = x  # then merge user-provided options
   if (!is.numeric(d[['toc_depth']])) d$toc_depth = 3L
   if (!is.character(d[['top_level']])) d$top_level = 'section'
+  # mathjax = true -> js_math = 'mathjax'
+  if (isTRUE(x[['mathjax']])) x$js_math = 'mathjax'
+  x = x[setdiff(names(x), 'mathjax')]
   x = normalize_embed(x)
   # TODO: fully enable footnotes https://github.com/github/cmark-gfm/issues/314
   if (format == 'html' && !is.logical(d[['footnotes']])) d$footnotes = TRUE
