@@ -325,9 +325,9 @@ build_output = function(format, options, template, meta) {
     }
     set_meta('title', first_heading(b))
     set_meta('css', pkg_file('resources', 'default.css'))
-    set_meta('math', if (isTRUE(options[['mathjax']]) && .requiresMathJax(b)) {
-      .mathJax(embed = isTRUE(options[['mathjax_embed']]))
-    })
+    if (isTRUE(options[['mathjax']]) && .requireMathJS(b)) {
+      meta[['js']] = c(meta[['js']], '@npm/mathjax@3/es5/tex-mml-chtml.js')
+    }
     set_meta('highlight', highlight_js(options[['highlight_code']], b))
     # special handling for css/js "files" that have no extensions
     for (i in c('css', 'js')) meta[[i]] = resolve_files(meta[[i]], i)
@@ -377,6 +377,6 @@ markdown_options = function() {
     setdiff(commonmark::list_extensions(), 'tagfilter')
   )
   # options disabled by default
-  x2 = c('toc', 'hardbreaks', 'tagfilter', 'mathjax_embed', 'number_sections')
+  x2 = c('toc', 'hardbreaks', 'tagfilter', 'number_sections')
   sort(c(paste0('+', x1), paste0('-', x2)))
 }

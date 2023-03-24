@@ -105,22 +105,7 @@ first_heading = function(html) {
   gsub(r, '\\2', regmatches(html, m))
 }
 
-.mathJax = local({
-  js = NULL
-  function(embed = FALSE, force = FALSE) {
-    url = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML'
-    # insert or link to MathJax script?
-    c('<!-- MathJax scripts -->', if (embed) {
-      # already in cache?
-      if (force || is.null(js)) js <<- xfun::read_utf8(url)
-      c('<script>', js)
-    } else {
-      sprintf('<script src="%s" defer>', url)
-    }, '</script>')
-  }
-})
-
-.requiresMathJax = function(x) {
+.requireMathJS = function(x) {
   regs = c('\\\\\\(.+?\\\\\\)', '[$]{2}.+?[$]{2}', '\\\\\\[.+?\\\\\\]')
   for (i in regs) if (any(grepl(i, x, perl = TRUE))) return(TRUE)
   FALSE
@@ -525,6 +510,10 @@ gen_tag = function(x, ext = '', embed_https = FALSE, embed_local = FALSE) {
   } else stop("The file extension '", ext, "' is not supported.")
   is_web = grepl('^https://', x)
   is_rel = !is_web && xfun::is_rel_path(x)
+  if (is_web && embed_https && xfun::url_filename(x) == 'MathJax.js') {
+    warning('MathJax.js cannot be embedded. Please use MathJax v3 instead.')
+    embed_https = FALSE
+  }
   if ((is_rel && !embed_local) || (is_web && !embed_https)) {
     # linking for 1) local rel paths that don't need to be embedded, or 2) web
     # resources that don't need to be accessed offline
@@ -541,7 +530,37 @@ gen_tags = function(...) mapply(gen_tag, ...)
 # read CSS/JS and embed external fonts/background images, etc.
 resolve_external = function(x, web = TRUE, ext = '') {
   # download and cache web resources
-  txt = if (web) xfun::download_cache$get(x, 'text') else xfun::read_utf8(x)
+  txt = if (web) xfun::download_cache$get(x, 'text', handler = function(code) {
+    # remove jsdelivr comments
+    if (grepl('^https://cdn[.]jsdelivr[.]net/', x)) {
+      code = gsub(
+        '^/[*][*]\n( [*][^\n]*\n)+ [*]/\n|\n/[*/]# sourceMappingURL=.+[.]map( [*]/)?$',
+        '', one_string(I(code))
+      )
+      code = base64_url(x, code)
+    }
+    code
+  }) else xfun::read_utf8(x)
+}
+
+# find url("path") in JS/CSS and base64 encode the resources
+base64_url = function(url, code) {
+  # embed fonts in mathjax's js
+  if (grepl('^https://cdn[.]jsdelivr[.]net/npm/mathjax.+[.]js$', url)) {
+    d = dirname(url)
+    r = '.*?fontURL:[^"]+\\("([^"]+)".*'  # output/chtml/fonts/woff-v2
+    p = xfun::grep_sub(r, '\\1', code)
+    if (length(p) == 1) code = match_replace(
+      code, '(?<=src:\'url\\(")(%%URL%%/[^"]+)(?="\\))', function(u) {
+        u = sub('%%URL%%', paste(d, p, sep = '/'), u, fixed = TRUE)
+        unlist(lapply(u, function(x) xfun::download_cache$get(x, 'base64')))
+      }, perl = TRUE
+    ) else warning(
+      'Unable to determine the font path in MathJax. Please report an issue to ',
+      'https://github.com/rstudio/markdown/issues and mention the URL ', url, '.'
+    )
+  }
+  code
 }
 
 # TODO: remove this after new release of https://github.com/rstudio/leaflet

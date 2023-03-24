@@ -312,9 +312,6 @@ below:
 
 -   `mathjax`: Include MathJax library in HTML output.
 
-    -   `mathjax_embed`: Whether to download and embed the MathJax library in
-        HTML output.
-
 -   `number_sections`: Whether to number section headings. To skip numbering a
     specific heading, add an attribute `{.unnumbered}` to it.
 

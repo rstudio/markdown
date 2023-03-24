@@ -10,6 +10,10 @@
 
 - Removed the option `standalone` from the list of Markdown options. Please use the argument `template = TRUE/FALSE` of `mark()` instead. The option `standalone = TRUE` was equivalent to `template = TRUE`.
 
+- Removed the option `mathjax_embed` from the list of Markdown options. To embed the MathJax library, enable `"https"` in the `embed_resources` option instead. Note that only MathJax v3 can be partially embedded, and lower versions cannot.
+
+- The default version of MathJax has been changed from v2 to v3.
+
 # CHANGES IN markdown VERSION 1.5
 
 - Values of meta variables `title`, `author`, and `date` (if provided) will be transformed to the target output format before they are passed into templates.
