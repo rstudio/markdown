@@ -479,9 +479,6 @@ Variables specific to the HTML template:
     is the same as the `css` variable, e.g., `snap` means `snap.js` in this
     package, and `@snap` means a "jsdelivr" resource.
 
--   `math`: JavaScript code for rendering LaTeX math. By default, MathJax is
-    used.
-
 Variables specific to the LaTeX template:
 
 -   `classoption`: A string containing options for the document class.

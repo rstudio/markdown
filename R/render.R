@@ -349,7 +349,6 @@ tpl_html = function(x) {
   x = sub_var(x, '#!markdown_css#', '$css$')
   x = sub_var(x, '#!header#', '$header-includes$')
   x = sub_var(x, '#!title#', '$title$')
-  x = sub_var(x, '#!mathjax#', '$math$')
   x = sub_var(x, '#!r_highlight#', '$highlight$')
   x = sub_var(x, '#!html_output#', '$body$')
   x
