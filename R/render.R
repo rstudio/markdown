@@ -210,7 +210,7 @@ mark = function(
       x[i1] = restore_html(code[i1])
       # possible math environments
       i2 = (lang %in% c('tex', 'latex')) &
-        grepl('^\\\\begin\\{(equation|align|eqnarray|gather)\\}.+?\\\\end\\{\\1\\}\n$', code)
+        grepl('^\\\\begin\\{[a-zA-Z*]+\\}.+\\\\end\\{[a-zA-Z*]+\\}\n$', code)
       x[i2] = sprintf('<p>\n%s</p>\n', code[i2])
       # discard other types of raw content blocks
       x[!(i1 | i2)] = ''

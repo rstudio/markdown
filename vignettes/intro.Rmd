@@ -88,22 +88,32 @@ these features:
 -   Both `$inline$` and `$$display$$` LaTeX math, e.g.,
     $\sin^{2}(\theta)+\cos^{2}(\theta) = 1$
 
-    $$
-    \bar{X} = \frac{1}{n} \sum_{i=1}^n X_i
-    $$
+    $$\bar{X} = \frac{1}{n} \sum_{i=1}^n X_i$$
 
-    LaTeX math environments `equation`, `align`, `eqnarray`, and `gather` are
-    also supported, e.g., below is an `eqnarray` environment (equations are
-    aligned at the equal signs):
+    $$x = \begin{cases}
+    a &\text{if } b \\
+    c &\text{if } d
+    \end{cases}$$
+
+    LaTeX math environments are also supported, e.g., below are an `align`
+    environment and an `equation` environment:
 
     ```{=latex}
-    \begin{eqnarray}
-    a^{2}+b^{2} & = & c^{2}\\
-    \sin^{2}(\theta)+\cos^{2}(\theta) & = & 1
-    \end{eqnarray}
+    \begin{align}
+    a^{2}+b^{2} & =  c^{2}\\
+    \sin^{2}(\theta)+\cos^{2}(\theta) & =  1
+    \end{align}
+
+    \begin{equation}
+    \begin{split}
+    (a+b)^2 &=(a+b)(a+b)\\
+      &=a^2+2ab+b^2
+    \end{split}
+    \end{equation}
     ```
     These math environments can be written in raw LaTeX blocks, and they work
-    for both LaTeX and HTML output.
+    for both LaTeX and HTML output. For HTML output, it is up to the JavaScript
+    library (MathJax or KaTeX) whether a math environment can be rendered.
 
 -   Superscripts via `^text^` and subscripts via `~text~` (same syntax as
     Pandoc's Markdown), e.g., 2^10^ and H~2~O. Currently only alphanumeric
