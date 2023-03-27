@@ -320,7 +320,63 @@ below:
     dollar signs, and transform them so that they could be correctly rendered by
     MathJax (HTML output) or LaTeX.
 
--   `mathjax`: Include MathJax library in HTML output.
+-   `js_math`: The JavaScript library for rendering math expressions in HTML
+    output. Possible values are `"mathjax"` and `"katex"` (the default). This
+    option is essentially a shorthand for setting the metadata variables `css`
+    and `js` (see next two sections).
+
+    -   For [MathJax](https://www.mathjax.org/#gettingstarted), the `js`
+        variable is set to `tex-mml-chtml.js`.
+
+    -   For [KaTeX](https://katex.org/docs/browser.html), the `js` variable is
+        set to `katex.min.js` and the `css` variable is set to `katex.min.css`.
+        KaTeX's `auto-render` extension (`auto-render.min.js`) is also enabled
+        by default, so math expressions can be immediately rendered when the
+        page is loaded.
+
+    If you want finer control, you can provide a list of the form
+    `list(package, version, css, js)`. This will allow you to specify the
+    package name, version, and css/js files. For example, if you want to use
+    MathJax's `tex-chtml.js` instead, you may set:
+
+    ``` yaml
+    js_math:
+      package: mathjax
+      version: 3
+      js: es5/tex-chtml.js
+    ```
+
+    By default, MathJax version 3 is used. If you want to use the older v2, you
+    may set:
+
+    ``` yaml
+    js_math:
+      package: mathjax
+      version: 2
+      js: MathJax.js?config=TeX-AMS-MML_CHTML
+    ```
+
+    Please visit [the MathJax CDN](https://cdn.jsdelivr.net/npm/mathjax/) to
+    know which versions and JS files are available.
+
+    For KaTeX, the version is not specified by default, which means the latest
+    version from [the CDN](https://cdn.jsdelivr.net/npm/katex/). Below is an
+    example of specifying the version 0.16.4 and using the `mhchem` extension:
+
+    ``` yaml
+    js_math:
+      package: katex
+      version: 0.16.4
+      js: [dist/katex.min.js, ]dist/contrib/mhchem.min.js]
+    ```
+
+    Note that if you want the HTML output to be self-contained via the
+    `embed_resources` option, KaTeX can be embedded and used offline, but
+    MathJax cannot be fully embedded due to its complexity. MathJax v3 can be
+    partially embedded and used offline. Currently only its fonts can be
+    embedded, and extensions cannot. If you must view HTML output offline, we
+    recommend using KaTeX, but please also note that KaTeX and MathJax do not
+    fully cover each other's features.
 
 -   `number_sections`: Whether to number section headings. To skip numbering a
     specific heading, add an attribute `{.unnumbered}` to it.

@@ -111,16 +111,38 @@ first_heading = function(html) {
   FALSE
 }
 
+# set js/css variables according to the js_math option
 set_math = function(meta, options, html) {
-  o = options[['js_math']]
-  if (isTRUE(o)) o = 'mathjax'
-  if (is.character(o)) o = switch(
-    o,
-    mathjax = list(package = o, version = '@3', path = 'es5/tex-mml-chtml.js')
-  )
-  if (is.null(o) || isFALSE(o) || !.requireMathJS(html)) return(meta)
-  meta[['js']] = c(sprintf('@npm/%s%s/%s', o$package, o$version, o$path), meta[['js']])
+  o = math_options(options[['js_math']])
+  if (is.null(o) || !.requireMathJS(html)) return(meta)
+  if (o$version != '') o$version = sub('^@?', '@', o$version)
+  if (is_katex <- o$package == 'katex')
+    o$js = c(o$js, 'dist/contrib/auto-render.min.js')
+  js = paste0('@', paste(c(
+    sprintf('npm/%s%s/%s', o$package, o$version, o$js),
+    if (is_katex) 'npm/@xiee/utils/js/render-katex.js'
+  ), collapse = ','))
+  css = sprintf('@npm/%s%s/%s', o$package, o$version, o$css)
+  meta[['js']] = c(js, meta[['js']])
+  meta[['css']] = c(css, meta[['css']])
   meta
+}
+
+math_options = function(x) {
+  if (is.list(x)) return(merge_list(default_math(x$package), x))
+  if (isTRUE(x)) x = 'katex'
+  if (is.character(x)) default_math(x)
+}
+
+default_math = function(x) {
+  if (is.null(x)) x = 'katex'
+  switch(
+    x,
+    katex = list(
+      package = x, version = '', css = 'dist/katex.min.css', js = 'dist/katex.min.js'
+    ),
+    mathjax = list(package = x, version = '3', js = 'es5/tex-mml-chtml.js')
+  )
 }
 
 highlight_js = function(opts, html) {
@@ -352,7 +374,7 @@ embed_resources = function(x, embed = 'local') {
     for (i in grep('^data:.+;base64,.+', z2, invert = TRUE)) {
       if (xfun::file_exists(f <- URLdecode(z2[i]))) {
         z2[i] = xfun::base64_uri(f)
-      } else if (embed[1] && grepl('^https://', f)) {
+      } else if (embed[1] && is_https(f)) {
         z2[i] = xfun::download_cache$get(f, 'base64')
       }
     }
@@ -523,7 +545,7 @@ gen_tag = function(x, ext = '', embed_https = FALSE, embed_local = FALSE) {
     t1 = '<script src="%s" defer></script>'
     t2 = c('<script>', '</script>')
   } else stop("The file extension '", ext, "' is not supported.")
-  is_web = grepl('^https://', x)
+  is_web = is_https(x)
   is_rel = !is_web && xfun::is_rel_path(x)
   if (is_web && embed_https && xfun::url_filename(x) == 'MathJax.js') {
     warning('MathJax.js cannot be embedded. Please use MathJax v3 instead.')
@@ -539,6 +561,8 @@ gen_tag = function(x, ext = '', embed_https = FALSE, embed_local = FALSE) {
   }
 }
 
+is_https = function(x) grepl('^https://', x)
+
 # a vectorized version
 gen_tags = function(...) mapply(gen_tag, ...)
 
@@ -552,17 +576,19 @@ resolve_external = function(x, web = TRUE, ext = '') {
         '^/[*][*]\n( [*][^\n]*\n)+ [*]/\n|\n/[*/]# sourceMappingURL=.+[.]map( [*]/)?$',
         '', one_string(I(code))
       )
-      code = base64_url(x, code)
+      code = base64_url(x, code, ext)
     }
     code
-  }) else xfun::read_utf8(x)
+  }) else {
+    base64_url(x, xfun::read_utf8(x), ext)
+  }
 }
 
 # find url("path") in JS/CSS and base64 encode the resources
-base64_url = function(url, code) {
+base64_url = function(url, code, ext) {
+  d = dirname(url)
   # embed fonts in mathjax's js
   if (grepl('^https://cdn[.]jsdelivr[.]net/npm/mathjax.+[.]js$', url)) {
-    d = dirname(url)
     r = '.*?fontURL:[^"]+\\("([^"]+)".*'  # output/chtml/fonts/woff-v2
     p = xfun::grep_sub(r, '\\1', code)
     if (length(p) == 1) code = match_replace(
@@ -574,6 +600,21 @@ base64_url = function(url, code) {
       'Unable to determine the font path in MathJax. Please report an issue to ',
       'https://github.com/rstudio/markdown/issues and mention the URL ', url, '.'
     )
+  }
+  # find `attr: url(resource)` and embed url resources in CSS
+  if (ext == 'css') {
+    r = '(: ?url\\("?)([^)]+)("?\\))'
+    code = match_replace(code, r, function(z) {
+      z1 = gsub(r, '\\1', z)
+      z2 = gsub(r, '\\2', z)
+      z3 = gsub(r, '\\3', z)
+      i = !is_https(z2)
+      z2[i] = paste(d, z2[i], sep = '/')
+      z2 = unlist(lapply(z2, function(x) {
+        if (is_https(x)) xfun::download_cache$get(x, 'base64') else xfun::base64_uri(x)
+      }))
+      paste0(z1, z2, z3)
+    }, perl = TRUE)
   }
   code
 }
