@@ -39,12 +39,11 @@ Historically, it uses a C library named **sundown**, which has been deleted and
 replaced by **commonmark** since v1.3 (2022-10-30). The main advantage of the
 latter is that it follows a clear and widely used spec, i.e., GFM ([GitHub
 Flavored Markdown](https://github.github.com/gfm/)), which can be seen as a
-(small) subset of [Pandoc's
-Markdown](https://pandoc.org/MANUAL.html#pandocs-markdown). Therefore the
-**markdown** package can be viewed as a small subset of the **rmarkdown**
-package (the latter is based on Pandoc but the former doesn't depend on external
-tools). It aims at simplicity, lightweight, and speed, at the cost of giving up
-a lot of features.
+subset of [Pandoc's Markdown](https://pandoc.org/MANUAL.html#pandocs-markdown).
+Therefore the **markdown** package can be viewed as a small subset of the
+**rmarkdown** package (the latter is based on Pandoc but the former doesn't
+depend on external tools). It aims at simplicity, lightweight, and speed, at the
+cost of giving up a lot of features.
 
 ## Markdown Syntax
 
@@ -133,8 +132,8 @@ these features:
     [^1]: This is the footnote.
     ```
 
-    The support is limited for LaTeX output,[^1] and there are two caveats if
-    the document is intended to be converted to LaTeX:
+    The support is limited for LaTeX output at the moment,[^1] and there are two
+    caveats if the document is intended to be converted to LaTeX:
 
     -   The footnote content must be a single paragraph.
 
@@ -250,8 +249,8 @@ As mentioned earlier, a lot of features in Pandoc's Markdown are not supported
 in the **markdown** package. Any feature that you find missing in the above
 summary is likely to be unavailable, such as citations and figure/table
 captions. In addition, a lot of R Markdown and Quarto (both are based on Pandoc)
-features are not supported, either (e.g., tabbed sections, code folding, and
-HTML widgets). Some HTML features may be implemented via JavaScript, but
+features are not supported, either, e.g., tabbed sections, code folding, and
+HTML widgets. Some HTML features may be implemented via JavaScript, but
 currently it is not straightforward and may be improved in future.
 
 Pandoc can convert Markdown to many output formats, such as Word, PowerPoint,
