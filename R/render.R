@@ -325,7 +325,7 @@ build_output = function(format, options, template, meta) {
       if (!name %in% names(meta)) meta[[name]] <<- value
     }
     set_meta('title', first_heading(b))
-    set_meta('css', pkg_file('resources', 'default.css'))
+    set_meta('css', 'default')
     meta = set_math(meta, options, b)
     set_meta('highlight', highlight_js(options[['highlight_code']], b))
     # special handling for css/js "files" that have no extensions
