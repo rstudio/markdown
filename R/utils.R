@@ -533,6 +533,7 @@ resolve_files = function(x, ext = 'css') {
     " (possible values are: ", paste0("'", b, "'", collapse = ','), ")"
   )
   x[i] = files[match(x[i], b)]
+  x = c(x[i], x[!i])
   if (ext %in% c('css', 'js')) gen_tags(x, ext) else xfun::read_all(x)
 }
 
