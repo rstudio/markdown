@@ -296,33 +296,46 @@ below:
     offline. If you have to view the output offline, you need to use the option
     value `"https"` (or `"all"`).
 
--   `highlight_code`: Includes the JavaScript library `highlight.js` to syntax
-    highlight code blocks. This option can also take a list of three possible
-    elements, `list(version, theme, languages)`, which specify:
+-   `js_highlight`: The JavaScript library to syntax highlight code blocks.
+    Possible values are `highlight` ([highlight.js](https://highlightjs.org))
+    and `prism` ([Prism.js](https://prismjs.com)). The default is `prism`. This
+    option can also take a list of the form
+    `list(package, version, style, languages)`, which specifies the package
+    name, version, CSS style, and names of languages to be highlighted.
 
-    -   The [JS library
-        version](https://github.com/highlightjs/highlight.js/releases) (e.g.,
-        `11.6.0`);
+    -   You can find information about Prism.js from its CDN at
+        <https://cdn.jsdelivr.net/npm/prismjs/>. Available styles are under the
+        `themes/` directory (e.g., `prism-dark`), and languages are under the
+        `components/` directory (e.g., `prism-c`). You can omit the prefix
+        `prism-`, e.g.,
 
-    -   The theme (e.g., `github`), and you can find demos of themes at
-        <https://highlightjs.org/static/demo/> and their names at
-        <https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/>;
+        ``` yaml
+        js_highlight:
+          package: prism
+          style: dark
+          languages: [r, latex, yaml]
+        ```
 
-    -   Additional languages to be supported. By default, `highlight.js` can
-        syntax highlight more than 30 common languages (including R). If any
-        code block is not syntax highlighted as expected, you may look up the JS
-        filename for the language at
-        <https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/languages/>
-        (e.g., `latex`).
+    -   The CDN of highlight.js is at
+        <https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/>. Themes are
+        under the `styles/` directory (e.g., `github`), and you can find demos
+        of themes at <https://highlightjs.org/static/demo/>. Supported language
+        are under the `languages/` directory (e.g., `latex`).
 
--   `latex_math`: Identify LaTeX math expressions in pairs of single or double
-    dollar signs, and transform them so that they could be correctly rendered by
-    MathJax (HTML output) or LaTeX.
+    By default, languages are automatically detected and the required JS files
+    are automatically loaded. Normally you need to specify the `languages`
+    information only if the automatic detection fails.
+
+    Technically this option is a shorthand for setting the metadata variables
+    `css` and `js` (see next two sections). If you want full control, you may
+    disable this option (set it to `false` or `null`) and use metadata variables
+    directly, which requires more familiarity with the JS libraries and the
+    jsdelivr CDN.
 
 -   `js_math`: The JavaScript library for rendering math expressions in HTML
-    output. Possible values are `"mathjax"` and `"katex"` (the default). This
-    option is essentially a shorthand for setting the metadata variables `css`
-    and `js` (see next two sections).
+    output. Possible values are `"mathjax"` and `"katex"` (the default). Like
+    the `js_highlight` option, this option is also essentially a shorthand for
+    setting the metadata variables `css` and `js`.
 
     -   For [MathJax](https://www.mathjax.org/#gettingstarted), the `js`
         variable is set to `tex-mml-chtml.js`.
@@ -366,30 +379,34 @@ below:
     js_math:
       package: katex
       version: 0.16.4
-      js: [dist/katex.min.js, ]dist/contrib/mhchem.min.js]
+      js: [dist/katex.min.js, dist/contrib/mhchem.min.js]
     ```
 
     Note that if you want the HTML output to be self-contained via the
     `embed_resources` option, KaTeX can be embedded and used offline, but
     MathJax cannot be fully embedded due to its complexity. MathJax v3 can be
-    partially embedded and used offline. Currently only its fonts can be
+    partially embedded and used offline, but currently only its fonts can be
     embedded, and extensions cannot. If you must view HTML output offline, we
     recommend using KaTeX, but please also note that KaTeX and MathJax do not
     fully cover each other's features.
 
+-   `latex_math`: Whether to identify LaTeX math expressions in pairs of single
+    (`$ $`) or double dollar signs (`$$ $$`), and transform them so that they
+    could be correctly rendered by MathJax (HTML output) or LaTeX.
+
 -   `number_sections`: Whether to number section headings. To skip numbering a
     specific heading, add an attribute `{.unnumbered}` to it.
 
--   `smartypants`: Translate certain ASCII strings into smart typographic
-    characters (see `?markdown::smartypants`).
+-   `smartypants`: Whether to translate certain ASCII strings into smart
+    typographic characters (see `?markdown::smartypants`).
 
--   `superscript`: Translate strings between two carets into superscripts, e.g.,
-    `text^foo^` to `text<sup>foo</sup>`.
+-   `superscript`: Whether to translate strings between two carets into
+    superscripts, e.g., `text^foo^` to `text<sup>foo</sup>`.
 
--   `subscript`: Translate strings between two tildes into subscripts, e.g.,
-    `text~foo~` to `text<sub>foo</sub>`.
+-   `subscript`: Whether to translate strings between two tildes into
+    subscripts, e.g., `text~foo~` to `text<sub>foo</sub>`.
 
--   `toc`: Generate a table of contents from section headings.
+-   `toc`: Whether to generate a table of contents from section headings.
 
     -   `toc_depth`: The number of section levels to include in the table of
         contents (`3` by default).
@@ -507,11 +524,11 @@ Variables specific to the HTML template:
     the base name, e.g., `default` means `default.css` in this package.
 
     You can also use web resources, e.g., `https://example.org/style.css`. One
-    special case is [jsdelivr.com](https://www.jsdelivr.com) resources: if a
-    `css` value starts with `@`, it will be recognized as a jsdelivr.com
-    resource. if you are not familiar with jsdelivr, you may read its
-    documentation to understand the following example URLs. The shorthand syntax
-    is as follows (`...` stands for `https://cdn.jsdelivr.net`):
+    special case is [jsdelivr](https://www.jsdelivr.com) resources: if a `css`
+    value starts with `@`, it will be recognized as a jsdelivr.com resource. if
+    you are not familiar with jsdelivr, you may read its documentation to
+    understand the following example URLs. The shorthand syntax is as follows
+    (`...` stands for `https://cdn.jsdelivr.net`):
 
     -   `@foo` will be converted to
         `.../gh/rstudio/markdown/inst/resources/foo`, e.g., `@default` means
@@ -535,10 +552,7 @@ Variables specific to the HTML template:
     the web instead of embedding inside HTML, at the cost of requiring Internet
     connection when viewing the HTML file. If you need the external web
     resources to work after you go offline, you can enable `"https"` in the
-    Markdown option `embed_resources`.
-
--   `highlight`: JavaScript code for syntax-highlighting code blocks. By
-    default, the highlight.js library is used.
+    Markdown option `embed_resources` in advance to embed the resources.
 
 -   `js`: A vector of JavaScript files to be included in the output. The syntax
     is the same as the `css` variable, e.g., `snap` means `snap.js` in this

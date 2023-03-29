@@ -327,7 +327,7 @@ build_output = function(format, options, template, meta) {
     set_meta('title', first_heading(b))
     set_meta('css', 'default')
     meta = set_math(meta, options, b)
-    set_meta('highlight', highlight_js(options[['highlight_code']], b))
+    meta = set_highlight(meta, options, b)
     # special handling for css/js "files" that have no extensions
     for (i in c('css', 'js')) meta[[i]] = resolve_files(meta[[i]], i)
     tpl = tpl_html(tpl)
@@ -370,7 +370,7 @@ tpl_html = function(x) {
 markdown_options = function() {
   # options enabled by default
   x1 = c(
-    'smart', 'smartypants', 'embed_resources', 'js_math', 'highlight_code',
+    'smart', 'smartypants', 'embed_resources', 'js_math', 'js_highlight',
     'superscript', 'subscript', 'latex_math',
     setdiff(commonmark::list_extensions(), 'tagfilter')
   )

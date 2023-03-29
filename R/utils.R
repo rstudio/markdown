@@ -113,9 +113,8 @@ first_heading = function(html) {
 
 # set js/css variables according to the js_math option
 set_math = function(meta, options, html) {
-  o = math_options(options[['js_math']])
-  if (is.null(o) || !.requireMathJS(html)) return(meta)
-  if (o$version != '') o$version = sub('^@?', '@', o$version)
+  o = js_options(options[['js_math']], 'katex', .requireMathJS(html))
+  if (is.null(o)) return(meta)
   if (is_katex <- o$package == 'katex')
     o$js = c(o$js, 'dist/contrib/auto-render.min.js')
   js = paste0('@', paste(c(
@@ -123,47 +122,88 @@ set_math = function(meta, options, html) {
     if (is_katex) 'npm/@xiee/utils/js/render-katex.js'
   ), collapse = ','))
   css = sprintf('@npm/%s%s/%s', o$package, o$version, o$css)
-  meta[['js']] = c(js, meta[['js']])
-  meta[['css']] = c(css, meta[['css']])
-  meta
+  add_meta(meta, list(js = js, css = css))
 }
 
-math_options = function(x) {
-  if (is.list(x)) return(merge_list(default_math(x$package), x))
-  if (isTRUE(x)) x = 'katex'
-  if (is.character(x)) default_math(x)
+js_options = function(x, default, test) {
+  d = js_default(x, default)
+  x = if (is.list(x)) merge_list(d, x) else d
+  if (is.null(x) || !test) return()
+  if (x$version != '') x$version = sub('^@?', '@', x$version)
+  x
 }
 
-default_math = function(x) {
-  if (is.null(x)) x = 'katex'
-  switch(
-    x,
-    katex = list(
-      package = x, version = '', css = 'dist/katex.min.css', js = 'dist/katex.min.js'
-    ),
-    mathjax = list(package = x, version = '3', js = 'es5/tex-mml-chtml.js')
-  )
+js_default = function(x, default) {
+  if (is.list(x)) x = x$package
+  if (is.null(x) || isTRUE(x)) x = default
+  if (is.character(x)) merge_list(js_libs[[x]], list(package = x))
 }
 
-highlight_js = function(opts, html) {
-  if (isTRUE(opts)) opts = list()
-  if (!is.list(opts) || !any(grepl('<code class="(language-)?[^"]+"', html)))
-    return()
-  # TODO: we could automatically detect <code> languages in html and load the
-  # necessary highlight.js language component (e.g., languages/latex.min.js)
-  opts = merge_list(
-    list(version = '11.7.0', style = 'github', languages = NULL), opts
+js_libs = list(
+  highlight = list(
+    version = '11.7.0', style = 'github', js = 'build/highlight.min.js'
+  ),
+  katex = list(version = '', css = 'dist/katex.min.css', js = 'dist/katex.min.js'),
+  mathjax = list(version = '3', js = 'es5/tex-mml-chtml.js'),
+  prism = list(
+    version = '1.29.0', style = 'prism', js = 'components/prism-core.min.js'
   )
-  tpl = one_string(pkg_file('resources', 'highlight.html'))
-  js = paste0(
-    sprintf('gh/highlightjs/cdn-release@%s/build/', opts$version),
-    c('highlight', sprintf('languages/%s', opts$languages)),
-    '.min.js', collapse = ','
+)
+
+add_meta = function(x, v) {
+  for (i in names(v)) x[[i]] = c(v[[i]], x[[i]])
+  x
+}
+
+# set js/css variables according to the js_highlight option
+set_highlight = function(meta, options, html) {
+  r = '(?<=<code class="language-)([^"]+)(?=")'
+  o = js_options(options[['js_highlight']], 'prism', any(grepl(r, html, perl = TRUE)))
+  if (is.null(o)) return(meta)
+
+  p = o$package
+  # return jsdelivr subpaths
+  get_path = function(path) {
+    t = switch(
+      p, highlight = '@gh/highlightjs/cdn-release%s/%s', prism = '@npm/prismjs%s/%s'
+    )
+    sprintf(t, o$version, path)
+  }
+  # add the `prism-` prefix if necessary
+  normalize_prism = function(x) {
+    if (length(x) == 1 && x == 'prism') x else sub('^(prism-)?', 'prism-', x)
+  }
+
+  # if resources need to be embedded, we need to work harder to figure out which
+  # js files to embed (this is quite tricky and may not be robust)
+  embed = 'https' %in% options[['embed_resources']]
+
+  # style -> css
+  if (is.null(o$css) && !is.null(s <- o$style)) o$css = switch(
+    p,
+    highlight = sprintf('build/styles/%s.min.css', s),
+    prism = sprintf('themes/%s.min.css', normalize_prism(s))
   )
-  tpl = sub_var(tpl, '$version$', opts$version)
-  tpl = sub_var(tpl, '$style$', opts$style)
-  tpl = sub_var(tpl, '$js$', js)
-  tpl
+  css = get_path(o$css)
+
+  # languages -> js
+  get_lang = function(x) switch(
+    p,
+    highlight = sprintf('build/languages/%s.min.js', x),
+    prism = sprintf('components/%s.min.js', normalize_prism(x))
+  )
+  o$js = c(o$js, if (is.null(l <- o$languages)) {
+    # detect <code> languages in html and load necessary language components
+    lang = unique(unlist(regmatches(html, gregexpr(r, html, perl = TRUE))))
+    if (embed) {
+    } else {
+      if (p == 'prism') 'plugins/autoloader/prism-autoloader.min.js'
+    }
+  } else get_lang(l))
+  js = get_path(o$js)
+  if (p == 'highlight') js = c(js, '@npm/@xiee/utils/js/load-highlight.js')
+
+  add_meta(meta, list(js = js, css = css))
 }
 
 # get an option using a case-insensitive name
@@ -432,6 +472,12 @@ normalize_options = function(x, format = 'html') {
   # mathjax = true -> js_math = 'mathjax'
   if (isTRUE(x[['mathjax']])) x$js_math = 'mathjax'
   x = x[setdiff(names(x), 'mathjax')]
+  # highlight_code -> js_highlight
+  if (!is.null(h <- x[['highlight_code']])) {
+    h$package = 'highlight'
+    x$js_highlight = h
+    x$highlight_code = NULL
+  }
   x = normalize_embed(x)
   # TODO: fully enable footnotes https://github.com/github/cmark-gfm/issues/314
   if (format == 'html' && !is.logical(d[['footnotes']])) d$footnotes = TRUE

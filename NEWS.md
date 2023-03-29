@@ -14,6 +14,8 @@
 
 - Removed the option `mathjax_embed` from the list of Markdown options. To embed the MathJax library, enable `"https"` in the `embed_resources` option instead. Note that only MathJax v3 can be partially embedded, and lower versions cannot.
 
+- Renamed the option `highlight_code` to `js_highlight`, and added support for an alternative syntax highlighting JS library Prism.js, which became the default. To continue using the old default `highlight.js`, you may set the `js_highlight` option to `highlight`.
+
 - The default version of MathJax has been changed from v2 to v3.
 
 - The default version of highlight.js has been changed from 11.6.0 to 11.7.0.
