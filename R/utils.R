@@ -117,12 +117,17 @@ set_math = function(meta, options, html) {
   if (is.null(o)) return(meta)
   if (is_katex <- o$package == 'katex')
     o$js = c(o$js, 'dist/contrib/auto-render.min.js')
-  js = paste0('@', paste(c(
+  js = js_combine(
     sprintf('npm/%s%s/%s', o$package, o$version, o$js),
     if (is_katex) 'npm/@xiee/utils/js/render-katex.js'
-  ), collapse = ','))
+  )
   css = sprintf('@npm/%s%s/%s', o$package, o$version, o$css)
   add_meta(meta, list(js = js, css = css))
+}
+
+# use jsdelivr's combine feature
+js_combine = function(...) {
+  if (length(x <- c(...))) paste0('@', paste(x, collapse = ','))
 }
 
 js_options = function(x, default, test) {
