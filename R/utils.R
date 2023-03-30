@@ -170,7 +170,7 @@ set_highlight = function(meta, options, html) {
   # return jsdelivr subpaths
   get_path = function(path) {
     t = switch(
-      p, highlight = '@gh/highlightjs/cdn-release%s/%s', prism = '@npm/prismjs%s/%s'
+      p, highlight = 'gh/highlightjs/cdn-release%s/%s', prism = 'npm/prismjs%s/%s'
     )
     sprintf(t, o$version, path)
   }
@@ -189,7 +189,7 @@ set_highlight = function(meta, options, html) {
     highlight = sprintf('build/styles/%s.min.css', s),
     prism = sprintf('themes/%s.min.css', normalize_prism(s))
   )
-  css = get_path(o$css)
+  css = js_combine(get_path(o$css))
 
   # languages -> js
   get_lang = function(x) switch(
@@ -197,19 +197,113 @@ set_highlight = function(meta, options, html) {
     highlight = sprintf('build/languages/%s.min.js', x),
     prism = sprintf('components/%s.min.js', normalize_prism(x))
   )
-  o$js = c(o$js, if (is.null(l <- o$languages)) {
+  autoloader = 'plugins/autoloader/prism-autoloader.min.js'
+  o$js = c(o$js, if (!is.null(l <- o$languages)) get_lang(l) else {
     # detect <code> languages in html and load necessary language components
     lang = unique(unlist(regmatches(html, gregexpr(r, html, perl = TRUE))))
-    if (embed) {
-    } else {
-      if (p == 'prism') 'plugins/autoloader/prism-autoloader.min.js'
+    f = switch(p, highlight = js_libs[[c(p, 'js')]], prism = autoloader)
+    if (!embed && p == 'prism') f else {
+      get_lang(lang_files(p, get_path(f), lang))
     }
-  } else get_lang(l))
+  })
   js = get_path(o$js)
-  if (p == 'highlight') js = c(js, '@npm/@xiee/utils/js/load-highlight.js')
+  if (p == 'highlight') js = c(js, 'npm/@xiee/utils/js/load-highlight.js')
+  # do not combine js when they are automatically detected (this will make
+  # embedding faster because each js is a separate URL that has been downloaded)
+  js = if (is.null(l)) paste0('@', js) else js_combine(js)
 
   add_meta(meta, list(js = js, css = css))
 }
+
+# figure out which language support files are needed for highlight.js/prism.js
+lang_files = function(package, path, langs) {
+  u = jsdelivr(path, '')
+  x = xfun::download_cache$get(u, 'text')
+  x = one_string(I(x))
+
+  warn = function(l1, l2, url) warning(
+    "Unable to recognize code blocks with language(s): ", comma_list(l2),
+    ". They will not be syntax highlighted by ", package, ".js. If you can find ",
+    "the right language files at ", url, ", you may mangually specify their names ",
+    "in the 'languages' field of the 'js_highlight' option.",
+    if (length(l1)) c(" Also remember to add ", comma_list(l1))
+  )
+
+  if (package == 'highlight') {
+    # first figure out all languages bundles in highlight.js (starting with grmr_)
+    x = unlist(strsplit(x, ',\n?grmr_'))
+    r = '^([[:alnum:]_-]+):.+'
+    x = grep(r, x, value = TRUE)
+    l = gsub(r, '\\1', x)
+    # then find their aliases
+    m = gregexpr('(?<=aliases:\\[)[^]]+(?=\\])', x, perl = TRUE)
+    a = lapply(regmatches(x, m), function(z) {
+      z = unlist(strsplit(z, '[",]'))
+      z[!xfun::is_blank(z)]
+    })
+    l = c(l, unlist(a))  # all possible languages that can be highlighted
+    l = setdiff(langs, l)  # languages not supported by default
+    if (length(l) == 0) return()
+    # check if language files exist on CDN
+    d = paste0(dirname(u), '/languages/')
+    l1 = unlist(lapply(l, function(z) {
+      if (downloadable(sprintf('%s%s.min.js', d, z))) z
+    }))
+    l2 = setdiff(l, l1)
+    if (length(l2)) warn(l1, l2, d)
+    l1
+  } else {
+    # dependencies and aliases (the arrays should be more than 1000 characters)
+    m = gregexpr('(?<=\\{)([[:alnum:]_-]+:\\[?"[^}]{1000,})(?=\\})', x, perl = TRUE)
+    x = unlist(regmatches(x, m))
+    if (length(x) < 2) {
+      warning(
+        "Unable to process Prism's autoloader plugin (", u, ") to figure out ",
+        "language components automatically. Please report this message to ",
+        packageDescription('markdown')$BugReports, "."
+      )
+      return()
+    }
+    x = x[1:2]
+    m = gregexpr('([[:alnum:]_-]+):(\\["[^]]+\\]|"[^"]+")', x, perl = TRUE)
+    x = lapply(regmatches(x, m), function(z) {
+      z = gsub('[]["]', '', z)
+      unlist(lapply(strsplit(z, '[:,]'), function(y) {
+        setNames(list(y[-1]), y[1])
+      }), recursive = FALSE)
+    })
+    # x1 is dependencies; x2 is aliases
+    x1 = x[[1]]; x2 = unlist(x[[2]])
+    # normalize aliases to canonical names
+    i = langs %in% names(x2)
+    langs[i] = x2[langs[i]]
+    # resolve dependencies via recursion
+    resolve_deps = function(lang) {
+      deps = x1[[lang]]
+      c(lapply(deps, resolve_deps), lang)
+    }
+    # all languages required for this page
+    l1 = unique(unlist(lapply(langs, resolve_deps)))
+    # languages that are officially supported
+    l2 = c(names(x1), unlist(x1), x2)
+    # for unknown languages, check if they exist on CDN
+    d = sub('/plugins/.+', '/components/', u)
+    l3 = unlist(lapply(setdiff(l1, l2), function(z) {
+      if (!downloadable(sprintf('%sprism-%s.min.js', d, z))) z
+    }))
+    l4 = setdiff(l1, l3)
+    if (length(l3)) warn(l4, l3, d)
+    l4
+  }
+}
+
+# test if a URL can be downloaded
+downloadable = function(u, type = 'text') {
+  !xfun::try_error(xfun::download_cache$get(u, type))
+}
+
+# quote a vector and combine by commas
+comma_list = function(x) paste0('"', x, '"', collapse = ', ')
 
 # get an option using a case-insensitive name
 get_option = function(name, default = NULL) {
