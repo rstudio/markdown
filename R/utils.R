@@ -475,15 +475,15 @@ normalize_options = function(x, format = 'html') {
   if (!is.numeric(d[['toc_depth']])) d$toc_depth = 3L
   if (!is.character(d[['top_level']])) d$top_level = 'section'
   # mathjax = true -> js_math = 'mathjax'
-  if (isTRUE(x[['mathjax']])) x$js_math = 'mathjax'
-  x = x[setdiff(names(x), 'mathjax')]
+  if (isTRUE(d[['mathjax']])) d$js_math = 'mathjax'
+  d$mathjax = NULL
   # highlight_code -> js_highlight
-  if (!is.null(h <- x[['highlight_code']])) {
+  if (!is.null(h <- d[['highlight_code']])) {
     h$package = 'highlight'
-    x$js_highlight = h
-    x$highlight_code = NULL
+    d$js_highlight = h
+    d$highlight_code = NULL
   }
-  x = normalize_embed(x)
+  d = normalize_embed(d)
   # TODO: fully enable footnotes https://github.com/github/cmark-gfm/issues/314
   if (format == 'html' && !is.logical(d[['footnotes']])) d$footnotes = TRUE
   d
