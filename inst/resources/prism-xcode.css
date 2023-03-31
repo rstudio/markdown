@@ -27,6 +27,12 @@ pre code {
 .token.builtin {
   color: #c41a16;
 }
+.token.inserted {
+  background-color: #ccffd8;
+}
+.token.deleted {
+  background-color: #ffebe9;
+}
 .token.operator,
 .token.entity,
 .token.url,
