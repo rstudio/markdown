@@ -429,15 +429,18 @@ convert_attrs = function(x, r, s, f, format = 'html') {
       z = gsub('\\\\([#%])', '\\1', z)
     }
     z2 = sub(r, s, z)
+    # convert #id to id="" and .class to class=""
     z2 = match_replace(z2, r2, perl = TRUE, function(a) {
-      i = grep('^#', a)
-      a[i] = gsub(r2, 'id="\\1"', a[i], perl = TRUE)
       i = grep('^[.]', a)
       if ((n <- length(i))) {
         # merge multiple classes into one class attribute
         a[i] = sub('^[.]', '', a[i])
         a[i] = c(rep('', n - 1), sprintf('class="%s"', paste(a[i], collapse = ' ')))
         a = c(a[i], a[-i])
+      }
+      if (length(i <- grep('^#', a))) {
+        a[i] = gsub(r2, 'id="\\1"', a[i], perl = TRUE)
+        a = c(a[i], a[-i])  # make sure id is the first attribute
       }
       a
     })
