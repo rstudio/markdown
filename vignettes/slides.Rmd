@@ -5,8 +5,8 @@ date: "`r Sys.Date()`"
 output:
   markdown::html_format:
     meta:
-      css: [default, snap, "@npm/@xiee/utils/css/key-buttons.min.css"]
-      js: [snap, "@npm/@xiee/utils/js/key-buttons.min.js,external-link.min.js,center-img.min.js"]
+      css: [default, snap, "@npm/@xiee/utils/css/key-buttons.min.css,heading-anchor.min.css"]
+      js: [snap, "@npm/@xiee/utils/js/key-buttons.min.js,external-link.min.js,heading-anchor.min.js"]
     options:
       toc: true
       number_sections: true
@@ -235,7 +235,10 @@ them more compact (`display: inline;`):
   display: inline;
   border-left: 0.2em dotted #ccc;
   padding-left: 0.2em;
+}
+#TOC li ul li a {
   color: #666;
+  text-decoration: none;
 }
 ```
 
@@ -556,7 +559,7 @@ just need to have the correct HTML structure. Then in your HTML document:
 
 ``` html
 <script src="https://cdn.jsdelivr.net/gh/rstudio/markdown@VERSION/inst/resources/snap.min.js" defer></script>
-<link href="https://cdn.jsdelivr.net/combine/gh/rstudio/markdown@VERSION/inst/resources/default.min.css,gh/rstudio/markdown@VERSION/inst/resources/slides.min.css" rel="stylesheet"></link>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/gh/rstudio/markdown@VERSION/inst/resources/default.min.css,gh/rstudio/markdown@VERSION/inst/resources/slides.min.css"></link>
 ```
 
 Remember to substitute `VERSION` with [an appropriate
