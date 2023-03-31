@@ -292,7 +292,7 @@ mark_html = function(..., template = TRUE) {
   # TODO: remove these special treatments to arguments
   # https://github.com/ajrgodfrey/BrailleR/pull/89
   args = list(...)
-  if ('stylesheet' %in% names(args)) {
+  if ('stylesheet' %in% names(args) && 'BrailleR' %in% loadedNamespaces()) {
     args$meta = list(css = args$stylesheet)
     args$stylesheet = NULL
     return(do.call(mark, c(args, list(format = 'html', template = template))))
