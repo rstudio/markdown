@@ -217,6 +217,8 @@ mark = function(
     })
     # commonmark doesn't support ```{.class}, which should be treated as ```class
     ret = gsub('(<pre><code class="language-)\\{[.]([^}]+)}(">)', '\\1\\2\\3', ret)
+    # auto identifiers
+    if (isTRUE(options[['auto_identifiers']])) ret = auto_identifier(ret)
     # number sections
     if (isTRUE(options[['number_sections']])) ret = number_sections(ret)
     # build table of contents
@@ -370,7 +372,7 @@ markdown_options = function() {
   # options enabled by default
   x1 = c(
     'smart', 'smartypants', 'embed_resources', 'js_math', 'js_highlight',
-    'superscript', 'subscript', 'latex_math',
+    'superscript', 'subscript', 'latex_math', 'auto_identifiers',
     setdiff(commonmark::list_extensions(), 'tagfilter')
   )
   # options disabled by default

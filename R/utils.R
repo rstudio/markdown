@@ -473,6 +473,31 @@ render_footnotes = function(x) {
   x
 }
 
+# add auto identifiers to headings
+auto_identifier = function(x) {
+  r = '<(h[1-6])([^>]*)>(.+?)</\\1>'
+  match_replace(x, r, perl = TRUE, function(z) {
+    z1 = sub(r, '\\1', z)  # tag
+    z2 = sub(r, '\\2', z)  # attrs
+    z3 = sub(r, '\\3', z)  # content
+    i = !grepl(' id="[^"]*"', z2)  # skip headings that already have IDs
+    id = unique_id(xfun::alnum_id(z3[i]), 'section')
+    z[i] = sprintf('<%s id="%s"%s>%s</%s>', z1[i], id, z2[i], z3[i], z1[i])
+    z
+  })
+}
+
+# add a number suffix to an id if it is duplicated
+unique_id = function(x, empty) {
+  x[x == ''] = empty
+  i = duplicated(x)
+  for (d in unique(x[i])) {
+    k = x == d
+    x[k] = paste0(x[k], '.', seq_len(sum(k)))
+  }
+  x
+}
+
 # number sections in HTML output
 number_sections = function(x) {
   m = gregexpr('</h[1-6]>', x)

@@ -10,6 +10,8 @@
 
 - Removed the option `standalone` from the list of Markdown options. Please use the argument `template = TRUE/FALSE` of `mark()` instead. The option `standalone = TRUE` was equivalent to `template = TRUE`.
 
+- Added the option `auto_identifiers` (enabled by default) to automatically add IDs to headings, e.g., `# Hello world!` will be converted to `<h1 id="hello-world">Hello world!</h1>`. You can certainly override the automatic ID by providing an ID manually via the `{#id}` attribute, e.g., `# Hello world! {#hello}`.
+
 - Renamed the `mathjax` option to `js_math` to allow for other JS math libraries. The default library was changed from MathJax to KaTeX. To continue using MathJax, you may set `js_math: mathjax`.
 
 - Removed the option `mathjax_embed` from the list of Markdown options. To embed the MathJax library, enable `"https"` in the `embed_resources` option instead. Note that only MathJax v3 can be partially embedded, and lower versions cannot.

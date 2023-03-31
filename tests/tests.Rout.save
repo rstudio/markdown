@@ -28,9 +28,9 @@ Type 'q()' to quit R.
 > mkd <- c("# Header 1", "p1", "## Header 2", "p2")
 
 > cat(mark(mkd, options = "+number_sections"))
-<h1><span class="section-number">1.</span> Header 1</h1>
+<h1 id="header-1"><span class="section-number">1.</span> Header 1</h1>
 <p>p1</p>
-<h2><span class="section-number">1.1</span> Header 2</h2>
+<h2 id="header-2"><span class="section-number">1.1</span> Header 2</h2>
 <p>p2</p>
 
 > cat(mark(mkd, options = "+number_sections+toc"))
@@ -43,9 +43,9 @@ Type 'q()' to quit R.
 </li>
 </ul>
 </div>
-<h1><span class="section-number">1.</span> Header 1</h1>
+<h1 id="header-1"><span class="section-number">1.</span> Header 1</h1>
 <p>p1</p>
-<h2><span class="section-number">1.1</span> Header 2</h2>
+<h2 id="header-2"><span class="section-number">1.1</span> Header 2</h2>
 <p>p2</p>
 
 > cat(mark("foo\nbar\n"))
