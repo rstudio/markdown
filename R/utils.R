@@ -146,7 +146,7 @@ js_default = function(x, default) {
 
 js_libs = list(
   highlight = list(
-    version = '11.7.0', style = 'github', js = 'build/highlight.min.js'
+    version = '11.7.0', style = 'xcode', js = 'build/highlight.min.js'
   ),
   katex = list(version = '', css = 'dist/katex.min.css', js = 'dist/katex.min.js'),
   mathjax = list(version = '3', js = 'es5/tex-mml-chtml.js'),

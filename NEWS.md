@@ -18,7 +18,7 @@
 
 - The default version of MathJax has been changed from v2 to v3.
 
-- The default version of highlight.js has been changed from 11.6.0 to 11.7.0.
+- The default version of highlight.js has been changed from 11.6.0 to 11.7.0, and the default style has been switched from `github` to `xcode`.
 
 # CHANGES IN markdown VERSION 1.5
 
