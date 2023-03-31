@@ -10,8 +10,6 @@ output:
     options:
       toc: true
       number_sections: true
-      highlight_code:
-        style: xcode
 ---
 
 ```{=html}
@@ -76,11 +74,11 @@ heading.
 ``` markdown
 ## First slide
 
-Content.
+**Content**.
 
 ---
 
-More content on the next page.
+More _content_ on the next page.
 
 ---
 

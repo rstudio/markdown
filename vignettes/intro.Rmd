@@ -7,8 +7,6 @@ output:
     options:
       toc: true
       number_sections: true
-      highlight_code:
-        languages: [latex]
 ---
 
 ```{=html}
@@ -301,7 +299,8 @@ below:
     and `prism` ([Prism.js](https://prismjs.com)). The default is `prism`. This
     option can also take a list of the form
     `list(package, version, style, languages)`, which specifies the package
-    name, version, CSS style, and names of languages to be highlighted.
+    name, version, CSS style/theme name, and names of languages to be
+    highlighted.
 
     -   You can find information about Prism.js from its CDN at
         <https://cdn.jsdelivr.net/npm/prismjs/>. Available styles are under the

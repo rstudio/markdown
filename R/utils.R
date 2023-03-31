@@ -151,7 +151,7 @@ js_libs = list(
   katex = list(version = '', css = 'dist/katex.min.css', js = 'dist/katex.min.js'),
   mathjax = list(version = '3', js = 'es5/tex-mml-chtml.js'),
   prism = list(
-    version = '1.29.0', style = 'prism', js = 'components/prism-core.min.js'
+    version = '1.29.0', js = 'components/prism-core.min.js'
   )
 )
 
@@ -184,12 +184,13 @@ set_highlight = function(meta, options, html) {
   embed = 'https' %in% options[['embed_resources']]
 
   # style -> css
-  if (is.null(o$css) && !is.null(s <- o$style)) o$css = switch(
+  css = if (is.null(s <- o$style)) {
+    if (p == 'prism') 'prism-xcode'  # use prism-xcode.css in this package
+  } else if (is.character(s)) js_combine(get_path(switch(
     p,
     highlight = sprintf('build/styles/%s.min.css', s),
     prism = sprintf('themes/%s.min.css', normalize_prism(s))
-  )
-  css = js_combine(get_path(o$css))
+  )))
 
   # languages -> js
   get_lang = function(x) switch(
