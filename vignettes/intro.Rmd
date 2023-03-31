@@ -429,7 +429,9 @@ below:
 -   `subscript`: Whether to translate strings between two tildes into
     subscripts, e.g., `text~foo~` to `text<sub>foo</sub>`.
 
--   `toc`: Whether to generate a table of contents from section headings.
+-   `toc`: Whether to generate a table of contents (TOC) from section headings.
+    If a heading has an `id` attribute, the corresponding TOC item will be a
+    link to this heading.
 
     -   `toc_depth`: The number of section levels to include in the table of
         contents (`3` by default).

@@ -325,14 +325,16 @@ one_string = function(x) {
 build_toc = function(html, n = 3) {
   if (n <= 0) return()
   if (n > 6) n = 6
-  r = sprintf('<(h[1-%d])[^>]*>(.+?)</\\1>', n)
+  r = sprintf('<(h[1-%d])( id="[^"]+")?[^>]*>(.+?)</\\1>', n)
   items = unlist(regmatches(html, gregexpr(r, html, perl = TRUE)))
   if (length(items) == 0) return()
-  x = gsub(r, '<toc>\\2</toc>', items)  # use a tag <toc> to protect heading text
+  x = gsub(r, '<toc\\2>\\3</toc>', items)  # use a tag <toc> to protect heading text
   h = as.integer(gsub('^h', '', gsub(r, '\\1', items)))  # heading level
   s = strrep('  ', seq_len(n) - 1)  # indent
   x = paste0(s[h], '- ', x)  # create an unordered list
   x = commonmark::markdown_html(x)
+  # add anchors on TOC items
+  x = gsub('<toc id="([^"]+)">(.+?)</toc>', '<a href="#\\1">\\2</a>', x)
   x = gsub('</?toc>', '', x)
   # add class 'numbered' to the first <ul> if any heading is numbered
   if (length(grep('<span class="section-number">', x)))
