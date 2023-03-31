@@ -298,9 +298,9 @@ below:
     Possible values are `highlight` ([highlight.js](https://highlightjs.org))
     and `prism` ([Prism.js](https://prismjs.com)). The default is `prism`. This
     option can also take a list of the form
-    `list(package, version, style, languages)`, which specifies the package
-    name, version, CSS style/theme name, and names of languages to be
-    highlighted.
+    `list(package, version, style, languages)`, which specifies the package name
+    (`highlight` or `prism`), version, CSS style/theme name, and names of
+    languages to be highlighted.
 
     -   You can find information about Prism.js from its CDN at
         <https://cdn.jsdelivr.net/npm/prismjs/>. Available styles are under the
@@ -322,8 +322,8 @@ below:
         are under the `languages/` directory (e.g., `latex`).
 
     By default, languages are automatically detected and the required JS files
-    are automatically loaded. Normally you need to specify the `languages`
-    information only if the automatic detection fails.
+    are automatically loaded. Normally you need to specify the `languages` array
+    only if the automatic detection fails.
 
     Technically this option is a shorthand for setting the metadata variables
     `css` and `js` (see next two sections). If you want full control, you may
@@ -582,8 +582,8 @@ output:
   markdown::html_format:
     options:
       toc: true
-      highlight_code:
-        theme: xcode
+      js_highlight:
+        theme: github
         languages: [diff, latex]
 ```
 
