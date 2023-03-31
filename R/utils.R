@@ -617,28 +617,8 @@ option2list = function(x) {
 }
 
 pkg_file = function(...) {
-  res = system.file(..., package = 'markdown', mustWork = TRUE)
-  # TODO: remove this hack after the next release of polmineR
-  if (!xfun::check_old_package('polmineR', '0.8.7')) return(res)
-  x = basename(file.path(...))
-  if (x == 'highlight.html') x = 'r_highlight.html'
-  if (x == 'default.css') x = 'markdown.css'
-  if (!x %in% c('markdown.css', 'markdown.html', 'r_highlight.html')) return(res)
-  download_old(x)
+  system.file(..., package = 'markdown', mustWork = TRUE)
 }
-
-# cache downloaded file
-download_old = local({
-  db = list()
-  function(file) {
-    if (!is.null(db[[file]])) return(db[[file]])
-    u = jsdelivr(file, 'gh/rstudio/markdown@1.3/inst/resources/')
-    f = tempfile()
-    xfun::download_file(u, f, quiet = TRUE)
-    db[[file]] <<- f
-    f
-  }
-})
 
 jsdelivr = function(file, dir = 'gh/rstudio/markdown/inst/resources/') {
   sprintf('https://cdn.jsdelivr.net/%s%s', dir, file)
@@ -768,6 +748,9 @@ base64_url = function(url, code, ext) {
 
 # compact HTML code
 clean_html = function(x) {
+  # TODO: remove this hack (https://github.com/rstudio/plumbertableau/pull/84)
+  if (xfun::check_old_package('plumbertableau', '0.1.0'))
+    return(gsub('>\n<p>', '>\n\n<p>', x))  # double \n
   x = gsub('\n+(\n<[a-z1-6]+[^>]*>|\n</(body|div|head|html)>)', '\\1', x)
   # can also merge <style>/<script> tags (<style type="text/css">).+?</style>\\s*\\1
   x
@@ -775,31 +758,3 @@ clean_html = function(x) {
 
 # TODO: remove this after new release of https://github.com/rstudio/leaflet
 .b64EncodeFile = function(...) xfun::base64_uri(...)
-
-# TODO: remove this after https://github.com/PolMine/polmineR/issues/235 is fixed
-.onLoad = function(lib, pkg) {
-  if (is.null(getOption('markdown.HTML.stylesheet')) && 'polmineR' %in% loadedNamespaces()) {
-    if (xfun::check_old_package('polmineR', '0.8.7')) {
-      options(markdown.HTML.stylesheet = pkg_file('resources', 'default.css'))
-    } else if (packageVersion('polmineR') == '0.8.7') {
-      warning("Sorry, but the 'markdown' does not work with 'polmineR' 0.8.7: https://github.com/PolMine/polmineR/issues/235")
-    }
-  }
-}
-
-# TODO: remove these hacks eventually
-tweak_html = function(x, text) {
-  if (xfun::check_old_package('plumbertableau', '0.1.0') ||
-      xfun::check_old_package('polmineR', '0.8.7')) {
-    # remove extra blockquote
-    x = gsub('</blockquote>\n<blockquote>', '', x)
-    # double \n
-    x = gsub('>\n<(p|h3|blockquote)>', '>\n\n<\\1>', x)
-    # tweak language class names
-    x = gsub('(<code class=")language-([^"]+)(">)', '\\1\\2\\3', x)
-    # preserve trailing spaces
-    if (length(sp <- xfun::grep_sub('.*?( +)\n*?$', '\\1', tail(one_string(I(text)), 1))))
-      x = gsub('></p>(\n+)?$', paste0('>', sp, '</p>\\1'), x)
-  }
-  x
-}

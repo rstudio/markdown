@@ -190,7 +190,6 @@ mark = function(
   ret = move_attrs(ret, format)  # apply attributes of the form {attr="value"}
 
   if (format == 'html') {
-    ret = tweak_html(ret, text)
     if (has_math) {
       ret = gsub(sprintf('<code>%s(.{5,}?)%s</code>', id, id), '\\1', ret)
       # `\(math\)` may fail to render to <code>\(math\)</code> when backticks

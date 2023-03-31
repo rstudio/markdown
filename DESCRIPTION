@@ -1,7 +1,7 @@
 Package: markdown
 Type: Package
 Title: Render Markdown with 'commonmark'
-Version: 1.5.14
+Version: 1.5.15
 Authors@R: c(
    person("JJ", "Allaire", role = "aut"),
    person("Jeffrey", "Horner", role = "aut"),
