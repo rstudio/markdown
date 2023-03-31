@@ -342,6 +342,15 @@ build_toc = function(html, n = 3) {
   paste0('<div id="TOC">\n', x, '</div>')
 }
 
+# add TOC to the html body
+add_toc = function(html, options) {
+  o = options[['toc']]
+  if (is.null(o) || isFALSE(o)) return(html)
+  if (isTRUE(o)) o = list()
+  if (!is.numeric(o$depth)) o$depth = 3
+  one_string(I(c(build_toc(html, o$depth), html)))
+}
+
 sec_levels = c('subsubsection', 'subsection', 'section', 'chapter', 'part')
 # raise section levels: redefine section to chapter or part, and so on
 redefine_level = function(x, top) {
@@ -597,7 +606,6 @@ normalize_options = function(x, format = 'html') {
   g = option2list(g)
   d[names(g)] = g  # merge global options() into default options
   d[n] = x  # then merge user-provided options
-  if (!is.numeric(d[['toc_depth']])) d$toc_depth = 3L
   if (!is.character(d[['top_level']])) d$top_level = 'section'
   # mathjax = true -> js_math = 'mathjax'
   if (isTRUE(d[['mathjax']])) d$js_math = 'mathjax'

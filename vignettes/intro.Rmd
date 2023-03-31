@@ -272,9 +272,9 @@ metadata" below).
 
 The `options` argument of `mark()` can be used to enable/disable/set options to
 control Markdown rendering. This argument can take either a list (e.g.,
-`list(toc = TRUE, smart = FALSE)`) or a character vector (e.g.,
+`list(toc = TRUE, smart = FALSE)`) or a character vector, e.g.,
 `c("+toc", "-smart")`, or equivalently, `+toc-smart`, where `+` means to enable
-an option, and `-` means to disable an option). Available options are listed
+an option, and `-` means to disable an option. Available options are listed
 below:
 
 -   `auto_identifiers`: Whether to add automatic IDs to headings, e.g.,
@@ -431,10 +431,15 @@ below:
 
 -   `toc`: Whether to generate a table of contents (TOC) from section headings.
     If a heading has an `id` attribute, the corresponding TOC item will be a
-    link to this heading.
+    link to this heading. You can also set a sub-option:
 
-    -   `toc_depth`: The number of section levels to include in the table of
-        contents (`3` by default).
+    -   `depth`: The number of section levels to include in the TOC (`3` by
+        default). Setting `toc` to `true` is equivalent to:
+
+        ``` yaml
+        toc:
+          depth: 3
+        ```
 
 -   `top_level`: The desired type of the top-level headings in LaTeX output.
     Possible values are `'chapter'` and `'part'`. For example, if
@@ -609,6 +614,7 @@ output:
     options:
       toc: true
       js_highlight:
+        package: highlight
         theme: github
         languages: [diff, latex]
 ```

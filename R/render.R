@@ -222,9 +222,7 @@ mark = function(
     # number sections
     if (isTRUE(options[['number_sections']])) ret = number_sections(ret)
     # build table of contents
-    if (isTRUE(options[['toc']])) ret = one_string(I(c(
-      build_toc(ret, options[['toc_depth']]), ret)
-    ))
+    ret = add_toc(ret, options)
   } else if (format == 'latex') {
     ret = render_footnotes(ret)  # render [^n] footnotes
     if (has_math) {
