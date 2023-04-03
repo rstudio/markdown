@@ -787,11 +787,14 @@ base64_url = function(url, code, ext) {
 # compact HTML code
 clean_html = function(x) {
   # TODO: remove this hack (https://github.com/rstudio/plumbertableau/pull/84)
-  if (xfun::check_old_package('plumbertableau', '0.1.0'))
-    return(gsub('>\n<p>', '>\n\n<p>', x))  # double \n
+  if (check_old()) return(gsub('>\n<p>', '>\n\n<p>', x))  # double \n
   x = gsub('\n+(\n<[a-z1-6]+[^>]*>|\n</(body|div|head|html)>)', '\\1', x)
   # can also merge <style>/<script> tags (<style type="text/css">).+?</style>\\s*\\1
   x
+}
+
+check_old = function() {
+  xfun::check_old_package('plumbertableau', '0.1.0')
 }
 
 # TODO: remove this after new release of https://github.com/rstudio/leaflet
