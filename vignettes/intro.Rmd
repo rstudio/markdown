@@ -99,9 +99,9 @@ $\sin^{2}(\theta)+\cos^{2}(\theta) = 1$
 
 $$\bar{X} = \frac{1}{n} \sum_{i=1}^n X_i$$
 
-$$x = \begin{cases}
-a &\text{if } b \\
-c &\text{if } d
+$$|x| = \begin{cases}
+x &\text{if } x \geq 0 \\
+-x &\text{if } x < 0
 \end{cases}$$
 
 LaTeX math environments are also supported, e.g., below are an `align`
