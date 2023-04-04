@@ -194,8 +194,16 @@ and `## Heading {#baz}` will generate:
 <h2 id="baz">Heading</h2>
 ```
 
-All attributes in `{}` are ignored for LaTeX output except for the `width`
-attribute for images.
+Most attributes in `{}` are ignored for LaTeX output except for:
+
+-   The `width` attribute for images, e.g., `![text](path){width="50%"}` will be
+    converted to `\includegraphics[width=.5\linewidth]{path}`.
+
+-   The `.unnumbered` attribute, which will make a heading unnumbered, e.g.,
+    `# Hello {.unnumbered}` will be converted to `\section*{Hello}`.
+
+-   The `.appendix` attribute on a heading, which will start the appendix, e.g.,
+    `# Appendix {.appendix}` will be converted to `\appendix`.
 
 #### Appendix
 

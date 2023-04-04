@@ -400,12 +400,14 @@ move_attrs = function(x, format = 'html') {
       z2 = sub(r, '\\2', z)
       paste0(z1, z3, z2)
     }, format)
-    # discard attributes for headings
+    # discard most attributes for headings
     r = sprintf('(\\\\(%s)\\{.+?) \\\\\\{([^}]+)\\\\\\}(\\})', paste(sec_levels, collapse = '|'))
     x = convert_attrs(x, r, '\\3', function(r, z, z3) {
       z = gsub(r, '\\1\\4', z)
       k = grepl('unnumbered', z3)
       z[k] = sub('{', '*{', z[k], fixed = TRUE)
+      k = grepl('appendix', z3)
+      z[k] = '\\appendix'
       z
     }, format)
     # fenced Div's
