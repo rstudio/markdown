@@ -507,7 +507,7 @@ unique_id = function(x, empty) {
   i = duplicated(x)
   for (d in unique(x[i])) {
     k = x == d
-    x[k] = paste0(x[k], '.', seq_len(sum(k)))
+    x[k] = paste0(x[k], '_', seq_len(sum(k)))
   }
   x
 }
