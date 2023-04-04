@@ -683,9 +683,9 @@ you must use hyphens instead of underscores as separators in variable names in
 the template.
 
 The above are variables supported in the default templates. If you use a custom
-template, you can use arbitrary variable names, except for `$body$` (which is a
-reserved name), and your metadata values will be passed to these variables in
-your template.
+template, you can use arbitrary variable names consisting of alphanumeric
+characters and hyphens, except for `$body$` (which is a reserved name), and your
+metadata values will be passed to these variables in your template.
 
 Besides metadata variables, the aforementioned Markdown options can also be set
 in YAML under `output -> markdown::*_format -> options`, e.g.,
