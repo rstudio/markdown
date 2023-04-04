@@ -197,9 +197,15 @@ and `## Heading {#baz}` will generate:
 All attributes in `{}` are ignored for LaTeX output except for the `width`
 attribute for images.
 
+#### Appendix
+
+When a top-level heading has the attribute `.appendix`, the rest of the document
+will be treated as the appendix. If [section numbering](#number-sections) is
+enabled, the appendix section headings will be numbered differently.
+
 #### Fenced `Div`s
 
-Fenced `Div`s can be written in `:::` fences. Note that the opening fence must
+A fenced `Div` can be written in `:::` fences. Note that the opening fence must
 have at least one attribute, such as the class name. For example:
 
 ``` markdown
@@ -218,7 +224,8 @@ It will be red in HTML output.
 :::
 ```
 
-A fenced Div will be converted to `<div>` with attributes in HTML output, e.g.,
+A fenced `Div` will be converted to `<div>` with attributes in HTML output,
+e.g.,
 
 ``` html
 <div class="foo" id="bar" style="color: red;">
@@ -256,11 +263,11 @@ will be converted to:
 \begin{minipage}{.5\linewidth}
 ```
 
-If a fenced Div doesn't have the `data-latex` attribute, the fence will be
+If a fenced `Div` doesn't have the `data-latex` attribute, the fence will be
 ignored, and its content will be written out normally without a surrounding
-environment. If a fenced Div has multiple class names (e.g., `{.a .b .c}`), only
-the first class name will be used as the LaTeX environment name. However, all
-class names will be used if the output format is HTML (e.g.,
+environment. If a fenced `Div` has multiple class names (e.g., `{.a .b .c}`),
+only the first class name will be used as the LaTeX environment name. However,
+all class names will be used if the output format is HTML (e.g.,
 `<div class="a b c">`).
 
 #### Smart HTML entities
@@ -310,7 +317,7 @@ an option, and `-` means to disable an option. The options can also be set in
 [YAML metadata](#yaml-metadata) (recommended). Available options are listed
 below.
 
-#### `auto_identifiers` 
+#### `auto_identifiers`
 
 Add automatic IDs to headings, e.g.,
 
@@ -547,7 +554,7 @@ markdown::mark(..., meta = list(title = "My Title"), template = TRUE)
 
 You can provide your own template file to the `template` argument, too.
 
-### YAML metadata
+### YAML metadata {#yaml-metadata}
 
 Alternatively, the `meta` argument can read YAML metadata in the Markdown
 document. The following variables can be set in the top-level fields in YAML:

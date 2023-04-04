@@ -520,16 +520,45 @@ number_sections = function(x) {
   h = min(as.integer(h))  # highest level of headings
   r = '<h([1-6])([^>]*)>(?!<span class="section-number">)'
   n = rep(0, 6)  # counters for all levels of headings
+  # test if a class name exists in attributes
+  has_class = function(x, class) {
+    grepl(sprintf(' class="([^"]+ )?%s( [^"]+)?"', class), x)
+  }
   match_replace(x, r, perl = TRUE, function(z) {
     z1 = as.integer(sub(r, '\\1', z, perl = TRUE))
     z2 = sub(r, '\\2', z, perl = TRUE)
+    num_sections = identity  # generate appendix numbers
     for (i in seq_along(z)) {
       k = z1[i]
       if (k < 6) n[(k + 1):6] <<- 0
-      if (grepl('unnumbered', z2[i])) next  # an unnumbered section
+      # skip unnumbered sections
+      if (has_class(z2[i], 'unnumbered')) next
+      if (has_class(z2[i], 'appendix')) {
+        if (k != h) stop(
+          "The 'appendix' attribute must be on the top-level heading (",
+          strrep('#', h), ').'
+        )
+        num_sections = local({
+          a = n[k]  # an offset
+          # number headings with A-Z or roman numerals
+          num = if (sum(z1[i:length(z)] == h) - 1 > length(LETTERS)) as.roman else {
+            function(i) LETTERS[i]
+          }
+          function(s) {
+            if (s[1] <= a) stop(
+              'An appendix section must start with the top-level heading (',
+              strrep('#', h), ').'
+            )
+            s[1] = num(s[1] - a)
+            s
+          }
+        })
+        next
+      }
       n[k] <<- n[k] + 1
       # remove leading 0's
-      s = paste(if (h > 1) n[-(1:(h - 1))] else n, collapse = '.')
+      s = if (h > 1) n[-(1:(h - 1))] else n
+      s = paste(num_sections(s), collapse = '.')
       s = gsub('([.]0)+$', '', s)  # remove trailing 0's
       if (!grepl('[.]', s)) s = paste0(s, '.')  # '1. section' instead of '1 section'
       z[i] = paste0(z[i], sprintf('<span class="section-number">%s</span> ', s))

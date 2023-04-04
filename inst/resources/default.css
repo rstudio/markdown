@@ -44,6 +44,7 @@ hr, .footnotes::before { border: 1px dashed #ddd; }
 #TOC .numbered li { list-style: none; }
 #TOC .numbered, #TOC .numbered ul { padding-left: 1em; }
 table, .body h2 { border-bottom: 1px solid #666; }
+.appendix, .appendix ~ h2 { border-bottom-style: dashed; }
 .footnote-ref a::before { content: "["; }
 .footnote-ref a::after { content: "]"; }
 .footnotes::before {
