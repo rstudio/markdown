@@ -1,5 +1,3 @@
-`%||%` = function(x, y) if (length(x)) x else y
-
 #' Convert some ASCII strings to HTML entities
 #'
 #' Transform ASCII strings \verb{(c)} (copyright), \verb{(r)} (registered
