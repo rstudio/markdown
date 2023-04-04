@@ -291,8 +291,8 @@ knitr::kable(t(as.matrix(p)), col.names = sprintf('`%s`', names(p)))
 ### Comparison to Pandoc
 
 As mentioned earlier, a lot of features in Pandoc's Markdown are not supported
-in the **markdown** package. Any feature that you find missing in the above
-summary is likely to be unavailable, such as citations and figure/table
+in the **markdown** package. Any feature that you find missing in previous
+sections is likely to be unavailable, such as citations and figure/table
 captions. In addition, a lot of R Markdown and Quarto (both are based on Pandoc)
 features are not supported, either, e.g., tabbed sections, code folding, and
 HTML widgets. Some HTML features may be implemented via JavaScript, but
@@ -312,8 +312,23 @@ default, and the wrapper functions `mark_*()` generates full documents.
 You can either call `markdown::mark()` to render a Markdown document
 programmatically, or click the `Knit` button in RStudio to render a (Markdown or
 R Markdown) document interactively. The latter requires you to specify the
-output format in the `output` field in YAML metadata (see the section "YAML
-metadata" below).
+output format in the `output` field in YAML metadata (see the section "[YAML
+metadata](#yaml-metadata)"), e.g.,
+
+``` yaml
+---
+output:
+  markdown::html_format:
+    options:
+      js_math:
+        package: "katex"
+        version: "0.16.4"
+      number_sections: true
+      embed_resources: ["local", "https"]
+    meta:
+      css: "custom.css"
+---
+```
 
 ### Markdown options
 
@@ -367,7 +382,7 @@ base64-encoded data (images) or raw content (CSS/JS). Possible values are:
 The default is `"local"`, i.e., local resources are embedded, whereas `https`
 resources are not. This means the output document may not work offline. If you
 have to view the output offline, you need to use the option value `"https"` (or
-`"all"`).
+`"all"`) and render the document at least once before you go offline.
 
 #### `js_highlight`
 
@@ -401,10 +416,11 @@ By default, languages are automatically detected and the required JS files are
 automatically loaded. Normally you need to specify the `languages` array only if
 the automatic detection fails.
 
-Technically this option is a shorthand for setting the metadata variables `css`
-and `js` (see next two sections). If you want full control, you may disable this
-option (set it to `false` or `null`) and use metadata variables directly, which
-requires more familiarity with the JS libraries and the jsdelivr CDN.
+Technically this option is a shorthand for setting the [metadata
+variables](#yaml-metadata) `css` and `js`. If you want full control, you may
+disable this option (set it to `false` or `null`) and use metadata variables
+directly, which requires more familiarity with the JS libraries and the jsdelivr
+CDN.
 
 #### `js_math`
 
@@ -756,3 +772,22 @@ Since the Markdown syntax of **markdown** can be viewed as a small and strict
 subset of Pandoc's Markdown, you can use RStudio's visual Markdown editor to
 author documents. Please bear in mind that most common, but not all, Markdown
 features are supported.
+
+## Appendix {.appendix}
+
+## Technical Notes
+
+### Embedding resources
+
+When `https` resources needs to be embedded (via the `embed_resources` option),
+only these elements are considered:
+
+``` html
+<img src="..." />
+<link rel="stylesheet" href="...">
+<script src="..."></script>
+```
+
+Background images set in the attribute `style="background-image: url(...)"` are
+also considered. If an external CSS file contains `url()` resources, these
+resources will also be downloaded and embedded.
