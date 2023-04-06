@@ -1,5 +1,5 @@
 ---
-title: An Introduction to the markdown package
+title: An Introduction to the markdown Package
 author: Yihui Xie
 date: "`r Sys.Date()`"
 output:
@@ -21,6 +21,7 @@ output:
   float: right;
   border-left: 1px dashed;
   margin-left: 2em;
+  padding-left: 1em;
   background: ghostwhite;
 }
 #TOC ul { margin: 0; }
