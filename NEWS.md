@@ -4,7 +4,7 @@
 
 - A lot of enhancements to the HTML slides format. See `vignette('slides', package = 'markdown')` for details.
 
-- If the input to `mark()` is a file, the output will also be a file by default. Previously the output would be text.
+- If the input to `mark()` is a file, the output will also be a file by default. Previously the output would be text. If you want `mark()` to return text output when the input is a file, you may specify the argument `output = NULL`.
 
 - The Markdown option `base64_images` has been renamed to `embed_resources`. This option can take two possible values, `"local"` and `"https"`, meaning whether to embed local and/or web (https) resources. You can specify none, either, or both of them. See `vignette('intro', package = 'markdown')` for details.
 
