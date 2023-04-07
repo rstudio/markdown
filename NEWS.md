@@ -1,3 +1,6 @@
+# CHANGES IN markdown VERSION 1.7
+
+
 # CHANGES IN markdown VERSION 1.6
 
 - Added support for footnotes, fenced `Div`s, section numbers, `{}` attributes for images/headings/fenced `Div`s, and appendices. See `vignette('intro', package = 'markdown')` for details.
