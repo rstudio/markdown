@@ -50,4 +50,4 @@ minimalists, and does not aim at rich features.
 
 ## License
 
-The **markdown** package is licensed under the MIT.
+The **markdown** package is licensed under MIT.
