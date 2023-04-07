@@ -1,7 +1,7 @@
 Package: markdown
 Type: Package
 Title: Render Markdown with 'commonmark'
-Version: 1.5.18
+Version: 1.5.19
 Authors@R: c(
    person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name", comment = c(ORCID = "0000-0003-0645-5666")),
    person("JJ", "Allaire", role = "aut"),

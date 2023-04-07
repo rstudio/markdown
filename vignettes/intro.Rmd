@@ -13,7 +13,7 @@ output:
 ```{=html}
 <!--
 %\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{An Introduction to the markdown package}
+%\VignetteIndexEntry{An Introduction to the markdown Package}
 %\VignetteEncoding{UTF-8}
 -->
 <style type="text/css">
@@ -206,7 +206,7 @@ Most attributes in `{}` are ignored for LaTeX output except for:
 -   The `.appendix` attribute on a heading, which will start the appendix, e.g.,
     `# Appendix {.appendix}` will be converted to `\appendix`.
 
-#### Appendix
+#### Appendices
 
 When a top-level heading has the attribute `.appendix`, the rest of the document
 will be treated as the appendix. If [section numbering](#number-sections) is
@@ -735,13 +735,50 @@ output:
 
 You can learn more in [`vignette('slides', package = 'markdown')`](slides.html).
 
-### HTML article
+### HTML articles
 
-TODO.
+Similarly, you can write an HTML article with extra CSS and JS. Learn more about
+it in [`vignette('article', package = 'markdown')`](article.html).
 
 ### External JS/CSS
 
-TODO.
+You can load arbitrary external JS and CSS files via the `js` and `css`
+variables. There are numerous JS libraries and CSS frameworks on the web. Here
+we will only use the JS/CSS from the repo <https://github.com/yihui/misc.js> to
+show a few brief examples.
+
+#### Right-align a quote footer
+
+You can use the script `right-quote.js` to right-align a blockquote footer if it
+starts with an em-dash (`---`).
+
+``` yaml
+js: ["@npm/@xiee/utils/js/right-quote.min.js"]
+```
+
+#### Add anchor links to headings
+
+The CSS is necessary only if you want to hide the anchors by default and reveal
+them on hover.
+
+``` yaml
+css: ["default", "@npm/@xiee/utils/css/heading-anchor.min.css"]
+js: ["@npm/@xiee/utils/js/heading-anchor.min.js"]
+```
+
+#### Style keyboard shortcuts
+
+The script `key-button.js` identifies keys and the CSS styles them, which can be
+useful for [showing keyboard
+shortcuts](https://yihui.org/en/2023/02/key-buttons/).
+
+``` yaml
+css: ["default", "@npm/@xiee/utils/css/key-buttons.min.css"]
+js: ["@npm/@xiee/utils/js/key-buttons.min.js"]
+```
+
+Of course, you can combine any number of JS scripts and CSS files if you want
+multiple features.
 
 ## Using RStudio
 
