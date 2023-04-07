@@ -35,7 +35,7 @@ Suggests:
     rmarkdown (>= 2.18),
     yaml,
     RCurl
-License: GPL-2
+License: MIT + file LICENSE
 URL: https://github.com/rstudio/markdown
 BugReports: https://github.com/rstudio/markdown/issues
 VignetteBuilder: knitr

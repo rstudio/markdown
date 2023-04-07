@@ -10,3 +10,4 @@ inst/RnwToMd.R
 ^\.travis\.yml$
 ^\.github$
 ^revdep$
+^LICENSE\.md$
