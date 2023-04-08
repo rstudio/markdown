@@ -559,7 +559,7 @@ just need to have the correct HTML structure. Then in your HTML document:
 
 ``` html
 <script src="https://cdn.jsdelivr.net/gh/rstudio/markdown@VERSION/inst/resources/snap.min.js" defer></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/gh/rstudio/markdown@VERSION/inst/resources/default.min.css,gh/rstudio/markdown@VERSION/inst/resources/slides.min.css"></link>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/gh/rstudio/markdown@VERSION/inst/resources/default.min.css,gh/rstudio/markdown@VERSION/inst/resources/slides.min.css">
 ```
 
 Remember to substitute `VERSION` with [an appropriate
