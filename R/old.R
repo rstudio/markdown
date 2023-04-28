@@ -1,14 +1,13 @@
-#' Functions in \pkg{markdown} before \code{v1.3}.
+#' Functions in \pkg{markdown} before `v1.3`.
 #'
 #' These functions are kept in this package for backward-compatibility. They
 #' will not be removed in the foreseeable future, although we recommend that you
-#' use their new names instead: \code{renderMarkdown()} has become
-#' \code{\link{mark}()}, and \code{markdownToHTML()} has become
-#' \code{\link{mark_html}()}.
-#' @param file,output,...,options,template Arguments to be passed to new functions.
-#' @param title,stylesheet,header Arguments to be passed to \code{meta =
-#'   list(title = , css = , `header-includes` = )}, which is passed to
-#'   \code{mark_html()}.
+#' use their new names instead: `renderMarkdown()` has become [mark()], and
+#' `markdownToHTML()` has become [mark_html()].
+#' @param file,output,...,options,template Arguments to be passed to new
+#'   functions.
+#' @param title,stylesheet,header Arguments to be passed to `meta = list(title =
+#'   , css = , `header-includes` = )`, which is passed to [mark_html()].
 #' @param fragment.only Whether to generate a fragment or a full HTML document.
 #' @param encoding Ignored.
 #' @export

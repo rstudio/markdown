@@ -1,8 +1,8 @@
 #' Convert some ASCII strings to HTML entities
 #'
-#' Transform ASCII strings \verb{(c)} (copyright), \verb{(r)} (registered
-#' trademark), \verb{(tm)} (trademark), and fractions \verb{n/m} into
-#' \emph{smart} typographic HTML entities.
+#' Transform ASCII strings `(c)` (copyright), `(r)` (registered trademark),
+#' `(tm)` (trademark), and fractions `n/m` into *smart* typographic HTML
+#' entities.
 #' @param text A character vector of the Markdown text.
 #' @return A character vector of the transformed text.
 #' @export

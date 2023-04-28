@@ -24,14 +24,14 @@ latex_format(
 )
 }
 \arguments{
-\item{meta, template, options}{Arguments to be passed to \code{\link{mark}()}.}
+\item{meta, template, options}{Arguments to be passed to \code{\link[=mark]{mark()}}.}
 
 \item{keep_md, keep_tex}{Whether to keep the intermediate \file{.md} and
 \file{.tex} files generated from \file{.Rmd}.}
 
 \item{latex_engine}{The LaTeX engine to compile \file{.tex} to \file{.pdf}.
-This argument and \code{keep_tex} are for \code{latex_format()} only, and
-ignored in \code{html_format()}.}
+This argument and \code{keep_tex} are for \code{latex_format()} only, and ignored in
+\code{html_format()}.}
 }
 \description{
 Convenience functions for R Markdown v2 users.
@@ -42,9 +42,9 @@ Markdown v1}, and the \pkg{rmarkdown} package as \dQuote{R Markdown v2}. The
 former uses \pkg{commonmark} to convert Markdown, and the latter uses Pandoc.
 However, the latter also accept custom converting tools in addition to
 Pandoc. The output formats here provide the custom converting function
-\code{\link{mark}()} to \pkg{rmarkdown}, so that users can take advantage of
-\code{rmarkdown::render()} and the Knit button in RStudio. It is absolutely
-not necessary to rely on \pkg{rmarkdown}. The only point is convenience. If
-you do not use \code{rmarkdown::render()} or the Knit button, you can
-definitely just call \code{markdown::mark()} directly.
+\code{\link[=mark]{mark()}} to \pkg{rmarkdown}, so that users can take advantage of
+\code{\link[rmarkdown:render]{rmarkdown::render()}} and the Knit button in RStudio. It is absolutely not
+necessary to rely on \pkg{rmarkdown}. The only point is convenience. If you
+do not use \code{rmarkdown::render()} or the Knit button, you can definitely just
+call \code{markdown::mark()} directly.
 }

@@ -13,9 +13,9 @@ smartypants(text)
 A character vector of the transformed text.
 }
 \description{
-Transform ASCII strings \verb{(c)} (copyright), \verb{(r)} (registered
-trademark), \verb{(tm)} (trademark), and fractions \verb{n/m} into
-\emph{smart} typographic HTML entities.
+Transform ASCII strings \code{(c)} (copyright), \code{(r)} (registered trademark),
+\code{(tm)} (trademark), and fractions \code{n/m} into \emph{smart} typographic HTML
+entities.
 }
 \examples{
 cat(smartypants("1/2 (c)\n"))

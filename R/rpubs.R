@@ -1,16 +1,16 @@
 #' Upload an HTML file to RPubs
 #'
 #' This function uploads an HTML file to rpubs.com. If the upload succeeds a
-#' list that includes an \code{id} and \code{continueUrl} is returned. A browser
-#' should be opened to the \code{continueUrl} to complete publishing of the
-#' document. If an error occurs then a diagnostic message is returned in the
-#' \code{error} element of the list.
+#' list that includes an `id` and `continueUrl` is returned. A browser should be
+#' opened to the `continueUrl` to complete publishing of the document. If an
+#' error occurs then a diagnostic message is returned in the `error` element of
+#' the list.
 #' @param title The title of the document.
 #' @param htmlFile The path to the HTML file to upload.
 #' @param id If this upload is an update of an existing document then the id
 #'   parameter should specify the document id to update. Note that the id is
 #'   provided as an element of the list returned by successful calls to
-#'   \code{rpubsUpload}.
+#'   `rpubsUpload`.
 #' @param properties A named list containing additional document properties
 #'   (RPubs doesn't currently expect any additional properties, this parameter
 #'   is reserved for future use).
@@ -19,13 +19,13 @@
 #'   "rcurl" uses the RCurl package to do an https upload; and "auto" uses the
 #'   best available method searched for in the following order: "curl", "rcurl",
 #'   and then "internal". The global default behavior can be configured by
-#'   setting the \code{rpubs.upload.method} option (the default is "auto").
+#'   setting the `rpubs.upload.method` option (the default is "auto").
 #' @return A named list. If the upload was successful then the list contains a
-#'   \code{id} element that can be used to subsequently update the document as
-#'   well as a \code{continueUrl} element that provides a URL that a browser
-#'   should be opened to in order to complete publishing of the document. If the
-#'   upload fails then the list contains an \code{error} element which contains
-#'   an explanation of the error that occurred.
+#'   `id` element that can be used to subsequently update the document as well
+#'   as a `continueUrl` element that provides a URL that a browser should be
+#'   opened to in order to complete publishing of the document. If the upload
+#'   fails then the list contains an `error` element which contains an
+#'   explanation of the error that occurred.
 #' @export
 #' @examples
 #' \dontrun{

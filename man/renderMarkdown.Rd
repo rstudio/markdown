@@ -21,11 +21,10 @@ markdownToHTML(
 )
 }
 \arguments{
-\item{file, output, ..., options, template}{Arguments to be passed to new functions.}
+\item{file, output, ..., options, template}{Arguments to be passed to new
+functions.}
 
-\item{title, stylesheet, header}{Arguments to be passed to \code{meta =
-list(title = , css = , `header-includes` = )}, which is passed to
-\code{mark_html()}.}
+\item{title, stylesheet, header}{Arguments to be passed to \verb{meta = list(title = , css = , }header-includes\verb{ = )}, which is passed to \code{\link[=mark_html]{mark_html()}}.}
 
 \item{fragment.only}{Whether to generate a fragment or a full HTML document.}
 
@@ -34,8 +33,7 @@ list(title = , css = , `header-includes` = )}, which is passed to
 \description{
 These functions are kept in this package for backward-compatibility. They
 will not be removed in the foreseeable future, although we recommend that you
-use their new names instead: \code{renderMarkdown()} has become
-\code{\link{mark}()}, and \code{markdownToHTML()} has become
-\code{\link{mark_html}()}.
+use their new names instead: \code{renderMarkdown()} has become \code{\link[=mark]{mark()}}, and
+\code{markdownToHTML()} has become \code{\link[=mark_html]{mark_html()}}.
 }
 \keyword{internal}

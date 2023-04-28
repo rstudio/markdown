@@ -1,51 +1,49 @@
 #' Render Markdown to an output format
 #'
 #' Render Markdown to an output format via the \pkg{commonmark} package. The
-#' function \code{mark_html()} is a shorthand of \code{mark(format = 'html',
-#' template = TRUE)}, and \code{mark_latex()} is a shorthand of
-#' \code{mark(format = 'latex', template = TRUE)}.
+#' function `mark_html()` is a shorthand of `mark(format = 'html', template =
+#' TRUE)`, and `mark_latex()` is a shorthand of `mark(format = 'latex', template
+#' = TRUE)`.
 #' @param file Path to an input file. If not provided, it is presumed that the
-#'   \code{text} argument will be used instead. This argument can also take a
+#'   `text` argument will be used instead. This argument can also take a
 #'   character vector of Markdown text directly. To avoid ambiguity in the
 #'   latter case, a single character string input will be treated as a file if
 #'   the file exists. If a string should be treated as Markdown text when it
-#'   happens to be a file path, wrap it in \code{I()}.
+#'   happens to be a file path, wrap it in [I()].
 #' @param output Output file path. If not character, the results will be
 #'   returned as a character vector. If not specified and the input is a file
 #'   path, the output file path will have the same base name as the input file,
-#'   with an extension corresponding to the \code{format} argument, e.g.,
-#'   \code{mark('foo.md', format = 'latex')} will generate an output file
+#'   with an extension corresponding to the `format` argument, e.g.,
+#'   `mark('foo.md', format = 'latex')` will generate an output file
 #'   \file{foo.tex} by default.
 #' @param text A character vector of the Markdown text. By default, it is read
-#'   from \code{file}.
-#' @param format An output format supported by \pkg{commonmark}, e.g.,
-#'   \code{'html'}, \code{'man'}, and \code{'text'}, etc. See the
-#'   \code{\link[commonmark:commonmark]{markdown_*}} renderers in
-#'   \pkg{commonmark}.
-#' @param options Options to be passed to the renderer. See
-#'   \code{\link{markdown_options}()} for details. This argument can take either
-#'   a character vector of the form \code{"+option1 option2-option3"} (use
-#'   \code{+} or a space to enable an option, and \code{-} to disable an
-#'   option), or a list of the form \code{list(option1 = value1, option2 =
-#'   value2, ...)}. A string \code{"+option1"} is equivalent to
-#'   \code{list(option1 = TRUE)}, and \code{"-option2"} means \code{list(option2
-#'   = FALSE)}. Options that do not take logical values must be specified via a
-#'   list, e.g., \code{list(width = 30)}.
+#'   from `file`.
+#' @param format An output format supported by \pkg{commonmark}, e.g., `'html'`,
+#'   `'man'`, and `'text'`, etc. See the
+#'   [`markdown_*()`][commonmark::commonmark] renderers in \pkg{commonmark}.
+#' @param options Options to be passed to the renderer. See [markdown_options()]
+#'   for details. This argument can take either a character vector of the form
+#'   `"+option1 option2-option3"` (use `+` or a space to enable an option, and
+#'   `-` to disable an option), or a list of the form `list(option1 = value1,
+#'   option2 = value2, ...)`. A string `"+option1"` is equivalent to
+#'   `list(option1 = TRUE)`, and `"-option2"` means `list(option2 = FALSE)`.
+#'   Options that do not take logical values must be specified via a list, e.g.,
+#'   `list(width = 30)`.
 #' @param template Path to a template file. The default value is
-#'   \code{getOption('markdown.FORMAT.template',
-#'   markdown:::pkg_file('resources', 'markdown.FORMAT'))} where \code{FORMAT}
-#'   is the output format name (\code{html} or \code{latex}). It can also take a
-#'   logical value: \code{TRUE} means to use the default template, and
-#'   \code{FALSE} means to generate only a fragment without using any template.
+#'   `getOption('markdown.FORMAT.template', markdown:::pkg_file('resources',
+#'   'markdown.FORMAT'))` where `FORMAT` is the output format name (`html` or
+#'   `latex`). It can also take a logical value: `TRUE` means to use the default
+#'   template, and `FALSE` means to generate only a fragment without using any
+#'   template.
 #' @param meta A named list of metadata. Elements in the metadata will be used
-#'   to fill out the template by their names and values, e.g., \code{list(title
-#'   = ...)} will replace the \code{$title$} variable in the template. See the
-#'   Section \dQuote{YAML metadata} in the vignette \code{vignette('intro',
-#'   package = 'markdown')} for supported variables.
-#' @return Invisible \code{NULL} when output is to a file, otherwise a character
+#'   to fill out the template by their names and values, e.g., `list(title =
+#'   ...)` will replace the `$title$` variable in the template. See the Section
+#'   \dQuote{YAML metadata} in the vignette `vignette('intro', package =
+#'   'markdown')` for supported variables.
+#' @return Invisible `NULL` when output is to a file, otherwise a character
 #'   vector of the rendered output.
 #' @seealso The spec of GitHub Flavored Markdown:
-#'   \url{https://github.github.com/gfm/}
+#'   <https://github.github.com/gfm/>
 #' @import utils
 #' @export
 #' @examples
@@ -280,7 +278,7 @@ mark = function(
 }
 
 #' @rdname mark
-#' @param ... Arguments to be passed to \code{mark()}.
+#' @param ... Arguments to be passed to `mark()`.
 #' @export
 #' @examples
 #'
@@ -353,11 +351,11 @@ tpl_html = function(x) {
 #' Markdown rendering options
 #'
 #' A list of all options to control Markdown rendering. Options that are enabled
-#' by default are marked by a \code{+} prefix, and those disabled by default are
-#' marked by \code{-}.
+#' by default are marked by a `+` prefix, and those disabled by default are
+#' marked by `-`.
 #'
-#' See \code{vignette('intro', package = 'markdown')} for the full list of
-#' options and their documentation.
+#' See `vignette('intro', package = 'markdown')` for the full list of options
+#' and their documentation.
 #' @return A character vector of all available options.
 #' @export
 #' @examples

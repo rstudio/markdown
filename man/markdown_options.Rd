@@ -15,8 +15,8 @@ by default are marked by a \code{+} prefix, and those disabled by default are
 marked by \code{-}.
 }
 \details{
-See \code{vignette('intro', package = 'markdown')} for the full list of
-options and their documentation.
+See \code{vignette('intro', package = 'markdown')} for the full list of options
+and their documentation.
 }
 \examples{
 # all available options
