@@ -7,10 +7,9 @@
 #' @param file Path to an input file. If not provided, it is presumed that the
 #'   \code{text} argument will be used instead. This argument can also take a
 #'   character vector of Markdown text directly. To avoid ambiguity in the
-#'   latter case, a single character string input will be treated as a file only
-#'   when the file exists or it has a file extension. If a string happens to
-#'   have a \dQuote{file extension} and should be treated as Markdown text
-#'   instead, wrap it in \code{I()}.
+#'   latter case, a single character string input will be treated as a file if
+#'   the file exists. If a string should be treated as Markdown text when it
+#'   happens to be a file path, wrap it in \code{I()}.
 #' @param output Output file path. If not character, the results will be
 #'   returned as a character vector. If not specified and the input is a file
 #'   path, the output file path will have the same base name as the input file,
@@ -55,7 +54,7 @@
 #' # a few corner cases
 #' mark(character(0))
 #' mark('')
-#' # if input looks like file but should be treated as text, use I()
+#' # if input happens to be a file path but should be treated as text, use I()
 #' mark(I('This is *not* a file.md'))
 #' # that's equivalent to
 #' mark(text = 'This is *not* a file.md')
@@ -267,7 +266,7 @@ mark = function(
 
   if (format == 'html') {
     ret = xfun::in_dir(
-      if (is_file(file, TRUE)) dirname(file) else '.',
+      if (is_file(file)) dirname(file) else '.',
       embed_resources(ret, options[['embed_resources']])
     )
     ret = clean_html(ret)
