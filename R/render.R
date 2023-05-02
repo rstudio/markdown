@@ -144,7 +144,7 @@ mark = function(
   if (has_sup <- test_feature('superscript', r2)) {
     id2 = id_string(text)
     find_prose()
-    text[p] = match_replace(text[p], r2, perl = TRUE, function(x) {
+    text[p] = match_replace(text[p], r2, function(x) {
       # place superscripts inside !id...id!
       x = gsub('^\\^|\\^$', id2, x)
       sprintf('!%s!', x)
@@ -154,7 +154,7 @@ mark = function(
   if (has_sub <- test_feature('subscript', r3)) {
     id3 = id_string(text)
     find_prose()
-    text[p]= match_replace(text[p], r3, perl = TRUE, function(x) {
+    text[p]= match_replace(text[p], r3, function(x) {
       # place subscripts inside !id...id!
       x = gsub('^~|~$', id3, x)
       sprintf('!%s!', x)
@@ -163,7 +163,7 @@ mark = function(
   # disallow single tilde for <del> (I think it is an awful idea in GFM's
   # strikethrough extension to allow both single and double tilde for <del>)
   find_prose()
-  text[p] = match_replace(text[p], r3, perl = TRUE, function(x) {
+  text[p] = match_replace(text[p], r3, function(x) {
     gsub('^~|~$', '\\\\~', x)
   })
   # add line breaks before/after fenced Div's to wrap ::: tokens into separate

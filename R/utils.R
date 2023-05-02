@@ -12,7 +12,7 @@ smartypants = function(text) {
   text = xfun::split_lines(text)
   i = xfun::prose_index(text)
   r = '(?<!`)\\((c|r|tm)\\)|(\\d+/\\d+)(?!`)'
-  text[i] = match_replace(text[i], r, perl = TRUE, function(z) {
+  text[i] = match_replace(text[i], r, function(z) {
     y = pants[z]
     i = is.na(y)
     y[i] = z[i]
@@ -429,7 +429,7 @@ move_attrs = function(x, format = 'html') {
 
 convert_attrs = function(x, r, s, f, format = 'html') {
   r2 = '(?<=^| )[.#]([[:alnum:]-]+)(?= |$)'
-  match_replace(x, r, perl = TRUE, function(y) {
+  match_replace(x, r, function(y) {
     if (format == 'html') {
       z = gsub('[\U201c\U201d]', '"', y)
     } else {
@@ -439,7 +439,7 @@ convert_attrs = function(x, r, s, f, format = 'html') {
     }
     z2 = sub(r, s, z)
     # convert #id to id="" and .class to class=""
-    z2 = match_replace(z2, r2, perl = TRUE, function(a) {
+    z2 = match_replace(z2, r2, function(a) {
       i = grep('^[.]', a)
       if ((n <- length(i))) {
         # merge multiple classes into one class attribute
@@ -522,7 +522,7 @@ number_sections = function(x) {
   has_class = function(x, class) {
     grepl(sprintf(' class="([^"]+ )?%s( [^"]+)?"', class), x)
   }
-  match_replace(x, r, perl = TRUE, function(z) {
+  match_replace(x, r, function(z) {
     z1 = as.integer(sub(r, '\\1', z, perl = TRUE))
     z2 = sub(r, '\\2', z, perl = TRUE)
     num_sections = identity  # generate appendix numbers
@@ -787,7 +787,7 @@ base64_url = function(url, code, ext) {
       code, '(?<=src:\'url\\(")(%%URL%%/[^"]+)(?="\\))', function(u) {
         u = sub('%%URL%%', paste(d, p, sep = '/'), u, fixed = TRUE)
         unlist(lapply(u, function(x) xfun::download_cache$get(x, 'base64')))
-      }, perl = TRUE
+      }
     ) else warning(
       'Unable to determine the font path in MathJax. Please report an issue to ',
       'https://github.com/rstudio/markdown/issues and mention the URL ', url, '.'
@@ -806,7 +806,7 @@ base64_url = function(url, code, ext) {
         if (is_https(x)) xfun::download_cache$get(x, 'base64') else xfun::base64_uri(x)
       }))
       paste0(z1, z2, z3)
-    }, perl = TRUE)
+    })
   }
   code
 }
