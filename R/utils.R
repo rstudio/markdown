@@ -62,8 +62,8 @@ id_string = function(text, lens = c(2:10, 20), times = 20) {
 }
 
 # a shorthand for gregexpr() and regmatches()
-match_replace = function(x, pattern, replace = identity, ...) {
-  m = gregexpr(pattern, x, ...)
+match_replace = function(x, pattern, replace = identity, ..., perl = TRUE) {
+  m = gregexpr(pattern, x, ..., perl = perl)
   regmatches(x, m) = lapply(regmatches(x, m), function(z) {
     if (length(z)) replace(z) else z
   })
@@ -478,7 +478,7 @@ render_footnotes = function(x) {
     f1 <<- c(f1, sub(r, '\\2', z))
     f2 <<- c(f2, sub(r, '\\3', z))
     gsub(r, '\\1', z)
-  })
+  }, perl = FALSE)
   for (i in seq_along(f1)) {
     x = sub(f1[i], sprintf('\\footnote{%s}', f2[i]), x, fixed = TRUE)
   }
@@ -488,7 +488,7 @@ render_footnotes = function(x) {
 # add auto identifiers to headings
 auto_identifier = function(x) {
   r = '<(h[1-6])([^>]*)>(.+?)</\\1>'
-  match_replace(x, r, perl = TRUE, function(z) {
+  match_replace(x, r, function(z) {
     z1 = sub(r, '\\1', z)  # tag
     z2 = sub(r, '\\2', z)  # attrs
     z3 = sub(r, '\\3', z)  # content
@@ -612,7 +612,7 @@ embed_resources = function(x, embed = 'local') {
     x = if (length(grep('</body>', x)) != 1) {
       one_string(I(c(x, x2)))
     } else {
-      match_replace(x, '</body>', fixed = TRUE, function(z) {
+      match_replace(x, '</body>', fixed = TRUE, perl = FALSE, function(z) {
         one_string(I(c(x2, z)))
       })
     }

@@ -211,7 +211,7 @@ mark = function(
       # discard other types of raw content blocks
       x[!(i1 | i2)] = ''
       x
-    })
+    }, perl = FALSE)
     # commonmark doesn't support ```{.class}, which should be treated as ```class
     ret = gsub('(<pre><code class="language-)\\{[.]([^}]+)}(">)', '\\1\\2\\3', ret)
     # auto identifiers
@@ -249,7 +249,7 @@ mark = function(
       # TODO: support code highlighting for latex (listings or highr::hi_latex)
       x = gsub(r4, '\\1\\3\\4', x)
       x
-    })
+    }, perl = FALSE)
     # fix horizontal rules from --- (\linethickness doesn't work)
     ret = gsub('{\\linethickness}', '{1pt}', ret, fixed = TRUE)
     ret = redefine_level(ret, options[['top_level']])

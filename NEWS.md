@@ -2,6 +2,8 @@
 
 - The `file` argument of `mark()` will be treated as a file path only if the file exists and the value is not wrapped in `I()`. Previously, it would be treated as a file path when it has a file extension, which could lead to confusing errors like #100 (thanks, @LukasWallrich).
 
+- When there are emojis in the text, `mark()` may fail to identify and embed web resources (thanks, @tdhock, yihui/knitr#2254).
+
 # CHANGES IN markdown VERSION 1.6
 
 - Added support for footnotes, fenced `Div`s, section numbers, `{}` attributes for images/headings/fenced `Div`s, and appendices. See `vignette('intro', package = 'markdown')` for details.
