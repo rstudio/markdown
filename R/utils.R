@@ -72,7 +72,7 @@ match_replace = function(x, pattern, replace = identity, ..., perl = TRUE) {
 
 # test if an input is a file path; if shouldn't be treated as file, use I()
 is_file = function(x) {
-  length(x) == 1 && !inherits(x, 'AsIs') && xfun::file_exists(x)
+  length(x) == 1 && !inherits(x, 'AsIs') && suppressWarnings(xfun::file_exists(x))
 }
 
 # substitute a variable in template `x` with its value; the variable may have
@@ -314,7 +314,7 @@ get_option = function(name, default = NULL) {
 one_string = function(x) {
   if (!is.character(x)) return('')
   if (is_file(x)) x = xfun::read_utf8(x)
-  paste(x, collapse = '\n')
+  I(paste(x, collapse = '\n'))
 }
 
 # find headings and build a table of contents as an unordered list
@@ -725,7 +725,8 @@ resolve_files = function(x, ext = 'css') {
   )
   x[i] = files[match(x[i], b)]
   x = c(x[i], x[!i])
-  if (ext %in% c('css', 'js')) gen_tags(x, ext) else xfun::read_all(x)
+  x = if (ext %in% c('css', 'js')) gen_tags(x, ext) else xfun::read_all(x)
+  I(x)
 }
 
 # generate tags for css/js depending on whether they need to be embedded or offline
