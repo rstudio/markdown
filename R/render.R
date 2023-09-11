@@ -211,7 +211,7 @@ mark = function(
       # discard other types of raw content blocks
       x[!(i1 | i2)] = ''
       x
-    }, perl = FALSE)
+    }, perl = FALSE)  # for perl = TRUE, we'd need (?s) before (.+?)
     # commonmark doesn't support ```{.class}, which should be treated as ```class
     ret = gsub('(<pre><code class="language-)\\{[.]([^}]+)}(">)', '\\1\\2\\3', ret)
     # auto identifiers
