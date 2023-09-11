@@ -1,5 +1,6 @@
 # CHANGES IN markdown VERSION 1.9
 
+- Fixed the bug that the option `number_sections: true` doesn't work for HTML output when then input contains certain Unicode characters (thanks, @fyuniv, #104).
 
 # CHANGES IN markdown VERSION 1.8
 

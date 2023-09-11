@@ -512,7 +512,7 @@ unique_id = function(x, empty) {
 
 # number sections in HTML output
 number_sections = function(x) {
-  m = gregexpr('</h[1-6]>', x)
+  m = gregexpr('</h[1-6]>', x, perl = TRUE)
   h = sub('</h([1-6])>', '\\1', unlist(regmatches(x, m)))
   if (length(h) == 0) return(x)  # no headings
   h = min(as.integer(h))  # highest level of headings
