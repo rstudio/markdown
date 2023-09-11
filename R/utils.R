@@ -65,8 +65,8 @@ id_string = function(text, lens = c(2:10, 20), times = 20) {
 }
 
 # a shorthand for gregexpr() and regmatches()
-match_replace = function(x, pattern, replace = identity, ..., perl = TRUE) {
-  m = gregexpr(pattern, x, ..., perl = perl)
+match_replace = function(x, pattern, replace = identity, ...) {
+  m = gregexpr(pattern, x, ...)
   regmatches(x, m) = lapply(regmatches(x, m), function(z) {
     if (length(z)) replace(z) else z
   })
