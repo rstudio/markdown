@@ -1,3 +1,6 @@
+# use PCRE by default (which seems to handle multibyte chars better)
+gregexpr = function(..., perl = TRUE) base::gregexpr(..., perl = perl)
+
 #' Convert some ASCII strings to HTML entities
 #'
 #' Transform ASCII strings `(c)` (copyright), `(r)` (registered trademark),
@@ -197,7 +200,7 @@ set_highlight = function(meta, options, html) {
   autoloader = 'plugins/autoloader/prism-autoloader.min.js'
   o$js = c(o$js, if (!is.null(l <- o$languages)) get_lang(l) else {
     # detect <code> languages in html and load necessary language components
-    lang = unique(unlist(regmatches(html, gregexpr(r, html, perl = TRUE))))
+    lang = unique(unlist(regmatches(html, gregexpr(r, html))))
     f = switch(p, highlight = js_libs[[c(p, 'js')]], prism = autoloader)
     if (!embed && p == 'prism') f else {
       get_lang(lang_files(p, get_path(f), lang))
@@ -233,7 +236,7 @@ lang_files = function(package, path, langs) {
     x = grep(r, x, value = TRUE)
     l = gsub(r, '\\1', x)
     # then find their aliases
-    m = gregexpr('(?<=aliases:\\[)[^]]+(?=\\])', x, perl = TRUE)
+    m = gregexpr('(?<=aliases:\\[)[^]]+(?=\\])', x)
     a = lapply(regmatches(x, m), function(z) {
       z = unlist(strsplit(z, '[",]'))
       z[!xfun::is_blank(z)]
@@ -251,7 +254,7 @@ lang_files = function(package, path, langs) {
     l1
   } else {
     # dependencies and aliases (the arrays should be more than 1000 characters)
-    m = gregexpr('(?<=\\{)([[:alnum:]_-]+:\\[?"[^}]{1000,})(?=\\})', x, perl = TRUE)
+    m = gregexpr('(?<=\\{)([[:alnum:]_-]+:\\[?"[^}]{1000,})(?=\\})', x)
     x = unlist(regmatches(x, m))
     if (length(x) < 2) {
       warning(
@@ -262,7 +265,7 @@ lang_files = function(package, path, langs) {
       return()
     }
     x = x[1:2]
-    m = gregexpr('([[:alnum:]_-]+):(\\["[^]]+\\]|"[^"]+")', x, perl = TRUE)
+    m = gregexpr('([[:alnum:]_-]+):(\\["[^]]+\\]|"[^"]+")', x)
     x = lapply(regmatches(x, m), function(z) {
       z = gsub('[]["]', '', z)
       unlist(lapply(strsplit(z, '[:,]'), function(y) {
@@ -322,7 +325,7 @@ build_toc = function(html, n = 3) {
   if (n <= 0) return()
   if (n > 6) n = 6
   r = sprintf('<(h[1-%d])( id="[^"]+")?[^>]*>(.+?)</\\1>', n)
-  items = unlist(regmatches(html, gregexpr(r, html, perl = TRUE)))
+  items = unlist(regmatches(html, gregexpr(r, html)))
   if (length(items) == 0) return()
   x = gsub(r, '<toc\\2>\\3</toc>', items)  # use a tag <toc> to protect heading text
   h = as.integer(gsub('^h', '', gsub(r, '\\1', items)))  # heading level
@@ -512,7 +515,7 @@ unique_id = function(x, empty) {
 
 # number sections in HTML output
 number_sections = function(x) {
-  m = gregexpr('</h[1-6]>', x, perl = TRUE)
+  m = gregexpr('</h[1-6]>', x)
   h = sub('</h([1-6])>', '\\1', unlist(regmatches(x, m)))
   if (length(h) == 0) return(x)  # no headings
   h = min(as.integer(h))  # highest level of headings
