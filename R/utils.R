@@ -824,6 +824,3 @@ clean_html = function(x) {
 check_old = function() {
   xfun::check_old_package('plumbertableau', '0.1.0')
 }
-
-# TODO: remove this after new release of https://github.com/rstudio/leaflet
-.b64EncodeFile = function(...) xfun::base64_uri(...)
