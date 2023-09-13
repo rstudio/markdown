@@ -74,6 +74,7 @@ mark = function(
     yaml_field(yaml, format),
     meta
   )
+  meta = normalize_meta(meta)
 
   if (missing(output) && is_file(file)) {
     ext = switch(format, commonmark = 'markdown', latex = 'tex', text = 'txt', format)
@@ -260,7 +261,11 @@ mark = function(
   # convert some meta variables in case they use Markdown syntax
   for (i in c('title', 'author', 'date')) meta[[i]] = render(meta[[i]], clean = TRUE)
   # use the template (if provided) to create a standalone document
-  ret = build_output(format, options, template, meta)
+  if (format %in% c('html', 'latex') && !isFALSE(template)) {
+    # add HTML dependencies to `include-headers` if found
+    meta = add_html_deps(meta, output, 'local' %in% options[['embed_resources']])
+    ret = build_output(format, options, template, meta)
+  }
 
   if (format == 'html') {
     ret = xfun::in_dir(
@@ -300,13 +305,11 @@ mark_latex = function(..., template = TRUE) {
 
 # insert body and meta variables into a template
 build_output = function(format, options, template, meta) {
-  if (!format %in% c('html', 'latex') || isFALSE(template)) return(meta$body)
   if (is.null(template)) template = get_option(
     sprintf('markdown.%s.template', format),
     pkg_file('resources', sprintf('markdown.%s', format))
   )
   tpl = one_string(template)
-  meta = normalize_meta(meta)
   if (format == 'html') {
     b = meta$body
     set_meta = function(name, value) {

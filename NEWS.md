@@ -2,6 +2,8 @@
 
 - Fixed the bug that the option `number_sections: true` doesn't work for HTML output when then input contains certain Unicode characters (thanks, @fyuniv, #104).
 
+- Added support for rendering HTML Widgets such as **ggplotly** (thanks, @fyuniv, #105).
+
 # CHANGES IN markdown VERSION 1.8
 
 - Fixed the superfluous warning about path lengths in `mark_html()` (thanks, @kenjisato, #103).

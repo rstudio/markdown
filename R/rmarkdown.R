@@ -12,6 +12,13 @@ output_format = function(to = 'html') {
     }
     rmarkdown::output_format(
       NULL, opts, keep_md = keep_md,
+      pre_processor = function(meta, input, runtime, knit_meta, ...) {
+        # knitr::knit_meta() has been emptied at this stage and only available
+        # in the `knit_meta` argument; make a copy in .env so that it can be
+        # accessed in add_html_deps() later
+        .env$knit_meta = knit_meta; NULL
+      },
+      on_exit = function() .env$knit_meta = NULL,
       clean_supporting = 'local' %in% normalize_options(options)[['embed_resources']]
     )
   }

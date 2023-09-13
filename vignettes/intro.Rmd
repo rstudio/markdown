@@ -295,9 +295,9 @@ As mentioned earlier, a lot of features in Pandoc's Markdown are not supported
 in the **markdown** package. Any feature that you find missing in previous
 sections is likely to be unavailable, such as citations and figure/table
 captions. In addition, a lot of R Markdown and Quarto (both are based on Pandoc)
-features are not supported, either, e.g., tabbed sections, code folding, and
-HTML widgets. Some HTML features may be implemented via JavaScript, but
-currently it is not straightforward and may be improved in future.
+features are not supported, either, e.g., tabbed sections and code folding. Some
+HTML features may be implemented via JavaScript, but currently it is not
+straightforward and may be improved in future.
 
 Pandoc can convert Markdown to many output formats, such as Word, PowerPoint,
 LaTeX beamer, and EPUB. The **markdown** package is unlikely to support output

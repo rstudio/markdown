@@ -815,6 +815,26 @@ base64_url = function(url, code, ext) {
   code
 }
 
+# resolve HTML dependencies and write out the appropriate HTML code to `header-includes`
+add_html_deps = function(meta, output, embed = TRUE) {
+  deps = c(knitr::knit_meta(), .env$knit_meta)
+  deps = rmarkdown:::flatten_html_dependencies(deps)
+  deps = rmarkdown:::html_dependency_resolver(deps)
+  if (length(deps) == 0) return(meta)
+  d1 = d2 = NULL
+  # if resources need to be embedded, use their absolute paths; otherwise copy
+  # dependencies to 'libs/' and use relative paths
+  if (!embed) {
+    if (is.character(output)) {
+      owd = setwd(dirname(output)); on.exit(setwd(owd), add = TRUE)
+    }
+    d1 = 'libs'; d2 = '.'
+  }
+  deps = rmarkdown:::html_dependencies_as_string(deps, d1, d2)
+  meta[['header-includes']] = paste(deps, one_string(meta[['header-includes']]), sep = '\n')
+  meta
+}
+
 # compact HTML code
 clean_html = function(x) {
   # TODO: remove this hack (https://github.com/rstudio/plumbertableau/pull/84)
