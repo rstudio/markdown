@@ -176,12 +176,21 @@ mark = function(
     text[p]
   )
 
-  # put info string inside code blocks so the info won't be lost, e.g., ```r -> ```\nr
+  id4 = id_string(text)
   if (format == 'latex') {
-    id4 = id_string(text)
+    # put info string inside code blocks so the info won't be lost, e.g., ```r -> ```\nr
     text = gsub(
       '^([> ]*)(```+)([^`].*)$', sprintf('\\1\\2\n\\1%s\\3%s', id4, id4), text
     )
+  } else if (format == 'html' && length(p) < length(text)) {
+    # hide spaces so that attributes won't be dropped: {.lang foo} -> {.lang!id!foo}
+    r4 = '^([> ]*```+)(\\{.+)}\\s*$'
+    text = match_replace(text, r4, function(x) {
+      x1 = sub(r4, '\\1', x)
+      x2 = sub(r4, '\\2', x)
+      x2 = gsub(' ', id4, x2)
+      paste0(x1, x2)
+    })
   }
 
   ret = render(text)
@@ -213,8 +222,16 @@ mark = function(
       x[!(i1 | i2)] = ''
       x
     }, perl = FALSE)  # for perl = TRUE, we'd need (?s) before (.+?)
-    # commonmark doesn't support ```{.class}, which should be treated as ```class
-    ret = gsub('(<pre><code class="language-)\\{[.]([^}]+)}(">)', '\\1\\2\\3', ret)
+    r4 = '(<pre><code class="language-)\\{([^"]+)}?">'
+    # deal with ```{.class1 .class2 attrs}, which is not supported by commonmark
+    ret = convert_attrs(ret, r4, '\\2', function(r, z, z2) {
+      z1 = sub(r, '\\1', z)
+      # make sure `class` is the first attribute
+      z2 = gsub('^(.+?)( +)(class="[^"]+")(.*)$', '\\3 \\1\\4', z2)
+      i = grepl('^class="', z2)
+      z2 = ifelse(i, sub('^class="', '', z2), paste0('"', z2))
+      paste0(z1, z2, '>')
+    }, 'html', function(z2) gsub(id4, ' ', restore_html(z2)))
     # auto identifiers
     if (isTRUE(options[['auto_identifiers']])) ret = auto_identifier(ret)
     # number sections

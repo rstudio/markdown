@@ -52,6 +52,13 @@ cat(mark("2^10^", options = "-superscript"))
 cat(mark("H~2~O"))
 cat(mark("H~2~O", options = "-subscript"))
 
+# code blocks
+cat(mark('```r\n1 + 1;\n```'))
+cat(mark('```{.r}\n1 + 1;\n```'))
+cat(mark('```{.r .js}\n1 + 1;\n```'))
+cat(mark('```{.r .js #foo}\n1 + 1;\n```'))
+cat(mark('```{.r .js #foo style="color:red;"}\n1 + 1;\n```'))
+
 # skip_html tags
 mkd = '<style>a {}</style><script type="text/javascript">console.log("No!");</script>\n[Hello](#)'
 cat(mark(mkd))

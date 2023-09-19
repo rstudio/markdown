@@ -1,5 +1,7 @@
 # CHANGES IN markdown VERSION 1.9
 
+- Added support for attributes on fenced code blocks, e.g., ```` ```{.lang .class2 #id attr="value"}```` (thanks, @thothal, #106).
+
 - Fixed the bug that the option `number_sections: true` doesn't work for HTML output when then input contains certain Unicode characters (thanks, @fyuniv, #104).
 
 - Added support for rendering HTML Widgets such as **ggplotly** (thanks, @fyuniv, #105).

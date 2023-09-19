@@ -430,7 +430,7 @@ move_attrs = function(x, format = 'html') {
   x
 }
 
-convert_attrs = function(x, r, s, f, format = 'html') {
+convert_attrs = function(x, r, s, f, format = 'html', f2 = identity) {
   r2 = '(?<=^| )[.#]([[:alnum:]-]+)(?= |$)'
   match_replace(x, r, function(y) {
     if (format == 'html') {
@@ -440,7 +440,7 @@ convert_attrs = function(x, r, s, f, format = 'html') {
       z = gsub("''( |\\\\})", '"\\1', z)
       z = gsub('\\\\([#%])', '\\1', z)
     }
-    z2 = sub(r, s, z)
+    z2 = f2(sub(r, s, z))
     # convert #id to id="" and .class to class=""
     z2 = match_replace(z2, r2, function(a) {
       i = grep('^[.]', a)

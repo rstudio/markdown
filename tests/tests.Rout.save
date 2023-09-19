@@ -125,6 +125,26 @@ Content Cell  | Content Cell</p>
 > cat(mark("H~2~O", options = "-subscript"))
 <p>H~2~O</p>
 
+> cat(mark("```r\n1 + 1;\n```"))
+<pre><code class="language-r">1 + 1;
+</code></pre>
+
+> cat(mark("```{.r}\n1 + 1;\n```"))
+<pre><code class="language-r">1 + 1;
+</code></pre>
+
+> cat(mark("```{.r .js}\n1 + 1;\n```"))
+<pre><code class="language-r js">1 + 1;
+</code></pre>
+
+> cat(mark("```{.r .js #foo}\n1 + 1;\n```"))
+<pre><code class="language-r js" id="foo">1 + 1;
+</code></pre>
+
+> cat(mark("```{.r .js #foo style=\"color:red;\"}\n1 + 1;\n```"))
+<pre><code class="language-r js" id="foo" style="color:red;">1 + 1;
+</code></pre>
+
 > mkd = "<style>a {}</style><script type=\"text/javascript\">console.log(\"No!\");</script>\n[Hello](#)"
 
 > cat(mark(mkd))
