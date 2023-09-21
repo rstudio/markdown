@@ -195,6 +195,25 @@ and `## Heading {#baz}` will generate:
 <h2 id="baz">Heading</h2>
 ```
 
+For fenced code blocks, a special rule is that the first class name will be
+treated as the language name for a block, and the `class` attribute of the
+result `<code>` tag will have a `language-` prefix. For example, the following
+code block
+
+```` markdown
+```{.foo .bar #my-code style="color: red;"}
+```
+````
+
+will generate the HTML output below:
+
+``` html
+<pre>
+  <code class="language-foo bar" id="my-code" style="color: red;">
+  </code>
+</pre>
+```
+
 Most attributes in `{}` are ignored for LaTeX output except for:
 
 -   The `width` attribute for images, e.g., `![text](path){width="50%"}` will be
