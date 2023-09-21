@@ -817,7 +817,13 @@ base64_url = function(url, code, ext) {
 
 # resolve HTML dependencies and write out the appropriate HTML code to `header-includes`
 add_html_deps = function(meta, output, embed = TRUE) {
+  if (!xfun::loadable('knitr')) return(meta)
   deps = c(knitr::knit_meta(), .env$knit_meta)
+  if (length(deps) && any(vapply(deps, inherits, logical(1), 'html_dependency')) &&
+      !xfun::loadable('rmarkdown')) stop(
+        'It seems the document contains HTML dependencies, which require ',
+        'the rmarkdown package but it is not available.'
+      )
   deps = rmarkdown:::flatten_html_dependencies(deps)
   deps = rmarkdown:::html_dependency_resolver(deps)
   if (length(deps) == 0) return(meta)
