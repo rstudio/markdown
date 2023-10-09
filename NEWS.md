@@ -1,5 +1,6 @@
 # CHANGES IN markdown VERSION 1.10
 
+- Raw blocks (```` ```{=lang}````) were broken in the previous version when the support for code block attributes was added.
 
 # CHANGES IN markdown VERSION 1.9
 

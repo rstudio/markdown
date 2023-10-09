@@ -1,7 +1,7 @@
 
 R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
 Copyright (C) 2023 The R Foundation for Statistical Computing
-Platform: x86_64-apple-darwin20 (64-bit)
+Platform: aarch64-apple-darwin20 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -144,6 +144,11 @@ Content Cell  | Content Cell</p>
 > cat(mark("```{.r .js #foo style=\"color:red;\"}\n1 + 1;\n```"))
 <pre><code class="language-r js" id="foo" style="color:red;">1 + 1;
 </code></pre>
+
+> cat(mark("```{=html}\n<p>raw HTML</p>\n```"))
+<p>raw HTML</p>
+
+> cat(mark("```{=latex}\n<p>raw HTML</p>\n```"))
 
 > mkd = "<style>a {}</style><script type=\"text/javascript\">console.log(\"No!\");</script>\n[Hello](#)"
 

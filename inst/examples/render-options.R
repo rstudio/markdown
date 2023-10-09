@@ -59,6 +59,10 @@ cat(mark('```{.r .js}\n1 + 1;\n```'))
 cat(mark('```{.r .js #foo}\n1 + 1;\n```'))
 cat(mark('```{.r .js #foo style="color:red;"}\n1 + 1;\n```'))
 
+# raw blocks
+cat(mark('```{=html}\n<p>raw HTML</p>\n```'))
+cat(mark('```{=latex}\n<p>raw HTML</p>\n```'))
+
 # skip_html tags
 mkd = '<style>a {}</style><script type="text/javascript">console.log("No!");</script>\n[Hello](#)'
 cat(mark(mkd))

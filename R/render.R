@@ -184,7 +184,7 @@ mark = function(
     )
   } else if (format == 'html' && length(p) < length(text)) {
     # hide spaces so that attributes won't be dropped: {.lang foo} -> {.lang!id!foo}
-    r4 = '^([> ]*```+)(\\{.+)}\\s*$'
+    r4 = '^([> ]*```+)(\\{.+})\\s*$'
     text = match_replace(text, r4, function(x) {
       x1 = sub(r4, '\\1', x)
       x2 = sub(r4, '\\2', x)
@@ -222,7 +222,7 @@ mark = function(
       x[!(i1 | i2)] = ''
       x
     }, perl = FALSE)  # for perl = TRUE, we'd need (?s) before (.+?)
-    r4 = '(<pre><code class="language-)\\{([^"]+)}?">'
+    r4 = '(<pre><code class="language-)\\{([^"]+)}">'
     # deal with ```{.class1 .class2 attrs}, which is not supported by commonmark
     ret = convert_attrs(ret, r4, '\\2', function(r, z, z2) {
       z1 = sub(r, '\\1', z)
