@@ -165,8 +165,7 @@ e.g.,
 ```
 
 ::: fullwidth
-![Cucumbers in my
-garden](https://user-images.githubusercontent.com/163582/61556189-db864600-aa26-11e9-9a18-1ee09c0420f7.jpg)
+![Sunspots](https://prose.yihui.org/post/2020/11/10/r-markdown-demo/index_files/figure-html/sunspots-1.svg)
 :::
 
 If you use R Markdown, you can generate a wide plot or table from an R code
