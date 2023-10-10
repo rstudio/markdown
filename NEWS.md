@@ -1,5 +1,6 @@
 # CHANGES IN markdown VERSION 1.11
 
+- Verbatim code blocks of the form ```` ```{lang attr1 attr2 ...} ```` were not correctly rendered.
 
 # CHANGES IN markdown VERSION 1.10
 

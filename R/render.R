@@ -188,7 +188,7 @@ mark = function(
     text = match_replace(text, r4, function(x) {
       x1 = sub(r4, '\\1', x)
       x2 = sub(r4, '\\2', x)
-      x2 = gsub(' ', id4, x2)
+      x2 = gsub(' ', id4, x2, fixed = TRUE)
       paste0(x1, x2)
     })
   }
@@ -232,6 +232,8 @@ mark = function(
       z2 = ifelse(i, sub('^class="', '', z2), paste0('"', z2))
       paste0(z1, z2, '>')
     }, 'html', function(z2) gsub(id4, ' ', restore_html(z2)))
+    # some code blocks with "attributes" are verbatim ones
+    ret = match_replace(ret, '```+\\{.+}', function(x) gsub(id4, ' ', x, fixed = TRUE))
     # auto identifiers
     if (isTRUE(options[['auto_identifiers']])) ret = auto_identifier(ret)
     # number sections

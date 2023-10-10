@@ -145,6 +145,12 @@ Content Cell  | Content Cell</p>
 <pre><code class="language-r js" id="foo" style="color:red;">1 + 1;
 </code></pre>
 
+> cat(mark("````\n```{r, echo=TRUE}\n1 + 1;\n```\n````"))
+<pre><code>```{r, echo=TRUE}
+1 + 1;
+```
+</code></pre>
+
 > cat(mark("```{=html}\n<p>raw HTML</p>\n```"))
 <p>raw HTML</p>
 
