@@ -319,9 +319,9 @@ As mentioned earlier, a lot of features in Pandoc's Markdown are not supported
 in the **markdown** package. Any feature that you find missing in previous
 sections is likely to be unavailable, such as citations and figure/table
 captions. In addition, a lot of R Markdown and Quarto (both are based on Pandoc)
-features are not supported, either, e.g., tabbed sections and code folding. Some
-HTML features may be implemented via JavaScript, but currently it is not
-straightforward and may be improved in future.
+features are not supported, either. Some HTML features may be implemented via
+JavaScript, but currently it is not straightforward and may be improved in
+future.
 
 Pandoc can convert Markdown to many output formats, such as Word, PowerPoint,
 LaTeX beamer, and EPUB. The **markdown** package is unlikely to support output
@@ -770,6 +770,26 @@ You can load arbitrary external JS and CSS files via the `js` and `css`
 variables. There are numerous JS libraries and CSS frameworks on the web. Here
 we will only use the JS/CSS from the repo <https://github.com/yihui/misc.js> to
 show a few brief examples.
+
+#### Tabbed sections
+
+You can load the script `tabsets.js` and CSS `tabsets.css` to create tabsets
+from sections (see [documentation
+here](https://yihui.org/en/2023/10/section-tabsets/)).
+
+``` yaml
+css: ["@npm/@xiee/utils/js/tabsets.min.css"]
+js: ["@npm/@xiee/utils/js/tabsets.min.js"]
+```
+
+#### Code folding
+
+Code folding can be supported by `fold-details.js` (see [documentation
+here](https://yihui.org/en/2023/09/code-folding/)).
+
+``` yaml
+js: ["@npm/@xiee/utils/js/fold-details.min.js"]
+```
 
 #### Right-align a quote footer
 
