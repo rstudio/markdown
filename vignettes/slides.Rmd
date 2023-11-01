@@ -563,7 +563,7 @@ just need to have the correct HTML structure. Then in your HTML document:
 ```
 
 Remember to substitute `VERSION` with [an appropriate
-version](https://github.com/rstudio/markdown/tags) (e.g., `1.6`). You can omit
+version](https://github.com/rstudio/markdown/tags) (e.g., `1.11`). You can omit
 `@VERSION` to use the latest version but it is not recommended because future
 updates might break your old slides.
 
