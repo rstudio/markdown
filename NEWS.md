@@ -1,5 +1,6 @@
 # CHANGES IN markdown VERSION 1.12
 
+- The default HTML template no longer wraps meta variables `include-before` and `include-after` inside `<div></div>`, because their values may contain incomplete HTML tags, e.g., `include-before = '<div>'` and `include-after = '</div>'`.
 
 # CHANGES IN markdown VERSION 1.11
 
