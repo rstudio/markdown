@@ -692,8 +692,17 @@ jsdelivr = function(file, dir = 'gh/rstudio/markdown/inst/resources/') {
   ifelse(is_https(file), file, sprintf('https://cdn.jsdelivr.net/%s%s', dir, file))
 }
 
+# if both @foo and foo are present, remove foo
+resolve_dups = function(x) {
+  for (i in grep('^@', x, value = TRUE)) {
+    x = x[x != sub('^@', '', i)]
+  }
+  x
+}
+
 # resolve CSS/JS shorthand filenames to actual paths (e.g., 'default' to 'default.css')
 resolve_files = function(x, ext = 'css') {
+  x = resolve_dups(x)
   if (length(x) == 0) return(x)
   # @foo -> jsdelivr.net/gh/rstudio/markdown
   i0 = grepl('^@', x)
