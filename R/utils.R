@@ -689,7 +689,7 @@ pkg_file = function(...) {
 }
 
 jsdelivr = function(file, dir = 'gh/rstudio/markdown/inst/resources/') {
-  sprintf('https://cdn.jsdelivr.net/%s%s', dir, file)
+  ifelse(is_https(file), file, sprintf('https://cdn.jsdelivr.net/%s%s', dir, file))
 }
 
 # resolve CSS/JS shorthand filenames to actual paths (e.g., 'default' to 'default.css')
