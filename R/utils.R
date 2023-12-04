@@ -694,6 +694,7 @@ jsdelivr = function(file, dir = 'gh/rstudio/markdown/inst/resources/') {
 
 # if both @foo and foo are present, remove foo
 resolve_dups = function(x) {
+  x = unique(x)
   for (i in grep('^@', x, value = TRUE)) {
     x = x[x != sub('^@', '', i)]
   }
