@@ -857,6 +857,49 @@ features are supported.
 
 ## Appendix {.appendix}
 
+## For rmarkdown Users
+
+The **markdown** package has also provided two *internal* output formats for
+compatibility with **rmarkdown**: `markdown:::html_document` and
+`markdown:::pdf_document`.[^4] The purpose is to make it a little easier to
+switch from **rmarkdown** to **markdown** by mapping some **rmarkdown** output
+format options to **markdown**.
+
+[^4]: The triple-colon `:::` means these functions are not exported, which is to
+    avoid name conflicts between the two packages.
+
+For example, for an R Markdown document with the following output format:
+
+``` yaml
+output:
+  rmarkdown::html_document:
+    toc: true
+    number_sections: true
+    anchor_sections: true
+    self_contained: false
+```
+
+You can switch to **markdown** simply by changing the output format name from
+`rmarkdown::html_document` to `markdown:::html_document`. Internally, the above
+output format is transformed to:
+
+``` yaml
+output:
+  markdown::html_format:
+    options:
+      toc: true
+      number_sections: true
+      embed_resources: false
+    meta:
+      css: ["default", "@npm/@xiee/utils/css/heading-anchor.min.css"]
+      js: ["@npm/@xiee/utils/js/heading-anchor.min.js"]
+```
+
+Note that not all **rmarkdown** options are supported, and not even all
+supported options have exactly the same effects in **markdown**. The supported
+options include:
+`r knitr::combine_words(setdiff(names(formals(markdown:::map_args)), '...'), before='\u60')`.
+
 ## Technical Notes
 
 ### Embedding resources

@@ -51,9 +51,47 @@ html_format = output_format('html')
 #' @export
 latex_format = output_format('latex')
 
+# compatibility layers to rmarkdown::[html|pdf]_document
+html_document = function(...) do.call(html_format, map_args(...))
+html_vignette = function(...) html_document(...)
+pdf_document = function(...) do.call(latex_format, map_args(...))
+
+# map rmarkdown arguments to markdown
+map_args = function(
+  toc = FALSE, toc_depth = 3, number_sections = FALSE, anchor_sections = FALSE,
+  code_folding = 'none', self_contained = TRUE, math_method = 'default',
+  css = NULL, includes = NULL, ...
+) {
+  opts = list(
+    toc = toc, number_sections = number_sections, embed_resources = self_contained
+  )
+  meta = list(css = c('default', css))
+  if (toc) opts$toc = list(depth = toc_depth)
+  if (identical(
+    if (is.list(math_method)) math_method$engine else math_method, 'mathjax'
+  )) opts$js_math = 'mathjax'
+  if (!isFALSE(anchor_sections)) {
+    meta$js = c(meta$js, '@npm/@xiee/utils/js/heading-anchor.min.js')
+    meta$css = c(meta$css, '@npm/@xiee/utils/css/heading-anchor.min.css')
+  }
+  # 'hide' is not supported here; if it is desired, use <script data-open=false>
+  if (code_folding != 'none') meta$js = c(
+    meta$js, '@npm/@xiee/utils/js/fold-details.min.js'
+  )
+  if (is.list(includes)) meta[
+    c('header_includes', 'include_before', 'include_after')
+  ] = includes[c('in_header', 'before_body', 'after_body')]
+  list(meta = meta, options = opts, ...)
+}
+
 # get metadata from a certain field under an output format
 yaml_field = function(yaml, format, name = 'meta') {
-  if (is.list(out <- yaml[['output']]) &&
-      is.list(out <- out[[sprintf('markdown::%s_format', format)]]))
-    out[[name]]
+  if (!is.list(out <- yaml[['output']])) return()
+  if (format == 'latex') format = '(latex|pdf)'
+  # try any (html|latex)_* output format
+  i = grep(sprintf('^markdown:::?%s_', format), names(out), value = TRUE)[1]
+  if (!is.list(out <- out[[i]])) return()
+  # compatibility with rmarkdown::(html|latex|pdf)_document
+  if (!grepl('_format$', i)) out = do.call(map_args, out)
+  out[[name]]
 }
