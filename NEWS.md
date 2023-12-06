@@ -1,3 +1,6 @@
+# CHANGES IN markdown VERSION 1.13
+
+
 # CHANGES IN markdown VERSION 1.12
 
 - Provided three internal functions `html_document`, `html_vignette`, and `pdf_document` as compatibility layers to functions of the same names in the **rmarkdown** package (thanks, @jangorecki, #108). See [the appendix](https://cran.r-project.org/package=markdown/vignettes/intro.html#for-rmarkdown-users) in `vignette('intro', package = 'markdown')` for details.
