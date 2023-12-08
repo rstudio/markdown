@@ -1,5 +1,6 @@
 # CHANGES IN markdown VERSION 1.13
 
+- Cleaned `sourcepos` records when they come from metadata (thanks, @dmurdoch, #111).
 
 # CHANGES IN markdown VERSION 1.12
 
