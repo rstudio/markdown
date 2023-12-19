@@ -381,7 +381,7 @@ markdown_options = function() {
   # options enabled by default
   x1 = c(
     'smart', 'smartypants', 'embed_resources', 'js_math', 'js_highlight',
-    'superscript', 'subscript', 'latex_math', if (!check_old()) 'auto_identifiers',
+    'superscript', 'subscript', 'latex_math', 'auto_identifiers',
     setdiff(commonmark::list_extensions(), 'tagfilter')
   )
   # options disabled by default
