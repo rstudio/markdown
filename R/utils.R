@@ -78,6 +78,19 @@ is_file = function(x) {
   length(x) == 1 && !inherits(x, 'AsIs') && suppressWarnings(xfun::file_exists(x))
 }
 
+# make an output filename with the format name
+auto_output = function(input, format) {
+  ext = switch(format, commonmark = 'markdown', latex = 'tex', text = 'txt', format)
+  output = xfun::with_ext(input, ext)
+  check_output(input, output)
+}
+
+# make sure not to overwrite input file inadvertently
+check_output = function(input, output) {
+  if (xfun::same_path(input, output))
+    stop('The output file path is the same as input: ', input)
+}
+
 # substitute a variable in template `x` with its value; the variable may have
 # more than one possible name, in which case we try them one by one
 sub_var = function(x, name, value) {

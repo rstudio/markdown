@@ -76,12 +76,7 @@ mark = function(
   )
   meta = normalize_meta(meta)
 
-  if (missing(output) && is_file(file)) {
-    ext = switch(format, commonmark = 'markdown', latex = 'tex', text = 'txt', format)
-    output = xfun::with_ext(file, ext)
-    if (xfun::same_path(file, output))
-      stop('The output file path is the same as input: ', file)
-  }
+  if (missing(output) && is_file(file)) output = auto_output(file, format)
 
   render_fun = tryCatch(
     getFromNamespace(paste0('markdown_', tolower(format)), 'commonmark'),
