@@ -27,7 +27,8 @@ output:
 #TOC ul { margin: 0; }
 </style>
 ```
-```{r, include=FALSE}
+```{r}
+#| include=FALSE
 options(width = 80)
 knitr::opts_chunk$set(comment = '#>')
 ```
@@ -308,7 +309,8 @@ all class names will be used if the output format is HTML (e.g.,
 "Smart" HTML entities can be represented by ASCII characters, e.g., you can
 write fractions in the form `n/m`. Below are some example entities:
 
-```{r, smartypants, echo=FALSE, eval=isTRUE(l10n_info()[['UTF-8']])}
+```{r}
+#| smartypants, echo=FALSE, eval=isTRUE(l10n_info()[['UTF-8']])
 p = markdown:::pants[-(4:14)]
 knitr::kable(t(as.matrix(p)), col.names = sprintf('`%s`', names(p)))
 ```
@@ -558,7 +560,8 @@ e.g., the `hardbreaks` option is for the `hardbreaks` argument of
 `commonmark::markdown_*()` functions, and the `table` option is for the `table`
 extension in **commonmark**'s extensions.
 
-```{r, collapse=TRUE}
+```{r}
+#| collapse=TRUE
 markdown::markdown_options()
 # commonmark's arguments
 opts = formals(commonmark::markdown_html)
