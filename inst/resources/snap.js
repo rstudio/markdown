@@ -136,7 +136,7 @@
   // start timer on fullscreen
   d.onfullscreenchange = (e) => d.fullscreenElement && !t0 && startTimers();
   tms.forEach(el => el.addEventListener('click', e => startTimers()));
-  // restore previsouly saved body class
+  // restore previously saved body class
   const bc = sessionStorage.getItem('body-class');
   if (bc) d.body.className += ' ' + bc;
 })(document);
