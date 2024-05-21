@@ -262,7 +262,7 @@
 
 ## MAJOR CHANGES
 
-- the markdown extension 'ingore_math' was replaced with 'latex_math'.
+- the markdown extension 'ignore_math' was replaced with 'latex_math'.
 
 - users can now use the markdown.HTML.stylesheet option to override the package default stylesheet.
 
