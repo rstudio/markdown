@@ -53,7 +53,7 @@ rpubsUpload <- function(title,
    if (!file.exists(htmlFile))
       stop("specified htmlFile does not exist")
    if (!is.list(properties))
-      stop("properties paramater must be a named list")
+      stop("properties parameter must be a named list")
 
    parseHeader <- function(header) {
       split <- strsplit(header, ": ")[[1]]
