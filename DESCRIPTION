@@ -19,11 +19,7 @@ Authors@R: c(
    person(given = "Posit Software, PBC", role = c("cph", "fnd"))
    )
 Description: Render Markdown to full and lightweight HTML/LaTeX documents with
-    the 'commonmark' package. It also supports features that are missing in
-    'commonmark', such as raw HTML/LaTeX blocks, LaTeX math, superscripts,
-    subscripts, footnotes, element attributes, appendices, and fenced 'Divs'.
-    With additional JavaScript and CSS, it can also create HTML slides and
-    articles.
+    the 'commonmark' package. This package has been superseded by 'litedown'.
 Depends:
     R (>= 2.11.1)
 Imports:
@@ -38,7 +34,6 @@ Suggests:
 License: MIT + file LICENSE
 URL: https://github.com/rstudio/markdown
 BugReports: https://github.com/rstudio/markdown/issues
-VignetteBuilder: knitr
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

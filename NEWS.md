@@ -2,9 +2,11 @@
 
 - Cleaned `sourcepos` records when they come from metadata (thanks, @dmurdoch, #111).
 
+- The **markdown** package is in the maintenance-only mode now. It is feature-complete, and will receive no updates except for fixing CRAN problems. New development will continue only in **litedown**: <https://github.com/yihui/litedown>.
+
 # CHANGES IN markdown VERSION 1.12
 
-- Provided three internal functions `html_document`, `html_vignette`, and `pdf_document` as compatibility layers to functions of the same names in the **rmarkdown** package (thanks, @jangorecki, #108). See [the appendix](https://cran.r-project.org/package=markdown/vignettes/intro.html#for-rmarkdown-users) in `vignette('intro', package = 'markdown')` for details.
+- Provided three internal functions `html_document`, `html_vignette`, and `pdf_document` as compatibility layers to functions of the same names in the **rmarkdown** package (thanks, @jangorecki, #108).
 
 - The default HTML template no longer wraps meta variables `include-before` and `include-after` inside `<div></div>`, because their values may contain incomplete HTML tags, e.g., `include-before = '<div>'` and `include-after = '</div>'`.
 
