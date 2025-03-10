@@ -1,3 +1,7 @@
+# CHANGES IN markdown VERSION 2.0
+
+- `mark()` is a simple wrapper function of `litedown::mark()` now.
+
 # CHANGES IN markdown VERSION 1.13
 
 - Cleaned `sourcepos` records when they come from metadata (thanks, @dmurdoch, #111).

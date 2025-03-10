@@ -19,26 +19,43 @@ mark = function(
   ))
   on.exit(options(opts), add = TRUE)
   if (is.null(output)) output = format
+  # check if bibutils is available for bibliography, and convert yes/no to Boolean
+  if (litedown:::is_file(file)) {
+    parts = xfun::yaml_body(xfun::read_utf8(file), parse = FALSE)
+    yaml = parts$yaml
+    if (length(i <- grep('^bibliography:\\s+', yaml)) && !xfun::loadable('rbibutils')) {
+      if (xfun::is_R_CMD_check()) {
+        yaml = yaml[-i]
+      } else stop(
+        'Detected bibliography in YAML (', file, ') but the rbibutils package is ',
+        'unavailable. Please make sure it is installed (and declared in Suggests ',
+        'if bibliography is used in package vignettes).'
+      )
+    }
+    if (length(i <- grep(':\\s+(yes|no)\\s*$', yaml))) {
+      if (xfun::is_R_CMD_check()) {
+        yaml[i] = sub('yes\\s*$', 'true', yaml[i])
+        yaml[i] = sub('no\\s*$', 'false', yaml[i])
+      } else stop(
+        'Detected yes/no in YAML. Please replace them with true/false.'
+      )
+    }
+    if (xfun::is_R_CMD_check()) {
+      xfun::write_utf8(c('---', yaml, '---', parts$body), file)
+    }
+  }
   litedown::mark(file, output, text, options, meta)
 }
 
 #' @rdname mark
 #' @param ... Arguments to be passed to `mark()`.
 #' @export
-#' @examples
-#'
-#' mark_html('Hello _World_!', template = FALSE)
-#' # write HTML to an output file
-#' mark_html('_Hello_, **World**!', output = tempfile())
 mark_html = function(..., template = TRUE) {
   mark(..., format = 'html', template = template)
 }
 
 #' @export
 #' @rdname mark
-#' @examples
-#'
-#' mark_latex('Hello _World_!', template = FALSE)
 mark_latex = function(..., template = TRUE) {
   mark(..., format = 'latex', template = template)
 }

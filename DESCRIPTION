@@ -24,6 +24,7 @@ Depends:
     R (>= 2.11.1)
 Imports:
     utils,
+    xfun,
     litedown (>= 0.6)
 Suggests:
     knitr,

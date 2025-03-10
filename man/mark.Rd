@@ -34,10 +34,3 @@ template.}
 This is a wrapper function based on \code{\link[litedown:mark]{litedown::mark()}}. You should use
 \code{litedown::mark()} directly.
 }
-\examples{
-mark_html("Hello _World_!", template = FALSE)
-# write HTML to an output file
-mark_html("_Hello_, **World**!", output = tempfile())
-
-mark_latex("Hello _World_!", template = FALSE)
-}
