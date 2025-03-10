@@ -4,5 +4,3 @@
 #' XHTML or other formats. This package provides wrapper functions (mainly
 #' [mark()]) based on the \pkg{commonmark} package.
 '_PACKAGE'
-
-.env = new.env(parent = emptyenv())
