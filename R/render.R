@@ -48,6 +48,8 @@ mark = function(
   if (format == 'html') {
     # remove sec/chp prefix in section IDs
     res = gsub('(<h[1-6] id=")(sec|chp):([^"]+")', '\\1\\3', res)
+    # restore trailing \n
+    res = sub('(</[a-z1-6]+>)$', '\\1\n', res)
   }
   as.character(res)
 }
