@@ -45,6 +45,17 @@ html_format = output_format('html')
 latex_format = output_format('latex')
 
 # compatibility layers to rmarkdown::[html|pdf]_document
-html_document = function(...) do.call(html_format, litedown:::map_args(...))
+html_document = function(...) do.call(html_format, map_args(...))
 html_vignette = function(...) html_document(...)
-pdf_document = function(...) do.call(latex_format, litedown:::map_args(...))
+pdf_document = function(...) do.call(latex_format, map_args(...))
+
+map_args = function(...) {
+  do.call(litedown:::map_args, convert_yn(list(...)))
+}
+
+convert_yn = function(x) {
+  lapply(x, function(z) {
+    if (is.list(z)) convert_yn(z) else if (identical(z, 'yes')) TRUE else
+      if (identical(z, 'no')) FALSE else z
+  })
+}

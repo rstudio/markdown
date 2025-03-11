@@ -37,7 +37,7 @@ mark = function(
         yaml[i] = sub('yes\\s*$', 'true', yaml[i])
         yaml[i] = sub('no\\s*$', 'false', yaml[i])
       } else stop(
-        'Detected yes/no in YAML. Please replace them with true/false.'
+        'Detected yes/no in YAML(', file, '). Please replace them with true/false.'
       )
     }
     if (xfun::is_R_CMD_check()) {
