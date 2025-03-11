@@ -21,10 +21,11 @@ mark = function(
   if (is.null(output)) output = format
   # check if bibutils is available for bibliography, and convert yes/no to Boolean
   if (litedown:::is_file(file)) {
+    is_check = xfun::is_R_CMD_check()
     parts = xfun::yaml_body(xfun::read_utf8(file), parse = FALSE)
     yaml = parts$yaml
     if (length(i <- grep('^bibliography:\\s+', yaml)) && !xfun::loadable('rbibutils')) {
-      if (xfun::is_R_CMD_check()) {
+      if (is_check) {
         yaml = yaml[-i]
       } else stop(
         'Detected bibliography in YAML (', file, ') but the rbibutils package is ',
@@ -33,14 +34,23 @@ mark = function(
       )
     }
     if (length(i <- grep(':\\s+(yes|no)\\s*$', yaml))) {
-      if (xfun::is_R_CMD_check()) {
+      if (is_check) {
         yaml[i] = sub('yes\\s*$', 'true', yaml[i])
         yaml[i] = sub('no\\s*$', 'false', yaml[i])
       } else stop(
         'Detected yes/no in YAML(', file, '). Please replace them with true/false.'
       )
     }
-    if (xfun::is_R_CMD_check()) {
+    if (length(i <- grep('^\\s*- ', yaml)) && xfun::try_error(xfun::taml_load(yaml))) {
+      yaml[i] = sub('^(\\s*)- ', '\\1  ', yaml[i])
+      if (xfun::try_error(xfun::taml_load(yaml))) stop(
+        'Cannot parse YAML (', file, '). See https://yihui.org/litedown/#sec:yaml-syntax for the syntax.'
+      ) else if (!is_check) stop(
+        "Detected items starting with '- ' in YAML(", file, '). The syntax is ',
+        'not supported by litedown: https://yihui.org/litedown/#sec:yaml-syntax'
+      )
+    }
+    if (is_check) {
       xfun::write_utf8(c('---', yaml, '---', parts$body), file)
     }
   }
