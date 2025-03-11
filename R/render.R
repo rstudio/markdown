@@ -44,7 +44,12 @@ mark = function(
       xfun::write_utf8(c('---', yaml, '---', parts$body), file)
     }
   }
-  litedown::mark(file, output, text, options, meta)
+  res = litedown::mark(file, output, text, options, meta)
+  if (format == 'html') {
+    # remove sec/chp prefix in section IDs
+    res = gsub('(<h[1-6] id=")(sec|chp):([^"]+")', '\\1\\3', res)
+  }
+  as.character(res)
 }
 
 #' @rdname mark
