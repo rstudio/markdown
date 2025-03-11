@@ -1,6 +1,6 @@
 # CHANGES IN markdown VERSION 2.0
 
-- `mark()` is a simple wrapper function of `litedown::mark()` now.
+- The core function `mark()` is a thin wrapper of `litedown::mark()` now. Users are recommended to call **litedown** directly instead of through the wrapper.
 
 # CHANGES IN markdown VERSION 1.13
 
