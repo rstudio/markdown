@@ -23,6 +23,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Yihui Xie \email{xie@yihui.name} (\href{https://orcid.org/0000-0003-0645-5666}{ORCID})
   \item JJ Allaire
   \item Jeffrey Horner
 }

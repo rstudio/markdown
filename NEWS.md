@@ -1,3 +1,7 @@
+# CHANGES IN markdown VERSION 2.1
+
+- Removed tests from the package, since tests have been covered by the **litedown** package.
+
 # CHANGES IN markdown VERSION 2.0
 
 - The core function `mark()` is a thin wrapper of `litedown::mark()` now. Users are recommended to call **litedown** directly instead of through the wrapper.

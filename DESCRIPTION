@@ -1,6 +1,6 @@
 Package: markdown
 Type: Package
-Title: A thin wrapper of 'litedown' to render Markdown documents
+Title: A Thin Wrapper of 'litedown' to Render Markdown Documents
 Version: 2.0.1
 Authors@R: c(
    person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name", comment = c(ORCID = "0000-0003-0645-5666")),
@@ -33,6 +33,6 @@ Suggests:
 License: MIT + file LICENSE
 URL: https://github.com/rstudio/markdown
 BugReports: https://github.com/rstudio/markdown/issues
-RoxygenNote: 7.3.2
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
+Config/roxygen2/version: 8.1.1
